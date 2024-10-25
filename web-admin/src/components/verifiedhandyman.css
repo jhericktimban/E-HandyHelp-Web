@@ -1,0 +1,49 @@
+.content-container {
+    margin: 100px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    justify-content: center; /* Center vertically */
+    padding: 20px;
+}
+
+.pending-handyman {
+    width: 100%;
+    max-width: 1200px; /* Set max width for larger screens */
+}
+
+.table {
+    width: 100%; /* Make sure the table is responsive */
+    margin: 20px 0;
+    font-size: 1.1rem; /* Increase font size for better readability */
+}
+
+.table th, .table td {
+    padding: 15px; /* Add padding to table cells */
+    text-align: center; /* Center the text in cells */
+}
+
+.modal {
+   
+    width: 100%;
+}
+
+/* Optional: Additional styles for better visibility */
+.modal-dialog {
+    margin: auto; /* Center the dialog */
+}
+
+.modal-content {
+    border-radius: 10px; /* Optional: rounded corners */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Optional: shadow for depth */
+}
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;  /* Adds space between stacked buttons */
+  }
+  
+  .action-buttons button {
+    white-space: nowrap;  /* Prevents text wrapping */
+  }
+  

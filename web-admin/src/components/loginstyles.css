@@ -1,0 +1,41 @@
+/* loginstyles.css */
+
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .admin-login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  .admin-login-box {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .admin-login-logo img {
+    max-width: 150px;
+  }
+  
+  .admin-login-title {
+    font-weight: bold;
+  }
+  
+  @media (max-width: 768px) {
+    .admin-login-box {
+      padding: 20px;
+    }
+  
+    .admin-login-logo img {
+      max-width: 100px;
+    }
+  }
+  

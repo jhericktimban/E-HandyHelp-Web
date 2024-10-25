@@ -1,0 +1,91 @@
+/* General container for the content */
+.content-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  margin: auto;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Search bar styling */
+.mb-3 {
+  width: 50%;
+  margin: 0 auto 20px auto;
+}
+
+.table-action-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* DataTable styling for better layout */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dataTable th,
+.dataTable td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.dataTable th {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.dataTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Modal button styles */
+.modal-footer button {
+  min-width: 100px;
+}
+
+button.mr-2 {
+  margin-right: 10px;
+}
+
+/* Adjusting modal title and body content */
+.modal-title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.modal-body h5 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.modal-body p {
+  font-size: 16px;
+}
+
+/* Ensure the DataTable and modal are responsive */
+@media (max-width: 768px) {
+  .mb-3 {
+    width: 90%;
+  }
+
+  .table-action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .modal-body h5, .modal-body p {
+    font-size: 14px;
+  }
+}
