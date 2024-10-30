@@ -1,0 +1,50 @@
+/* Container styling for the Suspended User component */
+.suspended-user {
+    padding: 20px; /* Padding for the container */
+    background-color: #fff3cd; /* Light background for contrast */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 1200px; /* Max width for the container */
+    margin: 20px auto; /* Center the container horizontally */
+}
+
+/* Title styling */
+.suspended-user h2 {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Space below the title */
+    color: #333; /* Dark color for title */
+    font-size: 24px; /* Font size for the title */
+    font-weight: bold; /* Bold title */
+}
+
+/* Search input styling */
+.suspended-user .form-control {
+    margin-bottom: 20px; /* Space below the search input */
+}
+
+/* Button group styling */
+.action-cell {
+    display: flex; /* Use flexbox for button layout */
+    gap: 10px; /* Space between buttons */
+}
+
+/* DataTable row styling */
+.suspended-user .rdt_Table {
+    border: 1px solid #dee2e6; /* Border for DataTable */
+}
+
+/* Modal header styling */
+.suspended-user .modal-header {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text color */
+}
+
+/* Modal body styling */
+.suspended-user .modal-body {
+    background-color: #f8f9fa; /* Light background for modals */
+}
+
+/* Alert styling */
+.suspended-user .alert {
+    margin-bottom: 20px; /* Space below alerts */
+}

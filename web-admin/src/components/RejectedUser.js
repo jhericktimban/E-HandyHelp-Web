@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
-import DataTable from 'react-data-table-component';
-import axios from 'axios';
-import './styles.css';
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form } from "react-bootstrap";
+import DataTable from "react-data-table-component";
+import axios from "axios";
+import "../css/rejecteduser.css";
 
 const RejectedUser = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State for delete confirmation
   const [selectedUser, setSelectedUser] = useState(null);
   const [rejectedUsers, setRejectedUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch rejected users from the backend
   useEffect(() => {
     const fetchRejectedUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/rejected');
+        const response = await axios.get(
+          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/rejected"
+        );
         setRejectedUsers(response.data);
       } catch (error) {
-        console.error('Error fetching rejected users:', error);
+        console.error("Error fetching rejected users:", error);
       }
     };
 
@@ -39,49 +41,57 @@ const RejectedUser = () => {
   const handleDeleteUser = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(`http://localhost:5000/api/users/${selectedUser._id}`); // Call delete API
-        setRejectedUsers((prevUsers) =>
-          prevUsers.filter((user) => user._id !== selectedUser._id) // Remove user from state
+        await axios.delete(
+          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}`
+        ); // Call delete API
+        setRejectedUsers(
+          (prevUsers) =>
+            prevUsers.filter((user) => user._id !== selectedUser._id) // Remove user from state
         );
         handleCloseModal();
       } catch (error) {
-        console.error('Error deleting user:', error);
+        console.error("Error deleting user:", error);
       }
     }
   };
 
   // Filter rejected users based on search term
-  const filteredUsers = rejectedUsers.filter(user =>
-    `${user.fname} ${user.lname}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUsers = rejectedUsers.filter((user) =>
+    `${user.fname} ${user.lname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   const columns = [
     {
-      name: 'Name',
-      selector: row => `${row.fname} ${row.lname}`,
+      name: "Name",
+      selector: (row) => `${row.fname} ${row.lname}`,
       sortable: true,
     },
     {
-      name: 'Username',
-      selector: row => row.username,
+      name: "Username",
+      selector: (row) => row.username,
       sortable: true,
     },
     {
-      name: 'Account Status',
-      selector: row => row.accounts_status,
+      name: "Account Status",
+      selector: (row) => row.accounts_status || "Rejected",
       sortable: true,
     },
     {
-      name: 'Action',
-      cell: row => (
+      name: "Action",
+      cell: (row) => (
         <div className="button-group">
           <Button variant="primary" onClick={() => handleOpenModal(row)}>
-            View Details
+             Details
           </Button>
-          <Button variant="danger" onClick={() => {
-            setSelectedUser(row);
-            setShowDeleteConfirm(true);
-          }}>
+          <Button
+            variant="danger"
+            onClick={() => {
+              setSelectedUser(row);
+              setShowDeleteConfirm(true);
+            }}
+          >
             Delete
           </Button>
         </div>
@@ -116,16 +126,23 @@ const RejectedUser = () => {
         <Modal.Body>
           {selectedUser && (
             <>
-              <h5>Name: {selectedUser.fname} {selectedUser.lname}</h5>
+              <h5>
+                Name: {selectedUser.fname} {selectedUser.lname}
+              </h5>
               <p>Username: {selectedUser.username}</p>
               <p>Contact: {selectedUser.contact}</p>
-              <p>Date of Birth: {new Date(selectedUser.dateOfBirth).toLocaleDateString()}</p>
+              <p>
+                Date of Birth:{" "}
+                {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
+              </p>
               <p>Account Status: {selectedUser.accounts_status}</p>
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -135,11 +152,16 @@ const RejectedUser = () => {
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete the user {selectedUser?.fname} {selectedUser?.lname}?
+          Are you sure you want to delete the user {selectedUser?.fname}{" "}
+          {selectedUser?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Cancel</Button>
-          <Button variant="danger" onClick={handleDeleteUser}>Delete</Button>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteUser}>
+            Delete
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

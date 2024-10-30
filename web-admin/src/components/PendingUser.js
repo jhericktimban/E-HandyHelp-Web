@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form, Alert } from 'react-bootstrap';
-import DataTable from 'react-data-table-component';
-import { FaUserClock, FaTrash } from 'react-icons/fa';
-import axios from 'axios';
-import './styles.css';
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form, Alert } from "react-bootstrap";
+import DataTable from "react-data-table-component";
+import { FaUserClock, FaTrash } from "react-icons/fa";
+import axios from "axios";
+import "../css/pendinguser.css";
 
 const PendingUser = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [pendingUsers, setPendingUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
   // Fetch pending users from the backend
   useEffect(() => {
     const fetchPendingUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/pending');
+        const response = await axios.get(
+          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/pending"
+        );
         setPendingUsers(response.data);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error("Error fetching users:", error);
       }
     };
 
@@ -40,17 +42,21 @@ const PendingUser = () => {
   const handleVerifyUser = async () => {
     if (selectedUser) {
       try {
-        await axios.put(`http://localhost:5000/api/users/${selectedUser._id}/verify`);
+        await axios.put(
+          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}/verify`
+        );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user._id === selectedUser._id ? { ...user, account_status: 'verified' } : user
+            user._id === selectedUser._id
+              ? { ...user, account_status: "verified" }
+              : user
           )
         );
-        setAlert({ type: 'success', message: 'User verified successfully.' }); // Alert on success
+        setAlert({ type: "success", message: "User verified successfully." }); // Alert on success
         handleCloseModal();
       } catch (error) {
-        console.error('Error verifying user:', error);
-        setAlert({ type: 'danger', message: 'Failed to verify user.' }); // Alert on error
+        console.error("Error verifying user:", error);
+        setAlert({ type: "danger", message: "Failed to verify user." }); // Alert on error
       }
     }
   };
@@ -58,17 +64,21 @@ const PendingUser = () => {
   const handleRejectUser = async () => {
     if (selectedUser) {
       try {
-        await axios.put(`http://localhost:5000/api/users/${selectedUser._id}/reject`);
+        await axios.put(
+          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}/reject`
+        );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
-            user._id === selectedUser._id ? { ...user, account_status: 'rejected' } : user
+            user._id === selectedUser._id
+              ? { ...user, account_status: "rejected" }
+              : user
           )
         );
-        setAlert({ type: 'success', message: 'User rejected successfully.' }); // Alert on success
+        setAlert({ type: "success", message: "User rejected successfully." }); // Alert on success
         handleCloseModal();
       } catch (error) {
-        console.error('Error rejecting user:', error);
-        setAlert({ type: 'danger', message: 'Failed to reject user.' }); // Alert on error
+        console.error("Error rejecting user:", error);
+        setAlert({ type: "danger", message: "Failed to reject user." }); // Alert on error
       }
     }
   };
@@ -76,12 +86,16 @@ const PendingUser = () => {
   const handleDeleteUser = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(`http://localhost:5000/api/users/${selectedUser._id}`);
-        setPendingUsers((prevUsers) => prevUsers.filter(user => user._id !== selectedUser._id));
-        setAlert({ type: 'success', message: 'User deleted successfully.' });
+        await axios.delete(
+          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}`
+        );
+        setPendingUsers((prevUsers) =>
+          prevUsers.filter((user) => user._id !== selectedUser._id)
+        );
+        setAlert({ type: "success", message: "User deleted successfully." });
       } catch (error) {
-        console.error('Error deleting user:', error);
-        setAlert({ type: 'danger', message: 'Failed to delete user.' });
+        console.error("Error deleting user:", error);
+        setAlert({ type: "danger", message: "Failed to delete user." });
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
@@ -91,29 +105,35 @@ const PendingUser = () => {
 
   const columns = [
     {
-      name: 'Name',
+      name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
       sortable: true,
     },
     {
-      name: 'Username',
+      name: "Username",
       selector: (row) => row.username,
       sortable: true,
     },
     {
-      name: 'Account Status',
-      selector: (row) => row.account_status, // Fixed typo here
+      name: "Account Status",
+      selector: (row) => row.account_status || "Pending",
       sortable: true,
     },
     {
-      name: 'Actions',
+      name: "Actions",
       cell: (row) => (
-        <div className="action-cell">
+        <div className="button-group">
           <Button variant="primary" onClick={() => handleOpenModal(row)}>
-            <FaUserClock /> View Details
+             Details
           </Button>
-          <Button variant="danger" onClick={() => { setSelectedUser(row); setShowConfirmDelete(true); }}>
-            <FaTrash /> Delete
+          <Button
+            variant="danger"
+            onClick={() => {
+              setSelectedUser(row);
+              setShowConfirmDelete(true);
+            }}
+          >
+            Delete
           </Button>
         </div>
       ),
@@ -121,9 +141,12 @@ const PendingUser = () => {
   ];
 
   const filteredUsers = pendingUsers.filter((user) => {
-    const fullName = `${user?.fname || ''} ${user?.lname || ''}`;
-    return fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           (user?.username && user.username.toLowerCase().includes(searchTerm.toLowerCase()));
+    const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user?.username &&
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
   });
 
   return (
@@ -141,7 +164,7 @@ const PendingUser = () => {
         data={filteredUsers} // Use the filtered users for the DataTable
         pagination
         highlightOnHover
-        striped 
+        striped
         responsive
       />
 
@@ -160,37 +183,63 @@ const PendingUser = () => {
         <Modal.Body>
           {selectedUser && (
             <>
-              <h5>Name: {selectedUser.fname} {selectedUser.lname}</h5>
+              <h5>
+                Name: {selectedUser.fname} {selectedUser.lname}
+              </h5>
               <p>Email: {selectedUser.email}</p>
               <p>Contact: {selectedUser.contact}</p>
-              <p>Date of Birth: {new Date(selectedUser.dateOfBirth).toLocaleDateString()}</p>
+              <p>
+                Date of Birth:{" "}
+                {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
+              </p>
               <p>Account Status: {selectedUser.account_status}</p>
               {selectedUser.validID ? (
-                <p><strong>Valid ID:</strong> {selectedUser.validID}</p>
+                <p>
+                  <strong>Valid ID:</strong> {selectedUser.validID}
+                </p>
               ) : (
-                <p><strong>Valid ID:</strong> <em>No ID provided</em></p>
+                <p>
+                  <strong>Valid ID:</strong> <em>No ID provided</em>
+                </p>
               )}
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
-          <Button variant="success" onClick={handleVerifyUser}>Verify</Button>
-          <Button variant="danger" onClick={handleRejectUser}>Reject</Button>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button variant="success" onClick={handleVerifyUser}>
+            Verify
+          </Button>
+          <Button variant="danger" onClick={handleRejectUser}>
+            Reject
+          </Button>
         </Modal.Footer>
       </Modal>
 
       {/* Confirmation Modal for Deletion */}
-      <Modal show={showConfirmDelete} onHide={() => setShowConfirmDelete(false)}>
+      <Modal
+        show={showConfirmDelete}
+        onHide={() => setShowConfirmDelete(false)}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete {selectedUser?.fname} {selectedUser?.lname}?
+          Are you sure you want to delete {selectedUser?.fname}{" "}
+          {selectedUser?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button variant="danger" onClick={handleDeleteUser}>Delete</Button>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmDelete(false)}
+          >
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeleteUser}>
+            Delete
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

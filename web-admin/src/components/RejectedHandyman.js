@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Modal, Form } from 'react-bootstrap';
-import DataTable from 'react-data-table-component';
-import axios from 'axios';
-import './rejectedhandyman.css';
+import React, { useState, useEffect } from "react";
+import { Button, Modal, Form } from "react-bootstrap";
+import DataTable from "react-data-table-component";
+import axios from "axios";
+import "../css/rejectedhandyman.css";
 
 const RejectedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false); // State for delete confirmation modal
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [rejectedHandymen, setRejectedHandymen] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch rejected handymen from the backend
   useEffect(() => {
     const fetchRejectedHandymen = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/handymen/rejected');
+        const response = await axios.get(
+          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/rejected"
+        );
         setRejectedHandymen(response.data);
       } catch (error) {
-        console.error('Error fetching rejected handymen:', error);
+        console.error("Error fetching rejected handymen:", error);
       }
     };
 
@@ -48,40 +50,50 @@ const RejectedHandyman = () => {
   // Function to handle the delete action
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/handymen/rejected/${selectedHandyman._id}`); // Make sure the API endpoint is correct
-      setRejectedHandymen(rejectedHandymen.filter(h => h._id !== selectedHandyman._id)); // Update state after deletion
+      await axios.delete(
+        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/rejected/${selectedHandyman._id}`
+      ); // Make sure the API endpoint is correct
+      setRejectedHandymen(
+        rejectedHandymen.filter((h) => h._id !== selectedHandyman._id)
+      ); // Update state after deletion
       handleCloseDeleteModal();
     } catch (error) {
-      console.error('Error deleting handyman:', error);
+      console.error("Error deleting handyman:", error);
     }
   };
 
-  const filteredHandymen = rejectedHandymen.filter(handyman =>
-    `${handyman.fname} ${handyman.lname}`.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredHandymen = rejectedHandymen.filter((handyman) =>
+    `${handyman.fname} ${handyman.lname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   const columns = [
     {
-      name: 'Name',
-      selector: row => `${row.fname} ${row.lname}`,
+      name: "Name",
+      selector: (row) => `${row.fname} ${row.lname}`,
       sortable: true,
     },
     {
-      name: 'Username',
-      selector: row => row.username,
+      name: "Username",
+      selector: (row) => row.username,
       sortable: true,
     },
     {
-      name: 'Status',
-      selector: row => row.accounts_status || 'Rejected',
+      name: "Status",
+      selector: (row) => row.accounts_status || "Rejected",
       sortable: true,
     },
     {
-      name: 'Action',
-      cell: row => (
-        <div className="table-action- ">
-          <Button variant="primary" onClick={() => handleOpenModal(row)} className="mr-2">
-            View Details
+      name: "Action",
+      cell: (row) => (
+        <div className="button-group">
+          <Button
+            variant="primary"
+            onClick={() => handleOpenModal(row)}
+            className="mr-2"
+          >
+             Details
           </Button>
           <Button variant="danger" onClick={() => handleOpenDeleteModal(row)}>
             Delete
@@ -101,7 +113,9 @@ const RejectedHandyman = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
-      <div> {/* Removed overflow styling for better layout */ }
+      <div>
+        {" "}
+        {/* Removed overflow styling for better layout */}
         <DataTable
           columns={columns}
           data={filteredHandymen} // Use filtered data for display
@@ -125,7 +139,9 @@ const RejectedHandyman = () => {
               </h5>
               <p>Username: {selectedHandyman.username}</p>
               <p>Contact: {selectedHandyman.contact}</p>
-              <p>Specialization: {selectedHandyman.specialization.join(', ')}</p>
+              <p>
+                Specialization: {selectedHandyman.specialization.join(", ")}
+              </p>
               <p>Account Status: {selectedHandyman.accounts_status}</p>
             </>
           )}
@@ -143,7 +159,8 @@ const RejectedHandyman = () => {
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete the handyman {selectedHandyman?.fname} {selectedHandyman?.lname}?
+          Are you sure you want to delete the handyman {selectedHandyman?.fname}{" "}
+          {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseDeleteModal}>

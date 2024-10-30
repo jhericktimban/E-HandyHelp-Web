@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './dashboardstyles.css';
+import '../css/dashboardstyles.css';
 
 const AdminDashboard = () => {
     const [handymanTotal, setHandymanTotal] = useState(0);
@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchTotals = async () => {
             try {
-                const response = await fetch('http://localhost:5000/api/dashboard/totals');
+                const response = await fetch('https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/dashboard/totals');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -32,9 +32,9 @@ const AdminDashboard = () => {
     }, []);
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
-            <div className="admin-dashboard text-center">
-                <h1>Welcome to the Admin Dashboard</h1>
+        <div className='body'>
+            <div className="dashboard">
+                <h1>Dashboard</h1>
                 <div className="dashboard-stats">
                     <div className="stat-box">
                         <h3>Total Handymen</h3>
@@ -62,7 +62,7 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
     );
 };
 
