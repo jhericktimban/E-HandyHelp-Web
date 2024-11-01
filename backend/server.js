@@ -27,5 +27,5 @@ app.use('/api/reports', reportRoute); // Route for Report
 app.use('/api/feedback', feedbackRoute); // Route for feedback
 app.use('/api/notifications' ,notificationRoute); // Route for notifications 
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
