@@ -16,7 +16,7 @@ const VerifiedUser = () => {
     const fetchVerifiedUsers = async () => {
       try {
         const response = await axios.get(
-          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/verified"
+          "http://localhost:8000/api/users/verified"
         ); // Fetching from backend
         setVerifiedUsers(response.data); // Set the fetched users in state
       } catch (error) {
@@ -42,7 +42,7 @@ const VerifiedUser = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}`
+          `http://localhost:8000/api/users/${selectedUser._id}`
         ); // Call delete API
         setVerifiedUsers(
           (prevUsers) =>

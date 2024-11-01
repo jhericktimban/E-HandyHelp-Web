@@ -17,7 +17,7 @@ const ViewFeedbacks = () => {
     // Fetch feedback data from the API
     axios
       .get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/feedback"
+        "http://localhost:8000/api/feedback"
       ) // Replace with your backend URL
       .then((response) => {
         setFeedbacks(response.data); // Set the fetched feedback in state

@@ -17,7 +17,7 @@ const VerifiedHandyman = () => {
   useEffect(() => {
     axios
       .get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/verified"
+        "http://localhost:8000/api/handymen/verified"
       )
       .then((response) => {
         setVerifiedHandymen(response.data);
@@ -51,7 +51,7 @@ const VerifiedHandyman = () => {
     if (selectedHandyman) {
       try {
         await axios.delete(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/${selectedHandyman._id}`
+          `http://localhost:8000/api/handymen/${selectedHandyman._id}`
         );
         setVerifiedHandymen(
           verifiedHandymen.filter(

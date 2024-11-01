@@ -16,7 +16,7 @@ const PendingHandyman = () => {
   useEffect(() => {
     axios
       .get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/pending"
+        "http://localhost:8000/api/handymen/pending"
       )
       .then((response) => {
         setPendingHandymen(response.data);
@@ -40,7 +40,7 @@ const PendingHandyman = () => {
     if (selectedHandyman) {
       axios
         .put(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/${selectedHandyman._id}/verify`
+          `http://localhost:8000/api/handymen/${selectedHandyman._id}/verify`
         )
         .then(() => {
           setPendingHandymen(
@@ -62,7 +62,7 @@ const PendingHandyman = () => {
     if (selectedHandyman) {
       axios
         .put(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/${selectedHandyman._id}/reject`
+          `http://localhost:8000/api/handymen/${selectedHandyman._id}/reject`
         )
         .then(() => {
           setPendingHandymen(
@@ -89,7 +89,7 @@ const PendingHandyman = () => {
     if (handymanToDelete) {
       axios
         .delete(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/${handymanToDelete}`
+          `http://localhost:8000/api/handymen/${handymanToDelete}`
         )
         .then(() => {
           setPendingHandymen(

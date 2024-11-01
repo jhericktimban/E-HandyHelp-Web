@@ -18,7 +18,7 @@ const PendingUser = () => {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get(
-          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/pending"
+          "http://localhost:8000/api/users/pending"
         );
         setPendingUsers(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.put(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}/verify`
+          `http://localhost:8000/api/users/${selectedUser._id}/verify`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -65,7 +65,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.put(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}/reject`
+          `http://localhost:8000/api/users/${selectedUser._id}/reject`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -87,7 +87,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}`
+          `http://localhost:8000/api/users/${selectedUser._id}`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.filter((user) => user._id !== selectedUser._id)

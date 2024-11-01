@@ -16,7 +16,7 @@ const RejectedHandyman = () => {
     const fetchRejectedHandymen = async () => {
       try {
         const response = await axios.get(
-          "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/rejected"
+          "http://localhost:8000/api/handymen/rejected"
         );
         setRejectedHandymen(response.data);
       } catch (error) {
@@ -51,7 +51,7 @@ const RejectedHandyman = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/rejected/${selectedHandyman._id}`
+        `http://localhost:8000/api/handymen/rejected/${selectedHandyman._id}`
       ); // Make sure the API endpoint is correct
       setRejectedHandymen(
         rejectedHandymen.filter((h) => h._id !== selectedHandyman._id)

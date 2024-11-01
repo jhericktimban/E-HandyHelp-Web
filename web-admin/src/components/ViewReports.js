@@ -16,7 +16,7 @@ const ViewReports = () => {
   const fetchReports = async () => {
     try {
       const response = await axios.get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/reports"
+        "http://localhost:8000/api/reports"
       );
       const pendingReports = response.data.filter(
         (report) => report.status === "pending"
@@ -40,11 +40,11 @@ const ViewReports = () => {
   const handleSuspendHandyman = async (handymanId, reportId) => {
     try {
       await fetch(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/${handymanId}/suspend`,
+        `http://localhost:8000/api/handymen/${handymanId}/suspend`,
         { method: "PUT" }
       );
       await axios.put(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/reports/${reportId}`,
+        `http://localhost:8000/api/reports/${reportId}`,
         { status: "completed" }
       );
       alert(
@@ -59,11 +59,11 @@ const ViewReports = () => {
   const handleSuspendUser = async (userId, reportId) => {
     try {
       await fetch(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${userId}/suspend`,
+        `http://localhost:8000/api/users/${userId}/suspend`,
         { method: "PUT" }
       );
       await axios.put(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/reports/${reportId}`,
+        `http://localhost:8000/api/reports/${reportId}`,
         { status: "completed" }
       );
       alert(
@@ -88,7 +88,7 @@ const ViewReports = () => {
 
     try {
       await axios.post(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/notifications",
+        "http://localhost:8000/api/notifications",
         notification
       );
       alert("Warning sent successfully.");

@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchTotals = async () => {
             try {
-                const response = await fetch('https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/dashboard/totals');
+                const response = await fetch('http://localhost:8000/api/dashboard/totals');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

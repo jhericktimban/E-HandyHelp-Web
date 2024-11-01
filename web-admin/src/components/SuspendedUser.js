@@ -16,7 +16,7 @@ const SuspendedUser = () => {
   const fetchSuspendedUsers = async () => {
     try {
       const response = await axios.get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/suspended"
+        "http://localhost:8000/api/users/suspended"
       );
       setSuspendedUsers(response.data);
     } catch (error) {
@@ -46,7 +46,7 @@ const SuspendedUser = () => {
   const handleDeleteUser = async () => {
     try {
       await axios.delete(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${selectedUser._id}`
+        `http://localhost:8000/api/users/${selectedUser._id}`
       );
       setAlert({ type: "success", message: "User deleted successfully." });
       fetchSuspendedUsers(); // Refresh the list after deletion
@@ -62,7 +62,7 @@ const SuspendedUser = () => {
   const handleLiftSuspension = async (user) => {
     try {
       await axios.put(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/users/${user._id}/lift-suspension`
+        `http://localhost:8000/api/users/${user._id}/lift-suspension`
       );
       setAlert({
         type: "success",

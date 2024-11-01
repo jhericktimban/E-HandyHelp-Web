@@ -17,7 +17,7 @@ const SuspendedHandyman = () => {
   const fetchSuspendedHandymen = async () => {
     try {
       const response = await axios.get(
-        "https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/handymen/suspended"
+        "http://localhost:8000/handymen/suspended"
       );
       setSuspendedHandymen(response.data);
     } catch (error) {
@@ -50,7 +50,7 @@ const SuspendedHandyman = () => {
   const handleDeleteHandyman = async () => {
     try {
       await axios.delete(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/handymen/${selectedHandyman._id}`
+        `http://localhost:8000/handymen/${selectedHandyman._id}`
       );
       setAlert({ type: "success", message: "Handyman deleted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after deletion
@@ -66,7 +66,7 @@ const SuspendedHandyman = () => {
   const handleLiftSuspension = async () => {
     try {
       await axios.put(
-        `https://661be00c-d2b2-45f7-95e7-954b7c9ba16b-00-1lrnb460qojsa.pike.replit.dev/api/handymen/lift-suspension/${selectedHandyman._id}`,
+        `http://localhost:8000/api/handymen/lift-suspension/${selectedHandyman._id}`,
         {
           accounts_status: "verified",
         }
