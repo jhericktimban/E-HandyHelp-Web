@@ -15,9 +15,7 @@ const PendingHandyman = () => {
   // Fetch pending handymen from the backend
   useEffect(() => {
     axios
-      .get(
-        "http://localhost:8000/api/handymen/pending"
-      )
+      .get("http://localhost:8000/api/handymen/pending")
       .then((response) => {
         setPendingHandymen(response.data);
       })
@@ -39,9 +37,7 @@ const PendingHandyman = () => {
   const handleVerifyHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(
-          `http://localhost:8000/api/handymen/${selectedHandyman._id}/verify`
-        )
+        .put(`http://localhost:8000/api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>
@@ -61,9 +57,7 @@ const PendingHandyman = () => {
   const handleRejectHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(
-          `http://localhost:8000/api/handymen/${selectedHandyman._id}/reject`
-        )
+        .put(`http://localhost:8000/api/handymen/${selectedHandyman._id}/reject`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>
@@ -88,14 +82,10 @@ const PendingHandyman = () => {
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
       axios
-        .delete(
-          `http://localhost:8000/api/handymen/${handymanToDelete}`
-        )
+        .delete(`http://localhost:8000/api/handymen/${handymanToDelete}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter(
-              (handyman) => handyman._id !== handymanToDelete
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete)
           );
           setShowDeleteModal(false);
           alert("Handyman deleted successfully!");
@@ -198,13 +188,23 @@ const PendingHandyman = () => {
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>
-              {selectedHandyman.validID ? (
-                <p>
-                  <strong>Valid ID:</strong> {selectedHandyman.validID}
-                </p>
+              {selectedHandyman.idImages && selectedHandyman.idImages.length > 0 ? (
+                <div>
+                  <strong>ID Images:</strong>
+                  <div className="id-images">
+                    {selectedHandyman.idImages.map((image, index) => (
+                      <img
+                        key={index}
+                        src={`data:image/jpeg;base64,${image}`}
+                        alt={`ID Image ${index + 1}`}
+                        style={{ width: "100%", height: "auto", marginTop: "10px" }}
+                      />
+                    ))}
+                  </div>
+                </div>
               ) : (
                 <p>
-                  <strong>Valid ID:</strong> <em>No ID provided</em>
+                  <strong>ID Images:</strong> <em>No ID images provided</em>
                 </p>
               )}
             </>

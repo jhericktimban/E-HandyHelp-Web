@@ -25,11 +25,10 @@ const userSchema = new mongoose.Schema({
   contact: { 
     type: String, 
     required: true 
-  },
-  images: { 
-    type: String, 
-    default: null 
-  },
+  },images: { 
+  type: [String], // Change this to an array of strings
+  default: [] // Default to an empty array
+},
   dataPrivacyConsent: { 
     type: Boolean, 
     required: true 

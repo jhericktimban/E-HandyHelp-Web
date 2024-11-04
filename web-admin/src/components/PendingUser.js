@@ -52,11 +52,11 @@ const PendingUser = () => {
               : user
           )
         );
-        setAlert({ type: "success", message: "User verified successfully." }); // Alert on success
+        setAlert({ type: "success", message: "User verified successfully." });
         handleCloseModal();
       } catch (error) {
         console.error("Error verifying user:", error);
-        setAlert({ type: "danger", message: "Failed to verify user." }); // Alert on error
+        setAlert({ type: "danger", message: "Failed to verify user." });
       }
     }
   };
@@ -74,11 +74,11 @@ const PendingUser = () => {
               : user
           )
         );
-        setAlert({ type: "success", message: "User rejected successfully." }); // Alert on success
+        setAlert({ type: "success", message: "User rejected successfully." });
         handleCloseModal();
       } catch (error) {
         console.error("Error rejecting user:", error);
-        setAlert({ type: "danger", message: "Failed to reject user." }); // Alert on error
+        setAlert({ type: "danger", message: "Failed to reject user." });
       }
     }
   };
@@ -124,7 +124,7 @@ const PendingUser = () => {
       cell: (row) => (
         <div className="button-group">
           <Button variant="primary" onClick={() => handleOpenModal(row)}>
-             Details
+            Details
           </Button>
           <Button
             variant="danger"
@@ -161,7 +161,7 @@ const PendingUser = () => {
       />
       <DataTable
         columns={columns}
-        data={filteredUsers} // Use the filtered users for the DataTable
+        data={filteredUsers}
         pagination
         highlightOnHover
         striped
@@ -193,10 +193,20 @@ const PendingUser = () => {
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
               </p>
               <p>Account Status: {selectedUser.account_status}</p>
-              {selectedUser.validID ? (
-                <p>
-                  <strong>Valid ID:</strong> {selectedUser.validID}
-                </p>
+              {selectedUser.images && selectedUser.images.length > 0 ? (
+                <>
+                  <strong>Valid ID:</strong>
+                  <div className="valid-id-images">
+                    {selectedUser.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={`data:image/jpeg;base64,${image}`}
+                        alt={`Valid ID ${index + 1}`}
+                        style={{ maxWidth: "100%", height: "auto", margin: "5px" }}
+                      />
+                    ))}
+                  </div>
+                </>
               ) : (
                 <p>
                   <strong>Valid ID:</strong> <em>No ID provided</em>

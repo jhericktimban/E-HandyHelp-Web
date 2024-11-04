@@ -8,6 +8,8 @@ const AdminDashboard = () => {
     const [pendingUsersTotal, setPendingUsersTotal] = useState(0);
     const [suspendedHandymenTotal, setSuspendedHandymenTotal] = useState(0);
     const [suspendedUsersTotal, setSuspendedUsersTotal] = useState(0);
+    const [loggedInHandymanTotal, setLoggedInHandymanTotal] = useState(0);
+    const [loggedInUsersTotal, setLoggedInUsersTotal] = useState(0);
 
     useEffect(() => {
         const fetchTotals = async () => {
@@ -23,6 +25,8 @@ const AdminDashboard = () => {
                 setPendingUsersTotal(data.pendingUsersTotal);
                 setSuspendedHandymenTotal(data.suspendedHandymenTotal);
                 setSuspendedUsersTotal(data.suspendedUsersTotal);
+                setLoggedInHandymanTotal(data.loggedInHandymanTotal);
+                setLoggedInUsersTotal(data.loggedInUsersTotal);
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             }
@@ -60,9 +64,17 @@ const AdminDashboard = () => {
                         <h3>Suspended User Accounts</h3>
                         <p>{suspendedUsersTotal}</p>
                     </div>
+                    <div className="stat-box">
+                        <h3>Logged-In Handymen</h3>
+                        <p>{loggedInHandymanTotal}</p>
+                    </div>
+                    <div className="stat-box">
+                        <h3>Logged-In Users</h3>
+                        <p>{loggedInUsersTotal}</p>
+                    </div>
                 </div>
             </div>
-            </div>
+        </div>
     );
 };
 
