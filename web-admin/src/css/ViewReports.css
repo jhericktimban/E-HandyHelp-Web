@@ -1,0 +1,111 @@
+/* Container styling for the View Reports component */
+.view-reports {
+    padding: 20px; /* Padding for the container */
+    background-color: #f8f9fa; /* Light gray background for contrast */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 1200px; /* Max width for the container */
+    margin: 20px auto; /* Center the container horizontally */
+    
+}
+
+/* Title styling */
+.view-reports-title {
+    text-align: center; /* Center the title */
+    margin-bottom: 20px; /* Space below the title */
+    margin-top: 60px;
+    color: #333; /* Dark color for title */
+    font-size: 24px; /* Font size for the title */
+    font-weight: bold; /* Bold title */
+}
+
+/* DataTable styling */
+.react-data-table {
+    border: 1px solid #dee2e6; /* Border around the table */
+}
+
+/* Header styling */
+.react-data-table .rdt_TableHead {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: #ffffff; /* White text color */
+}
+
+/* Header cell styling */
+.react-data-table .rdt_TableHead .rdt_HeadCell {
+    font-weight: bold; /* Bold text in header */
+    padding: 12px; /* Padding for header cells */
+}
+
+/* Row styling */
+.react-data-table .rdt_TableBody .rdt_Row {
+    transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.react-data-table .rdt_TableBody .rdt_Row:hover {
+    background-color: #ffffff; /* Light gray on hover */
+}
+
+/* Cell styling */
+.react-data-table .rdt_TableBody .rdt_Cell {
+    padding: 15px; /* Padding in table cells */
+    border-bottom: 1px solid #dee2e6; /* Border between rows */
+}
+
+/* Button styling within table actions */
+.react-data-table .rdt_TableBody .rdt_Cell .btn {
+    width: 100%; /* Make buttons full width */
+    height: 40px; /* Consistent height for all buttons */
+    margin-bottom: 5px; /* Space below buttons */
+    display: flex; /* Use flexbox for alignment */
+    justify-content: center; /* Center text within buttons */
+}
+
+/* Additional styling to ensure button text does not overflow */
+.react-data-table .rdt_TableBody .rdt_Cell .btn span {
+    overflow: hidden; /* Prevent overflow */
+    text-overflow: ellipsis; /* Add ellipsis for long text */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+/* Modal styling */
+.modal-content {
+    border-radius: 8px; /* Rounded corners for modal */
+}
+
+.modal-header {
+    background-color: #007bff; /* Primary color for header */
+    color: #ffffff; /* White text color */
+}
+
+/* Modal title styling */
+.modal-title {
+    margin: 0; /* Remove default margin */
+    font-weight: bold; /* Bold title */
+}
+
+/* Modal body text styling */
+.modal-body p {
+    margin: 10px 0; /* Space between paragraphs */
+    color: #333; /* Dark text color */
+}
+
+/* Style for modal footer buttons */
+.modal-footer .btn {
+    flex: 1; /* Allow buttons to take equal space */
+    height: 40px; /* Ensure the same height */
+    margin-left: 10px; /* Space between buttons */
+}
+
+/* Alert styling */
+.alert {
+    margin-top: 20px; /* Space above the alert */
+    border-radius: 8px; /* Rounded corners for alert */
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center content vertically */
+}
+
+/* Alert close button styling */
+.alert .close {
+    cursor: pointer; /* Pointer cursor for close button */
+    margin-left: auto; /* Push close button to the right */
+}

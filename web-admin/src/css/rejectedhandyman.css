@@ -1,0 +1,98 @@
+/* Container styling for the Rejected Handyman component */
+.rejected-handyman {
+  padding: 20px; /* Padding for the container */
+  background-color: #f1f1f1; /* Light background for contrast */
+  border-radius: 8px; /* Rounded corners for the container */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 1200px; /* Max width for the container */
+  margin: 20px auto; /* Center the container horizontally */
+}
+
+/* Title styling */
+.rejected-handyman h2 {
+  text-align: center; /* Center the title */
+  margin-bottom: 20px; /* Space below the title */
+  color: #333; /* Dark color for title */
+  font-size: 24px; /* Font size for the title */
+  font-weight: bold; /* Bold title */
+}
+
+/* Search input styling */
+.rejected-handyman .form-control {
+  margin-bottom: 20px; /* Space below the search input */
+}
+
+/* Button styling */
+.button-group {
+  display: flex; /* Use flexbox for button layout */
+  justify-content: space-between; /* Space out buttons */
+}
+
+/* Table responsiveness */
+.table-responsive {
+  overflow-x: auto; /* Allow horizontal scrolling */
+  border-radius: 8px; /* Rounded corners for the table container */
+  background-color: #ffffff; /* White background for table */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  margin: 20px 0; /* Add margin above and below the table */
+}
+
+/* DataTable styling */
+.react-data-table {
+  border: 1px solid #dee2e6; /* Border around the table */
+}
+
+/* Header styling */
+.react-data-table .rdt_TableHead {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: #ffffff; /* White text color */
+}
+
+/* Header cell styling */
+.react-data-table .rdt_TableHead .rdt_HeadCell {
+  font-weight: bold; /* Bold text in header */
+}
+
+/* Row styling */
+.react-data-table .rdt_TableBody .rdt_Row {
+  transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.react-data-table .rdt_TableBody .rdt_Row:hover {
+  background-color: #f1f1f1; /* Light gray on hover */
+}
+
+/* Cell styling */
+.react-data-table .rdt_TableBody .rdt_Cell {
+  padding: 15px; /* Padding in table cells */
+  border-bottom: 1px solid #dee2e6; /* Border between rows */
+}
+
+/* Modal styling */
+.modal-content {
+  border-radius: 8px; /* Rounded corners for modal */
+}
+
+.modal-header {
+  background-color: #007bff; /* Primary color for header */
+  color: #ffffff; /* White text color */
+}
+
+/* Modal title styling */
+.modal-title {
+  margin: 0; /* Remove default margin */
+  font-weight: bold; /* Bold title */
+}
+
+/* Modal body text styling */
+.modal-body p {
+  margin: 10px 0; /* Space between paragraphs */
+  color: #333; /* Dark text color */
+}
+
+/* Style for delete confirmation modal buttons */
+.modal-footer .btn {
+  flex: 1; /* Allow buttons to take equal space */
+  height: 40px; /* Ensure the same height */
+  margin-left: 10px; /* Space between buttons */
+}
