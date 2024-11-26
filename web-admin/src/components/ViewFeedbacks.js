@@ -73,12 +73,8 @@ const ViewFeedbacks = () => {
     {
       name: "Actions",
       cell: (row) => (
-<<<<<<< HEAD
         <Button 
          onClick={() => handleShowModal(row)}>
-=======
-        <Button variant="primary" onClick={() => handleShowModal(row)}>
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
           View Details
         </Button>
       ),

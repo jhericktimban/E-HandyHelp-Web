@@ -123,20 +123,12 @@ const PendingUser = () => {
       name: "Actions",
       cell: (row) => (
         <div className="button-group">
-<<<<<<< HEAD
           <Button  
           onClick={() => handleOpenModal(row)}>
             Details
           </Button>
           <Button
             
-=======
-          <Button variant="primary" onClick={() => handleOpenModal(row)}>
-            Details
-          </Button>
-          <Button
-            variant="danger"
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => {
               setSelectedUser(row);
               setShowConfirmDelete(true);
@@ -163,11 +155,7 @@ const PendingUser = () => {
       <h2>Pending Users</h2>
       <Form.Control
         type="text"
-<<<<<<< HEAD
         placeholder="Search by name or username..."
-=======
-        placeholder="Search by Name or Email"
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
@@ -199,24 +187,16 @@ const PendingUser = () => {
               <h5>
                 Name: {selectedUser.fname} {selectedUser.lname}
               </h5>
-<<<<<<< HEAD
               <p>
                 Description:{" "}
                 {selectedUser.accounts_status || "Pending Approval"}
               </p>
-=======
-              <p>Email: {selectedUser.email}</p>
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
               <p>Contact: {selectedUser.contact}</p>
               <p>
                 Date of Birth:{" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
               </p>
-<<<<<<< HEAD
               
-=======
-              <p>Account Status: {selectedUser.account_status}</p>
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
               {selectedUser.images && selectedUser.images.length > 0 ? (
                 <>
                   <strong>Valid ID:</strong>

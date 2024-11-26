@@ -56,7 +56,6 @@ const RejectedUser = () => {
   };
 
   // Filter rejected users based on search term
-<<<<<<< HEAD
   const filteredUsers = rejectedUsers.filter((user) => {
     const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
     return (
@@ -65,14 +64,6 @@ const RejectedUser = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
-=======
-  const filteredUsers = rejectedUsers.filter((user) =>
-    `${user.fname} ${user.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
-
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
   const columns = [
     {
       name: "Name",
@@ -93,20 +84,12 @@ const RejectedUser = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
-<<<<<<< HEAD
           <Button 
           onClick={() => handleOpenModal(row)}>
              Details
           </Button>
           <Button
             
-=======
-          <Button variant="primary" onClick={() => handleOpenModal(row)}>
-             Details
-          </Button>
-          <Button
-            variant="danger"
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => {
               setSelectedUser(row);
               setShowDeleteConfirm(true);
@@ -124,11 +107,7 @@ const RejectedUser = () => {
       <h2>Rejected Users</h2>
       <Form.Control
         type="text"
-<<<<<<< HEAD
         placeholder="Search by name or username..."
-=======
-        placeholder="Search by name..."
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

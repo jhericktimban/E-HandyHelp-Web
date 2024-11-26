@@ -62,7 +62,6 @@ const RejectedHandyman = () => {
     }
   };
 
-<<<<<<< HEAD
   const filteredHandymen = rejectedHandymen.filter((handyman) => {
     const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
     return (
@@ -71,13 +70,6 @@ const RejectedHandyman = () => {
         handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
-=======
-  const filteredHandymen = rejectedHandymen.filter((handyman) =>
-    `${handyman.fname} ${handyman.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
 
   const columns = [
     {
@@ -100,22 +92,14 @@ const RejectedHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
-<<<<<<< HEAD
           
-=======
-            variant="primary"
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => handleOpenModal(row)}
             className="mr-2"
           >
              Details
           </Button>
-<<<<<<< HEAD
           <Button
           onClick={() => handleOpenDeleteModal(row)}>
-=======
-          <Button variant="danger" onClick={() => handleOpenDeleteModal(row)}>
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             Delete
           </Button>
         </div>
@@ -128,11 +112,7 @@ const RejectedHandyman = () => {
       <h2>Rejected Handymen</h2>
       <Form.Control
         type="text"
-<<<<<<< HEAD
         placeholder="Search by name or username..."
-=======
-        placeholder="Search by name..."
->>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
