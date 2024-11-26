@@ -11,6 +11,7 @@
 /* Title styling */
 .view-feedbacks-title {
     text-align: center; /* Center the title */
+    margin-top: 60px;
     margin-bottom: 30px; /* Space below the title */
     color: #333; /* Dark color for title */
     font-size: 28px; /* Font size for the title */

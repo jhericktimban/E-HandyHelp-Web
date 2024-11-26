@@ -76,12 +76,14 @@ const SuspendedUser = () => {
   };
 
   // Filter suspended users based on search term
-  const filteredUsers = suspendedUsers.filter((user) =>
-    `${user.fname} ${user.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
-
+  const filteredUsers = suspendedUsers.filter((user) => {
+    const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user?.username &&
+        user.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
   const columns = [
     {
       name: "Name",
@@ -104,14 +106,14 @@ const SuspendedUser = () => {
       cell: (row) => (
         <div className="action-cell">
           <Button
-            variant="primary"
+            
             onClick={() => handleOpenModal(row)}
             className="btn"
           >
             Details
           </Button>
           <Button
-            variant="danger"
+            
             onClick={() => {
               setSelectedUser(row);
               handleConfirmDelete();
@@ -137,7 +139,7 @@ const SuspendedUser = () => {
       <h2>Suspended Users</h2>
       <Form.Control
         type="text"
-        placeholder="Search by name..."
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

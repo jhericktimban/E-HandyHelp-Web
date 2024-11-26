@@ -1,26 +1,30 @@
 /* Container styling for the View Reports component */
 .view-reports {
+    
     padding: 20px; /* Padding for the container */
     background-color: #f8f9fa; /* Light gray background for contrast */
     border-radius: 8px; /* Rounded corners for the container */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-shadow: 0 2px 10px;
     max-width: 1200px; /* Max width for the container */
     margin: 20px auto; /* Center the container horizontally */
-    
+    margin-right: 20px;
+
 }
 
 /* Title styling */
 .view-reports-title {
+    
     text-align: center; /* Center the title */
     margin-bottom: 20px; /* Space below the title */
     margin-top: 60px;
-    color: #333; /* Dark color for title */
+    color: #000000; /* Dark color for title */
     font-size: 24px; /* Font size for the title */
     font-weight: bold; /* Bold title */
 }
 
 /* DataTable styling */
 .react-data-table {
+    
     border: 1px solid #dee2e6; /* Border around the table */
 }
 
@@ -34,6 +38,7 @@
 .react-data-table .rdt_TableHead .rdt_HeadCell {
     font-weight: bold; /* Bold text in header */
     padding: 12px; /* Padding for header cells */
+    
 }
 
 /* Row styling */

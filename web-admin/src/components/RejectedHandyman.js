@@ -62,11 +62,14 @@ const RejectedHandyman = () => {
     }
   };
 
-  const filteredHandymen = rejectedHandymen.filter((handyman) =>
-    `${handyman.fname} ${handyman.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredHandymen = rejectedHandymen.filter((handyman) => {
+    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
 
   const columns = [
     {
@@ -89,13 +92,14 @@ const RejectedHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
-            variant="primary"
+          
             onClick={() => handleOpenModal(row)}
             className="mr-2"
           >
              Details
           </Button>
-          <Button variant="danger" onClick={() => handleOpenDeleteModal(row)}>
+          <Button
+          onClick={() => handleOpenDeleteModal(row)}>
             Delete
           </Button>
         </div>
@@ -108,7 +112,7 @@ const RejectedHandyman = () => {
       <h2>Rejected Handymen</h2>
       <Form.Control
         type="text"
-        placeholder="Search by name..."
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

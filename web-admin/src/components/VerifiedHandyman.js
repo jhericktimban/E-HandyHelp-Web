@@ -69,11 +69,14 @@ const VerifiedHandyman = () => {
   };
 
   // Filter verified handymen based on search term
-  const filteredHandymen = verifiedHandymen.filter((handyman) =>
-    `${handyman.fname} ${handyman.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredHandymen = verifiedHandymen.filter((handyman) => {
+    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
 
   const columns = [
     {
@@ -95,11 +98,12 @@ const VerifiedHandyman = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
-          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+          <Button 
+          onClick={() => handleOpenModal(row)}>
             Details
           </Button>
           <Button
-            variant="danger"
+            
             onClick={() => handleOpenDeleteModal(row)}
             className="ml-2"
           >
@@ -115,7 +119,7 @@ const VerifiedHandyman = () => {
       <h2>Verified Handymen</h2>
       <Form.Control
         type="text"
-        placeholder="Search by Name or Contact"
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

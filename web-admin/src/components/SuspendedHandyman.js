@@ -83,11 +83,14 @@ const SuspendedHandyman = () => {
   };
 
   // Filter suspended handymen based on search term
-  const filteredHandymen = suspendedHandymen.filter((handyman) =>
-    `${handyman.fname} ${handyman.lname}`
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const filteredHandymen = suspendedHandymen.filter((handyman) => {
+    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
 
   const columns = [
     {
@@ -113,7 +116,7 @@ const SuspendedHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
-            variant="success"
+            
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmLift();
@@ -122,7 +125,7 @@ const SuspendedHandyman = () => {
             Lift Suspension
           </Button>
           <Button
-            variant="danger"
+           
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmDelete();
@@ -130,7 +133,8 @@ const SuspendedHandyman = () => {
           >
             Delete
           </Button>
-          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+          <Button 
+          onClick={() => handleOpenModal(row)}>
              Details
           </Button>
         </div>
@@ -144,7 +148,7 @@ const SuspendedHandyman = () => {
       <h2>Suspended Handymen</h2>
       <Form.Control
         type="text"
-        placeholder="Search by name..."
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

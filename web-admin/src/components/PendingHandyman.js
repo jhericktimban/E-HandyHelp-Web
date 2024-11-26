@@ -101,8 +101,8 @@ const PendingHandyman = () => {
     const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
     return (
       fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (handyman?.contact &&
-        handyman.contact.toLowerCase().includes(searchTerm.toLowerCase()))
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
 
@@ -127,14 +127,14 @@ const PendingHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
-            variant="primary"
+            
             onClick={() => handleOpenModal(row)}
             className="mb-2"
           >
-             Details
+            Detail
           </Button>
           <Button
-            variant="danger"
+            
             onClick={() => handleDeleteHandyman(row._id)}
           >
             Delete
@@ -149,7 +149,7 @@ const PendingHandyman = () => {
       <h2>Pending Handymen</h2>
       <Form.Control
         type="text"
-        placeholder="Search by Name or Contact"
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

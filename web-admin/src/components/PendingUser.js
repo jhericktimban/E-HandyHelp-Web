@@ -123,11 +123,12 @@ const PendingUser = () => {
       name: "Actions",
       cell: (row) => (
         <div className="button-group">
-          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+          <Button  
+          onClick={() => handleOpenModal(row)}>
             Details
           </Button>
           <Button
-            variant="danger"
+            
             onClick={() => {
               setSelectedUser(row);
               setShowConfirmDelete(true);
@@ -154,7 +155,7 @@ const PendingUser = () => {
       <h2>Pending Users</h2>
       <Form.Control
         type="text"
-        placeholder="Search by Name or Username"
+        placeholder="Search by name or username..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

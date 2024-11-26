@@ -6,11 +6,11 @@
     font-family: "Poppins", sans-serif;
 }
 
+/* Sidebar styling */
 .admin-sidebar {
     width: 300px;
     height: 100vh;
-    background-color: #0841b2;
-    color: #06eaff;
+    background-color: #0e3569;
     position: fixed;
     top: 0;
     left: 0;
@@ -33,24 +33,41 @@
 }
 
 .sidebar-title {
-    font-size: 18px;
+    font-size: 25px;
     color: #ecf0f1;
 }
 
+.sidebar-header h5 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.sidebar-header img {
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Sidebar links */
 .admin-sidebar ul {
+    color: #ffff;
     list-style-type: none;
     padding: 0;
 }
 
 .admin-sidebar ul li {
+    color: #ffffff;
     position: relative;
 }
+.admin-sidebar ul li:hover {
+    color: #000000;
+    position: relative;
+}
+
 
 .admin-sidebar ul li a {
     display: flex;
     align-items: center;
     padding: 15px 20px;
-    color: #ecf0f1;
+    color: #ffffff;
     text-decoration: none;
     transition: background 0.3s ease;
     font-size: 15px;
@@ -58,8 +75,8 @@
 }
 
 .admin-sidebar ul li a:hover {
-    background-color: #0080ff;
-    color: #fff;
+    background-color: #ffffff;
+    color: #000000;
     transform: translateX(5px);
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -77,28 +94,28 @@
     align-items: center;
     padding: 10px 20px;
     font-weight: 500;
-    color: #bdc3c7;
+    color: #000000;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 .collapsible:hover {
-    background-color: #cc001b;
+    background-color: #ffffff;
     color: #fff;
 }
 
 .icon {
     font-size: 14px;
-    color: #bdc3c7;
+    color: #ffffff;
     transition: transform 0.3s ease;
 }
 
 .icon.active {
-    color: #1aa9bc;
+    color: #ffffff;
     transform: rotate(90deg);
 }
 
-/* Updated Collapsible Content */
+/* Collapsible content */
 .collapsible-content {
     display: flex;
     flex-direction: column;
@@ -106,7 +123,8 @@
     padding-top: 5px;
     max-height: 0;
     overflow: hidden;
-    background-color: #d0d1d2;
+    color: #000000;
+    background-color: #1960b2;
     border-left: 4px solid #0080ff;
     transition: max-height 0.5s ease-out;
     margin-left: 15px;
@@ -114,67 +132,40 @@
     box-shadow: 2px 3px 5px rgba(0, 0, 0, 0.1);
 }
 
+/* Links inside collapsible content */
 .collapsible-content a {
+    color: #000000; /* Text remains black */
     padding: 10px 0 10px 15px;
     font-size: 14px;
-    color: #bdc3c7;
-    transition: color 0.3s ease, padding-left 0.3s;
+    text-decoration: none;
+    transition: padding-left 0.3s ease; /* Smooth padding transition */
 }
 
 .collapsible-content a:hover {
-    color: #ecf0f1;
+    color: #000000; /* Maintain black text on hover */
     padding-left: 20px;
-    background-color: #ffffff;
+    background-color: #f0f0f0; /* Optional: Light gray background */
     border-radius: 4px;
 }
-
-.collapsible.active .icon {
-    color: #e2fff9; /* Change icon color when active */
-    transform: rotate(90deg);
-}
-
-.collapsible-content {
-    transition: max-height 0.3s ease, padding 0.3s ease; /* Smooth padding transition */
-}
-
 
 .collapsible-content a i {
     margin-right: 8px;
     font-size: 14px;
-}
-
-input[type="checkbox"] {
-    display: none;
+    
 }
 
 /* Active state for collapsible content */
 .active .collapsible-content {
     max-height: 500px; /* Adjust based on content size */
     padding-bottom: 10px;
-}
-
-/* Hover effects for icons and links */
-.collapsible:hover, .collapsible-content a:hover {
-    background-color: #000000;
-    color: #fff;
-}
-
-.sidebar-header h5 {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.sidebar-header img {
-    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.2));
-}
-
-.admin-sidebar ul li a:active, .admin-sidebar ul li a:focus {
-    background-color: #0080ff;
-    border-radius: 10px;
+    color: #000000;
 }
 
 /* Improved transition for active state */
 .icon.active {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
     transform: rotate(90deg);
     transition: transform 0.4s ease;
 }
@@ -182,4 +173,11 @@ input[type="checkbox"] {
 /* Box shadow consistency */
 .admin-sidebar ul li a:hover, .collapsible-content {
     box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-sidebar ul li a:active,
+.admin-sidebar ul li a:focus {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
 }

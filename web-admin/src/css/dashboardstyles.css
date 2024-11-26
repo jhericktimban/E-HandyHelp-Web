@@ -1,17 +1,11 @@
 /* Reset some default styles */
-body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    background-color: white;
-  }
+
   
   .dashboard {
-    font-family: "Poppins", sans-serif;
-    padding: 20px;
-    border-radius: 10px;
-    margin-right: 70px;
-    margin-top: 40px;
+    margin-right: 23px;
+    padding: 20px; /* Padding for the container */
+    max-width: 1200px; /* Max width for the container */
+    margin-top: 60px;
   }
   
   .dashboard h1 {
@@ -32,7 +26,7 @@ body {
   .stat-box {
     background-color: #ffffff; /* White background for each box */
     border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    box-shadow: 0 0 2px;
     padding: 20px; /* Internal padding */
     text-align: center; /* Centered text */
     flex: 1 1 250px; /* Flex properties for responsive design */
