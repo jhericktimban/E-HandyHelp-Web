@@ -44,7 +44,11 @@ const AdminSidebar = ({ onLogout }) => {
         </li>
         <li>
           <Link to="/view-reports">
+<<<<<<< HEAD
             <i className="fa fa-file-text" aria-hidden="true"></i> Incident Reports
+=======
+            <i className="fa fa-file-text" aria-hidden="true"></i> View Reports
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
           </Link>
         </li>
         <li>

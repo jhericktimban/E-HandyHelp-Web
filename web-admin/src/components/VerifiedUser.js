@@ -56,6 +56,7 @@ const VerifiedUser = () => {
   };
 
   // Filter verified users based on search term
+<<<<<<< HEAD
   const filteredUsers = verifiedUsers.filter((user) => {
     const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
     return (
@@ -64,6 +65,15 @@ const VerifiedUser = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
+=======
+  const filteredUsers = verifiedUsers.filter(
+    (user) =>
+      `${user.fname} ${user.lname}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
 
   const columns = [
     {
@@ -85,12 +95,20 @@ const VerifiedUser = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
+<<<<<<< HEAD
           <Button 
           onClick={() => handleOpenModal(row)}>
             Details
           </Button>
           <Button
             
+=======
+          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+            Details
+          </Button>
+          <Button
+            variant="danger"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => {
               setSelectedUser(row);
               setShowDeleteConfirm(true);

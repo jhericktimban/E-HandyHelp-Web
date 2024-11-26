@@ -101,8 +101,13 @@ const PendingHandyman = () => {
     const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
     return (
       fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+<<<<<<< HEAD
       (handyman?.username &&
         handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+=======
+      (handyman?.contact &&
+        handyman.contact.toLowerCase().includes(searchTerm.toLowerCase()))
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
     );
   });
 
@@ -127,6 +132,7 @@ const PendingHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
+<<<<<<< HEAD
             
             onClick={() => handleOpenModal(row)}
             className="mb-2"
@@ -135,6 +141,16 @@ const PendingHandyman = () => {
           </Button>
           <Button
             
+=======
+            variant="primary"
+            onClick={() => handleOpenModal(row)}
+            className="mb-2"
+          >
+             Details
+          </Button>
+          <Button
+            variant="danger"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => handleDeleteHandyman(row._id)}
           >
             Delete
@@ -149,7 +165,11 @@ const PendingHandyman = () => {
       <h2>Pending Handymen</h2>
       <Form.Control
         type="text"
+<<<<<<< HEAD
         placeholder="Search by name or username..."
+=======
+        placeholder="Search by Name or Contact"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
@@ -182,7 +202,11 @@ const PendingHandyman = () => {
               </h5>
               <p>
                 Description:{" "}
+<<<<<<< HEAD
                 {selectedHandyman.accounts_status || "Pending Approval"}
+=======
+                {selectedHandyman.accounts_status || "Pending Handyman"}
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
               </p>
               <p>Contact: {selectedHandyman.contact}</p>
               <p>

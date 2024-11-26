@@ -69,6 +69,7 @@ const VerifiedHandyman = () => {
   };
 
   // Filter verified handymen based on search term
+<<<<<<< HEAD
   const filteredHandymen = verifiedHandymen.filter((handyman) => {
     const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
     return (
@@ -77,6 +78,13 @@ const VerifiedHandyman = () => {
         handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
+=======
+  const filteredHandymen = verifiedHandymen.filter((handyman) =>
+    `${handyman.fname} ${handyman.lname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
 
   const columns = [
     {
@@ -98,12 +106,20 @@ const VerifiedHandyman = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
+<<<<<<< HEAD
           <Button 
           onClick={() => handleOpenModal(row)}>
             Details
           </Button>
           <Button
             
+=======
+          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+            Details
+          </Button>
+          <Button
+            variant="danger"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => handleOpenDeleteModal(row)}
             className="ml-2"
           >
@@ -119,7 +135,11 @@ const VerifiedHandyman = () => {
       <h2>Verified Handymen</h2>
       <Form.Control
         type="text"
+<<<<<<< HEAD
         placeholder="Search by name or username..."
+=======
+        placeholder="Search by Name or Contact"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"

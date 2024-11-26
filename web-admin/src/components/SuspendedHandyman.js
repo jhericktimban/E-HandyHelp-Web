@@ -83,6 +83,7 @@ const SuspendedHandyman = () => {
   };
 
   // Filter suspended handymen based on search term
+<<<<<<< HEAD
   const filteredHandymen = suspendedHandymen.filter((handyman) => {
     const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
     return (
@@ -91,6 +92,13 @@ const SuspendedHandyman = () => {
         handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
+=======
+  const filteredHandymen = suspendedHandymen.filter((handyman) =>
+    `${handyman.fname} ${handyman.lname}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
 
   const columns = [
     {
@@ -116,7 +124,11 @@ const SuspendedHandyman = () => {
       cell: (row) => (
         <div className="button-group">
           <Button
+<<<<<<< HEAD
             
+=======
+            variant="success"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmLift();
@@ -125,7 +137,11 @@ const SuspendedHandyman = () => {
             Lift Suspension
           </Button>
           <Button
+<<<<<<< HEAD
            
+=======
+            variant="danger"
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmDelete();
@@ -133,8 +149,12 @@ const SuspendedHandyman = () => {
           >
             Delete
           </Button>
+<<<<<<< HEAD
           <Button 
           onClick={() => handleOpenModal(row)}>
+=======
+          <Button variant="primary" onClick={() => handleOpenModal(row)}>
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
              Details
           </Button>
         </div>
@@ -148,7 +168,11 @@ const SuspendedHandyman = () => {
       <h2>Suspended Handymen</h2>
       <Form.Control
         type="text"
+<<<<<<< HEAD
         placeholder="Search by name or username..."
+=======
+        placeholder="Search by name..."
+>>>>>>> fa407173ed1d37fa06522cf50e89ca3ddcbf2e4b
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
