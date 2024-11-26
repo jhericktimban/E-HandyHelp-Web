@@ -13,7 +13,7 @@
 .rejected-user h2 {
     text-align: center; /* Center the title */
     margin-bottom: 20px; /* Space below the title */
-    color: #333; /* Dark color for title */
+    color: #000000; /* Dark color for title */
     font-size: 24px; /* Font size for the title */
     font-weight: bold; /* Bold title */
 }
