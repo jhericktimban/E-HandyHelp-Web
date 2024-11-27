@@ -148,7 +148,7 @@ const ViewFeedbacks = () => {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
+            <Button onClick={handleCloseModal}>
               Close
             </Button>
           </Modal.Footer>

@@ -151,7 +151,7 @@ const RejectedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>
@@ -167,10 +167,10 @@ const RejectedHandyman = () => {
           {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+          <Button  onClick={handleCloseDeleteModal}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          <Button  onClick={handleDelete}>
             Delete
           </Button>
         </Modal.Footer>

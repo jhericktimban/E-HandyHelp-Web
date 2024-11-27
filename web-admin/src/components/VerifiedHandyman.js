@@ -157,7 +157,7 @@ const VerifiedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>
@@ -176,10 +176,10 @@ const VerifiedHandyman = () => {
           ?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+          <Button  onClick={handleCloseDeleteModal}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteHandyman}>
+          <Button  onClick={handleDeleteHandyman}>
             Delete
           </Button>
         </Modal.Footer>
@@ -187,7 +187,7 @@ const VerifiedHandyman = () => {
 
       {/* Alert for successful deletion */}
       <Alert
-        variant="success"
+       
         show={alertVisible}
         onClose={() => setAlertVisible(false)}
         dismissible

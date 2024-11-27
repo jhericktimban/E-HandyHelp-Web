@@ -190,7 +190,7 @@ const SuspendedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button  onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>
@@ -210,12 +210,12 @@ const SuspendedHandyman = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            
             onClick={() => setShowConfirmDelete(false)}
           >
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteHandyman}>
+          <Button onClick={handleDeleteHandyman}>
             Delete
           </Button>
         </Modal.Footer>
@@ -231,10 +231,10 @@ const SuspendedHandyman = () => {
           {selectedHandyman?.fname} {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmLift(false)}>
+          <Button onClick={() => setShowConfirmLift(false)}>
             Cancel
           </Button>
-          <Button variant="success" onClick={handleLiftSuspension}>
+          <Button onClick={handleLiftSuspension}>
             Lift Suspension
           </Button>
         </Modal.Footer>

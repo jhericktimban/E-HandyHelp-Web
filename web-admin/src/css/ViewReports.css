@@ -102,44 +102,7 @@
     margin-left: 10px; /* Space between buttons */
 }
 
-/* Custom button styling */
-.custom-btn {
-    width: 100%; /* Make buttons full width */
-    height: 40px; /* Consistent height for all buttons */
-    margin-bottom: 5px; /* Space below buttons */
-    display: flex; /* Use flexbox for alignment */
-    justify-content: center; /* Center text within buttons */
-    border-radius: 5px; /* Rounded corners for buttons */
-    font-weight: bold; /* Bold text */
-    color: white; /* White text */
-}
 
-/* Details button color */
-.custom-btn.details {
-    background-color: #1960b2; /* Blue background for Details */
-}
-
-.custom-btn.details:hover {
-    background-color: #5095e5; /* Darker blue for hover */
-}
-
-/* Suspend button color */
-.custom-btn.suspend {
-    background-color: #1960b2; /* Red background for Suspend */
-}
-
-.custom-btn.suspend:hover {
-    background-color: #5095e5; /* Darker red for hover */
-}
-
-/* Send Warning button color */
-.custom-btn.warning {
-    background-color: #1960b2; /* Yellow background for Send Warning */
-}
-
-.custom-btn.warning:hover {
-    background-color: #5095e5; /* Darker yellow for hover */
-}
 
 
 /* Alert styling */

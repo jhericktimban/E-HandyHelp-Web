@@ -211,13 +211,13 @@ const PendingHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button  onClick={handleCloseModal}>
             Close
           </Button>
-          <Button variant="success" onClick={handleVerifyHandyman}>
+          <Button onClick={handleVerifyHandyman}>
             Verify
           </Button>
-          <Button variant="danger" onClick={handleRejectHandyman}>
+          <Button  onClick={handleRejectHandyman}>
             Reject
           </Button>
         </Modal.Footer>
@@ -236,10 +236,10 @@ const PendingHandyman = () => {
           <p>Are you sure you want to delete this handyman?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+          <Button  onClick={() => setShowDeleteModal(false)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={confirmDeleteHandyman}>
+          <Button  onClick={confirmDeleteHandyman}>
             Delete
           </Button>
         </Modal.Footer>

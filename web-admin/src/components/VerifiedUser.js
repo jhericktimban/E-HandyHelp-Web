@@ -144,7 +144,7 @@ const VerifiedUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>
@@ -160,10 +160,10 @@ const VerifiedUser = () => {
           {selectedUser?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button onClick={handleCloseModal}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteUser}>
+          <Button  onClick={handleDeleteUser}>
             Delete
           </Button>
         </Modal.Footer>

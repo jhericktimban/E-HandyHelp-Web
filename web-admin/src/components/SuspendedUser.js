@@ -123,7 +123,7 @@ const SuspendedUser = () => {
             Delete
           </Button>
           <Button
-            variant="success"
+            
             onClick={() => handleLiftSuspension(row)}
             className="btn"
           >
@@ -182,7 +182,7 @@ const SuspendedUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button  onClick={handleCloseModal}>
             Close
           </Button>
         </Modal.Footer>
@@ -202,12 +202,12 @@ const SuspendedUser = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+          
             onClick={() => setShowConfirmDelete(false)}
           >
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteUser}>
+          <Button  onClick={handleDeleteUser}>
             Delete
           </Button>
         </Modal.Footer>

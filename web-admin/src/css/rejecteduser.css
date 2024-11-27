@@ -26,7 +26,8 @@
 /* Button group styling */
 .button-group {
     display: flex; /* Use flexbox for button layout */
-    gap: 10px; /* Space between buttons */
+    justify-content: space-between; /* Space out buttons */
+    width: 100%;
 }
 
 /* DataTable row styling */

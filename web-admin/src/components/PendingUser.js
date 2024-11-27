@@ -220,13 +220,13 @@ const PendingUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <Button onClick={handleCloseModal}>
             Close
           </Button>
-          <Button variant="success" onClick={handleVerifyUser}>
+          <Button  onClick={handleVerifyUser}>
             Verify
           </Button>
-          <Button variant="danger" onClick={handleRejectUser}>
+          <Button  onClick={handleRejectUser}>
             Reject
           </Button>
         </Modal.Footer>
@@ -246,12 +246,12 @@ const PendingUser = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
+            
             onClick={() => setShowConfirmDelete(false)}
           >
             Cancel
           </Button>
-          <Button variant="danger" onClick={handleDeleteUser}>
+          <Button  onClick={handleDeleteUser}>
             Delete
           </Button>
         </Modal.Footer>

@@ -29,12 +29,14 @@
     display: flex; /* Flexbox for button alignment */
     justify-content: space-between; /* Space between buttons */
     
+    
 }
 
 /* Button styling */
 .button-group {
     display: flex; /* Use flexbox for button layout */
     justify-content: space-between; /* Space out buttons */
+    width: 100%;
 }
 
 /* Table responsiveness */
