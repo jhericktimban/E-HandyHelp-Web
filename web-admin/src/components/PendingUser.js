@@ -18,7 +18,7 @@ const PendingUser = () => {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/users/pending"
+          "https://e-handy-help-web-backend.vercel.app//api/users/pending"
         );
         setPendingUsers(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.put(
-          `http://localhost:8000/api/users/${selectedUser._id}/verify`
+          `https://e-handy-help-web-backend.vercel.app//api/users/${selectedUser._id}/verify`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -65,7 +65,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.put(
-          `http://localhost:8000/api/users/${selectedUser._id}/reject`
+          `https://e-handy-help-web-backend.vercel.app//api/users/${selectedUser._id}/reject`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>
@@ -87,7 +87,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/users/${selectedUser._id}`
+          `https://e-handy-help-web-backend.vercel.app/api/users/${selectedUser._id}`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.filter((user) => user._id !== selectedUser._id)

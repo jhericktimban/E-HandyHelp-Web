@@ -16,7 +16,7 @@ const VerifiedUser = () => {
     const fetchVerifiedUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/users/verified"
+          "https://e-handy-help-web-backend.vercel.app/api/users/verified"
         ); // Fetching from backend
         setVerifiedUsers(response.data); // Set the fetched users in state
       } catch (error) {
@@ -42,7 +42,7 @@ const VerifiedUser = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/users/${selectedUser._id}`
+          `https://e-handy-help-web-backend.vercel.app/api/users/${selectedUser._id}`
         ); // Call delete API
         setVerifiedUsers(
           (prevUsers) =>

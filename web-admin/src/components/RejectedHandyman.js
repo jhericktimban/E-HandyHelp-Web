@@ -16,7 +16,7 @@ const RejectedHandyman = () => {
     const fetchRejectedHandymen = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/handymen/rejected"
+          "https://e-handy-help-web-backend.vercel.app/api/handymen/rejected"
         );
         setRejectedHandymen(response.data);
       } catch (error) {
@@ -51,7 +51,7 @@ const RejectedHandyman = () => {
   const handleDelete = async () => {
     try {
       await axios.delete(
-        `http://localhost:8000/api/handymen/rejected/${selectedHandyman._id}`
+        `https://e-handy-help-web-backend.vercel.app//api/handymen/rejected/${selectedHandyman._id}`
       ); // Make sure the API endpoint is correct
       setRejectedHandymen(
         rejectedHandymen.filter((h) => h._id !== selectedHandyman._id)
