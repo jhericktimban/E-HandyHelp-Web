@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const helmet = require("helmet");
-require("dotenv").config(); // Import dotenv for environment variables
+require("dotenv").config(); // Load environment variables
 
 const usersRoute = require("./routes/users");
 const handymenRoute = require("./routes/handymen");
@@ -17,6 +17,9 @@ const app = express();
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+
+// Debug the environment variable
+console.log("MONGO_URI:", process.env.MONGO_URI);
 
 // MongoDB connection
 mongoose
