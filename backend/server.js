@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
+require("dotenv").config(); // Import dotenv for environment variables
+
 const usersRoute = require("./routes/users");
 const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
@@ -12,24 +15,23 @@ const app = express();
 
 // Middleware
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 // MongoDB connection
 mongoose
-  .connect(
-    "mongodb+srv://my_database:6mAaP61jyT04DiFU@atlascluster.5hsvgm6.mongodb.net/e_handy_help?retryWrites=true&w=majority&appName=AtlasCluster",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-app.use("/api/users", usersRoute); // Route for users
-app.use("/api/handymen", handymenRoute); // Route for handymen
-app.use("/api/dashboard", dashboardRoute); // Route for Dashboard
-app.use("/api/reports", reportRoute); // Route for Report
-app.use("/api/feedback", feedbackRoute); // Route for feedback
-app.use("/api/notifications", notificationRoute); // Route for notifications
+app.use("/api/users", usersRoute);
+app.use("/api/handymen", handymenRoute);
+app.use("/api/dashboard", dashboardRoute);
+app.use("/api/reports", reportRoute);
+app.use("/api/feedback", feedbackRoute);
+app.use("/api/notifications", notificationRoute);
 
-const PORT = process.env.PORT || 8000;
+// Port Configuration
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
