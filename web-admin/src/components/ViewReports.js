@@ -17,7 +17,7 @@ const ViewReports = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get("https://e-handy-help-web-backend.vercel.app/api/reports");
+      const response = await axios.get("http://e-handy-help-web-backend.vercel.app/api/reports");
       const pendingReports = response.data.filter(
         (report) => report.status === "pending"
       );
@@ -49,10 +49,10 @@ const ViewReports = () => {
   const handleSuspendHandyman = async (handymanId, reportId) => {
     try {
       await fetch(
-        `https://e-handy-help-web-backend.vercel.app/api/handymen/${handymanId}/suspend`,
+        `http://e-handy-help-web-backend.vercel.app/api/handymen/${handymanId}/suspend`,
         { method: "PUT" }
       );
-      await axios.put(`https://e-handy-help-web-backend.vercel.app/api/reports/${reportId}`, {
+      await axios.put(`http://e-handy-help-web-backend.vercel.app/api/reports/${reportId}`, {
         status: "completed",
       });
       alert(
@@ -67,10 +67,10 @@ const ViewReports = () => {
 
   const handleSuspendUser = async (userId, reportId) => {
     try {
-      await fetch(`https://e-handy-help-web-backend.vercel.app/api/users/${userId}/suspend`, {
+      await fetch(`http://e-handy-help-web-backend.vercel.app/api/users/${userId}/suspend`, {
         method: "PUT",
       });
-      await axios.put(`https://e-handy-help-web-backend.vercel.app/api/reports/${reportId}`, {
+      await axios.put(`http://e-handy-help-web-backend.vercel.app/api/reports/${reportId}`, {
         status: "completed",
       });
       alert(
@@ -95,7 +95,7 @@ const ViewReports = () => {
 
     try {
       await axios.post(
-        "https://e-handy-help-web-backend.vercel.app/api/notifications",
+        "http://e-handy-help-web-backend.vercel.app/api/notifications",
         notification
       );
       alert("Warning sent successfully.");

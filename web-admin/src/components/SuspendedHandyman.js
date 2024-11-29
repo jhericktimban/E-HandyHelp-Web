@@ -17,7 +17,7 @@ const SuspendedHandyman = () => {
   const fetchSuspendedHandymen = async () => {
     try {
       const response = await axios.get(
-        "https://e-handy-help-web-backend.vercel.app/handymen/suspended"
+        "http://e-handy-help-web-backend.vercel.app/handymen/suspended"
       );
       setSuspendedHandymen(response.data);
     } catch (error) {
@@ -50,7 +50,7 @@ const SuspendedHandyman = () => {
   const handleDeleteHandyman = async () => {
     try {
       await axios.delete(
-        `https://e-handy-help-web-backend.vercel.app//handymen/${selectedHandyman._id}`
+        `http://e-handy-help-web-backend.vercel.app/handymen/${selectedHandyman._id}`
       );
       setAlert({ type: "success", message: "Handyman deleted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after deletion
@@ -66,7 +66,7 @@ const SuspendedHandyman = () => {
   const handleLiftSuspension = async () => {
     try {
       await axios.put(
-        `https://e-handy-help-web-backend.vercel.app//api/handymen/lift-suspension/${selectedHandyman._id}`,
+        `http://e-handy-help-web-backend.vercel.app//api/handymen/lift-suspension/${selectedHandyman._id}`,
         {
           accounts_status: "verified",
         }

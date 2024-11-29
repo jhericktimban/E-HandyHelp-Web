@@ -15,7 +15,7 @@ const PendingHandyman = () => {
   // Fetch pending handymen from the backend
   useEffect(() => {
     axios
-      .get("https://e-handy-help-web-backend.vercel.app/api/handymen/pending")
+      .get("http://e-handy-help-web-backend.vercel.app/api/handymen/pending")
       .then((response) => {
         setPendingHandymen(response.data);
       })
@@ -37,7 +37,7 @@ const PendingHandyman = () => {
   const handleVerifyHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(`https://e-handy-help-web-backend.vercel.app//api/handymen/${selectedHandyman._id}/verify`)
+        .put(`http://e-handy-help-web-backend.vercel.app//api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>
@@ -57,7 +57,7 @@ const PendingHandyman = () => {
   const handleRejectHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(`https://e-handy-help-web-backend.vercel.app//api/handymen/${selectedHandyman._id}/reject`)
+        .put(`http://e-handy-help-web-backend.vercel.app//api/handymen/${selectedHandyman._id}/reject`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>
@@ -82,7 +82,7 @@ const PendingHandyman = () => {
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
       axios
-        .delete(`https://e-handy-help-web-backend.vercel.app/api/handymen/${handymanToDelete}`)
+        .delete(`http://e-handy-help-web-backend.vercel.app/api/handymen/${handymanToDelete}`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete)

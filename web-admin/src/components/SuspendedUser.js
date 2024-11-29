@@ -16,7 +16,7 @@ const SuspendedUser = () => {
   const fetchSuspendedUsers = async () => {
     try {
       const response = await axios.get(
-        "https://e-handy-help-web-backend.vercel.app//api/users/suspended"
+        "http://e-handy-help-web-backend.vercel.app//api/users/suspended"
       );
       setSuspendedUsers(response.data);
     } catch (error) {
@@ -46,7 +46,7 @@ const SuspendedUser = () => {
   const handleDeleteUser = async () => {
     try {
       await axios.delete(
-        `https://e-handy-help-web-backend.vercel.app/api/users/${selectedUser._id}`
+        `http://e-handy-help-web-backend.vercel.app/api/users/${selectedUser._id}`
       );
       setAlert({ type: "success", message: "User deleted successfully." });
       fetchSuspendedUsers(); // Refresh the list after deletion
@@ -62,7 +62,7 @@ const SuspendedUser = () => {
   const handleLiftSuspension = async (user) => {
     try {
       await axios.put(
-        `https://e-handy-help-web-backend.vercel.app//api/users/${user._id}/lift-suspension`
+        `http://e-handy-help-web-backend.vercel.app/api/users/${user._id}/lift-suspension`
       );
       setAlert({
         type: "success",

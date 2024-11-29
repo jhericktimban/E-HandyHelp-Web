@@ -20,7 +20,7 @@ const ViewFeedbacks = () => {
 
   const fetchFeedbacks = async () => {
     try {
-      const response = await axios.get("https://e-handy-help-web-backend.vercel.app/api/feedback");
+      const response = await axios.get("http://e-handy-help-web-backend.vercel.app/api/feedback");
       setFeedbacks(response.data);
     } catch (error) {
       console.error("Error fetching feedback:", error);

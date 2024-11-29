@@ -14,7 +14,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchTotals = async () => {
             try {
-                const response = await fetch('https://e-handy-help-web-backend.vercel.app/api/dashboard/totals');
+                const response = await fetch('http://e-handy-help-web-backend.vercel.app/api/dashboard/totals');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
