@@ -167,7 +167,7 @@ const ViewReports = () => {
     <div className="container">
       <div className="row">
         <div className="col-12">
-          <h2 className="view-reports-title">Reported Handymen</h2>
+          <h2 className="view-reports-title">Reported by Handymen</h2>
           <div className="table-responsive">
             <DataTable
               columns={columns}
@@ -186,7 +186,7 @@ const ViewReports = () => {
         </div>
 
         <div className="col-12 mt-4">
-          <h2 className="view-reports-title">Reported Resident</h2>
+          <h2 className="view-reports-title">Reported by Resident</h2>
           <div className="table-responsive">
             <DataTable
               columns={columns}
