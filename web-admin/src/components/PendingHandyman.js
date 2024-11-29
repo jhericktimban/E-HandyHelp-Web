@@ -37,7 +37,7 @@ const PendingHandyman = () => {
   const handleVerifyHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(`https://e-handyhelp-web-backend.onrender.com//api/handymen/${selectedHandyman._id}/verify`)
+        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>
@@ -57,7 +57,7 @@ const PendingHandyman = () => {
   const handleRejectHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(`https://e-handyhelp-web-backend.onrender.com//api/handymen/${selectedHandyman._id}/reject`)
+        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`)
         .then(() => {
           setPendingHandymen(
             pendingHandymen.map((handyman) =>

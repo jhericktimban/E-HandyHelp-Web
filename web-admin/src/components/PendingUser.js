@@ -18,7 +18,7 @@ const PendingUser = () => {
     const fetchPendingUsers = async () => {
       try {
         const response = await axios.get(
-          "https://e-handyhelp-web-backend.onrender.comhttps://e-handyhelp-web-backend.onrender.com//api/users/pending"
+          "https://e-handyhelp-web-backend.onrender.com/api/users/pending"
         );
         setPendingUsers(response.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const PendingUser = () => {
     if (selectedUser) {
       try {
         await axios.put(
-          `https://e-handyhelp-web-backend.onrender.com//api/users/${selectedUser._id}/verify`
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`
         );
         setPendingUsers((prevUsers) =>
           prevUsers.map((user) =>

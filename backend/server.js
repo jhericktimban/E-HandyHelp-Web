@@ -18,14 +18,8 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-// Debug the environment variable
-console.log("MONGO_URI:", process.env.MONGO_URI);
 
-// MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("MongoDB connected..."))
-  .catch((err) => console.error("MongoDB connection error:", err));
+
 
 // Routes
 app.use("/api/users", usersRoute);

@@ -66,7 +66,7 @@ const SuspendedHandyman = () => {
   const handleLiftSuspension = async () => {
     try {
       await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com//api/handymen/lift-suspension/${selectedHandyman._id}`,
+        `https://e-handyhelp-web-backend.onrender.com/api/handymen/lift-suspension/${selectedHandyman._id}`,
         {
           accounts_status: "verified",
         }

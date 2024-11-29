@@ -16,7 +16,7 @@ const RejectedUser = () => {
     const fetchRejectedUsers = async () => {
       try {
         const response = await axios.get(
-          "https://e-handyhelp-web-backend.onrender.com//api/users/rejected"
+          "https://e-handyhelp-web-backend.onrender.com/api/users/rejected"
         );
         setRejectedUsers(response.data);
       } catch (error) {

@@ -16,7 +16,7 @@ const SuspendedUser = () => {
   const fetchSuspendedUsers = async () => {
     try {
       const response = await axios.get(
-        "https://e-handyhelp-web-backend.onrender.com//api/users/suspended"
+        "https://e-handyhelp-web-backend.onrender.com/api/users/suspended"
       );
       setSuspendedUsers(response.data);
     } catch (error) {
