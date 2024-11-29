@@ -18,8 +18,14 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-
-
+// MongoDB connection
+mongoose
+  .connect(
+    "mongodb+srv://my_database:6mAaP61jyT04DiFU@atlascluster.5hsvgm6.mongodb.net/e_handy_help?retryWrites=true&w=majority&appName=AtlasCluster",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("MongoDB connected..."))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
 app.use("/api/users", usersRoute);
