@@ -16,7 +16,7 @@ const RejectedUser = () => {
     const fetchRejectedUsers = async () => {
       try {
         const response = await axios.get(
-          "http://e-handy-help-web-backend.vercel.app//api/users/rejected"
+          "https://e-handyhelp-web-backend.onrender.com//api/users/rejected"
         );
         setRejectedUsers(response.data);
       } catch (error) {
@@ -42,7 +42,7 @@ const RejectedUser = () => {
     if (selectedUser) {
       try {
         await axios.delete(
-          `http://e-handy-help-web-backend.vercel.app/api/users/${selectedUser._id}`
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
         ); // Call delete API
         setRejectedUsers(
           (prevUsers) =>

@@ -17,7 +17,7 @@ const VerifiedHandyman = () => {
   useEffect(() => {
     axios
       .get(
-        "http://e-handy-help-web-backend.vercel.app/api/handymen/verified"
+        "https://e-handyhelp-web-backend.onrender.com/api/handymen/verified"
       )
       .then((response) => {
         setVerifiedHandymen(response.data);
@@ -51,7 +51,7 @@ const VerifiedHandyman = () => {
     if (selectedHandyman) {
       try {
         await axios.delete(
-          `http://e-handy-help-web-backend.vercel.app/api/handymen/${selectedHandyman._id}`
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
         );
         setVerifiedHandymen(
           verifiedHandymen.filter(
