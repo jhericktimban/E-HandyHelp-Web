@@ -24,19 +24,7 @@ import "../src/css/styles.css";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [reports, setReports] = useState([
-    {
-      title: "Handyman Issue Reported",
-      description: "Christian Ragasa reported an issue with a handyman.",
-      reportedBy: "Christian Ragasa",
-    },
-    {
-      title: "Handyman Bure Gausin Issue",
-      description: "Bure Gausin has a reported issue.",
-      reportedBy: "Bure Gausin",
-    },
-    // Add more mock reports as needed
-  ]);
+  const [reports] = useState([]);
 
   // Check localStorage for login status on mount
   useEffect(() => {

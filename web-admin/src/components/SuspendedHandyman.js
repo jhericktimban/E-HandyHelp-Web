@@ -17,7 +17,7 @@ const SuspendedHandyman = () => {
   const fetchSuspendedHandymen = async () => {
     try {
       const response = await axios.get(
-        "https://e-handyhelp-web-backend.onrender.com/handymen/suspended"
+        "https://e-handyhelp-web-backend.onrender.com/api/handymen/suspended"
       );
       setSuspendedHandymen(response.data);
     } catch (error) {

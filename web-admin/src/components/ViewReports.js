@@ -17,20 +17,24 @@ const ViewReports = () => {
 
   const fetchReports = async () => {
     try {
-      const response = await axios.get("https://e-handyhelp-web-backend.onrender.com/api/reports");
+      const response = await axios.get(
+        "https://e-handyhelp-web-backend.onrender.com/api/reports"
+      );
       const pendingReports = response.data.filter(
         (report) => report.status === "pending"
       );
 
-      setReports(pendingReports);
-
       // Separate reports based on who reported them
-      setUserReports(
-        pendingReports.filter((report) => report.reported_by === "user")
+      const userReports = pendingReports.filter(
+        (report) => report.reported_by === "user"
       );
-      setHandymanReports(
-        pendingReports.filter((report) => report.reported_by === "handyman")
+      const handymanReports = pendingReports.filter(
+        (report) => report.reported_by === "handyman"
       );
+
+      setReports(pendingReports);
+      setUserReports(userReports);
+      setHandymanReports(handymanReports);
     } catch (error) {
       console.error("Error fetching reports:", error);
     }
@@ -47,32 +51,52 @@ const ViewReports = () => {
   };
 
   const handleSuspendHandyman = async (handymanId, reportId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to suspend this handyman?"
+    );
+
+    if (!isConfirmed) return; // If not confirmed, exit the function
+
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
         { method: "PUT" }
       );
-      await axios.put(`https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`, {
-        status: "completed",
-      });
+      await axios.put(
+        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
+        {
+          status: "completed",
+        }
+      );
       alert(
         "Handyman suspended successfully and report status updated to completed."
       );
       fetchReports();
-      
     } catch (error) {
       console.error("Error suspending handyman:", error);
     }
   };
 
   const handleSuspendUser = async (userId, reportId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to suspend this resident?"
+    );
+
+    if (!isConfirmed) return; // If not confirmed, exit the function
+
     try {
-      await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`, {
-        method: "PUT",
-      });
-      await axios.put(`https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`, {
-        status: "completed",
-      });
+      await fetch(
+        `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
+        {
+          method: "PUT",
+        }
+      );
+      await axios.put(
+        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
+        {
+          status: "completed",
+        }
+      );
       alert(
         "User suspended successfully and report status updated to completed."
       );
@@ -128,7 +152,10 @@ const ViewReports = () => {
       name: "Actions",
       cell: (row) => (
         <div className="d-flex flex-column">
-          <Button className="custom-btn details mb-2" onClick={() => handleShowModal(row)}>
+          <Button
+            className="custom-btn details mb-2"
+            onClick={() => handleShowModal(row)}
+          >
             Details
           </Button>
           {row.reported_by === "handyman" ? (
@@ -141,7 +168,10 @@ const ViewReports = () => {
               >
                 Suspend
               </Button>
-              <Button className="custom-btn warning mb-2" onClick={() => handleSendWarning(row)}>
+              <Button
+                className="custom-btn warning mb-2"
+                onClick={() => handleSendWarning(row)}
+              >
                 Send Warning
               </Button>
             </>
@@ -153,7 +183,10 @@ const ViewReports = () => {
               >
                 Suspend
               </Button>
-              <Button className="custom-btn warning mb-2" onClick={() => handleSendWarning(row)}>
+              <Button
+                className="custom-btn warning mb-2"
+                onClick={() => handleSendWarning(row)}
+              >
                 Send Warning
               </Button>
             </>
@@ -250,9 +283,7 @@ const ViewReports = () => {
             </ul>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleCloseModal}>
-              Close
-            </Button>
+            <Button onClick={handleCloseModal}>Close</Button>
           </Modal.Footer>
         </Modal>
       )}
