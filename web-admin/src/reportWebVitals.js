@@ -19,7 +19,6 @@ export const reportWebVitals = (onPerfEntry) => {
     getFID(sendToVercelAnalytics);
     getLCP(sendToVercelAnalytics);
     getTTFB(sendToVercelAnalytics);
-    getINP(sendToVercelAnalytics); // Include INP for interactivity
   }
 };
 
