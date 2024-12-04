@@ -1,13 +1,24 @@
-const reportWebVitals = onPerfEntry => {
-  if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    });
+// src/reportWebVitals.js
+import { onCLS, onFID, onLCP, onTTFB, onINP } from "web-vitals";
+
+// Send metrics to your Vercel analytics backend
+const sendToVercelAnalytics = (metric) => {
+  const body = JSON.stringify(metric);
+  const url = "/_vercel/insights";
+
+  if (navigator.sendBeacon) {
+    navigator.sendBeacon(url, body);
+  } else {
+    fetch(url, { body, method: "POST", keepalive: true });
   }
 };
 
-export default reportWebVitals;
+export const reportWebVitals = (onPerfEntry) => {
+  if (onPerfEntry && onPerfEntry instanceof Function) {
+    onCLS(sendToVercelAnalytics);
+    onFID(sendToVercelAnalytics);
+    onLCP(sendToVercelAnalytics);
+    onTTFB(sendToVercelAnalytics);
+    onINP(sendToVercelAnalytics); // Include INP for interactivity
+  }
+};
