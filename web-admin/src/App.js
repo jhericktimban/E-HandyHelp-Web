@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import {
   BrowserRouter as Router,
   Routes,
@@ -93,10 +94,14 @@ const App = () => {
           <AdminLogin onLogin={handleLogin} />
         )}
       </div>
+      
     </Router>
+    
   );
+
 };
 
 
 
+injectSpeedInsights();
 export default App;
