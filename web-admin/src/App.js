@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { injectSpeedInsights } from "@vercel/speed-insights/next"
 import {
   BrowserRouter as Router,
   Routes,
@@ -96,5 +97,7 @@ const App = () => {
     </Router>
   );
 };
+
+injectSpeedInsights();
 
 export default App;
