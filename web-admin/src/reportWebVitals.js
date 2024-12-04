@@ -1,5 +1,5 @@
 // src/reportWebVitals.js
-import { onCLS, onFID, onLCP, onTTFB, onINP } from "web-vitals";
+import { getCLS, getFID, getLCP, getTTFB, getINP } from "web-vitals";
 
 // Send metrics to your Vercel analytics backend
 const sendToVercelAnalytics = (metric) => {
