@@ -171,7 +171,7 @@ const PendingHandyman = () => {
 
       {/* Modal for handyman details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -229,9 +229,9 @@ const PendingHandyman = () => {
         onHide={() => setShowDeleteModal(false)}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
+        </Modal.Header >
         <Modal.Body>
           <p>Are you sure you want to delete this handyman?</p>
         </Modal.Body>

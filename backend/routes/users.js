@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 
+
 // Get all pending users
 router.get('/pending', async (req, res) => {
   try {

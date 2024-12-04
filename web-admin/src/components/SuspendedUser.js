@@ -162,7 +162,7 @@ const SuspendedUser = () => {
 
       {/* Modal for user details */}
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -193,7 +193,7 @@ const SuspendedUser = () => {
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
       >
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }}closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>

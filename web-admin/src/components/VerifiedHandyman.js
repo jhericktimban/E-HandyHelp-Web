@@ -136,7 +136,7 @@ const VerifiedHandyman = () => {
 
       {/* Modal for handyman details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -165,7 +165,7 @@ const VerifiedHandyman = () => {
 
       {/* Modal for delete confirmation */}
       <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>

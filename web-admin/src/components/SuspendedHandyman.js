@@ -170,7 +170,7 @@ const SuspendedHandyman = () => {
 
       {/* Modal for handyman details */}
       <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -201,7 +201,7 @@ const SuspendedHandyman = () => {
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
       >
-        <Modal.Header closeButton>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>

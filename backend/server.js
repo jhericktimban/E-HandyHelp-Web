@@ -4,6 +4,8 @@ const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config(); // Load environment variables
 
+// Import the login route
+
 const usersRoute = require("./routes/users");
 const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
@@ -28,7 +30,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-app.use("/apis/login", )
+
 app.use("/api/users", usersRoute);
 app.use("/api/handymen", handymenRoute);
 app.use("/api/dashboard", dashboardRoute);
