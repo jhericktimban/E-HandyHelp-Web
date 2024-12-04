@@ -27,14 +27,15 @@
 .table-action-buttons {
   display: flex; /* Use flexbox for button layout */
   justify-content: space-between; /* Space out buttons */
+  padding: 15px;
 }
 
-.button-group button {
-  width: 150%; /* Set a fixed width for consistency */
+.button-group-suspend-handyman button {
+  width: 100%; /* Set a fixed width for consistency */
   text-align: center; /* Center text inside the button */
-  display: inline-flex; /* Use flex to center the text */
+  display: flex; /* Use flex to center the text */
   justify-content: center; /* Horizontally center the content */
-  margin-right: 5px; /* Optional: Add spacing between buttons */
+  margin-bottom: 5px;
 }
 
 /* DataTable styling */

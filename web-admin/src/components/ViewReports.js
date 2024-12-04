@@ -50,40 +50,13 @@ const ViewReports = () => {
     setSelectedReport(null);
   };
 
-  const handleSuspendHandyman = async (handymanId, reportId) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to suspend this handyman?"
-    );
-
-    if (!isConfirmed) return; // If not confirmed, exit the function
-
-    try {
-      await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
-        { method: "PUT" }
-      );
-      await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
-        {
-          status: "completed",
-        }
-      );
-      alert(
-        "Handyman suspended successfully and report status updated to completed."
-      );
-      fetchReports();
-    } catch (error) {
-      console.error("Error suspending handyman:", error);
-    }
-  };
-
   const handleSuspendUser = async (userId, reportId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to suspend this resident?"
     );
-
+  
     if (!isConfirmed) return; // If not confirmed, exit the function
-
+  
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
@@ -105,6 +78,34 @@ const ViewReports = () => {
       console.error("Error suspending user:", error);
     }
   };
+  
+  const handleSuspendHandyman = async (handymanId, reportId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to suspend this handyman?"
+    );
+  
+    if (!isConfirmed) return; // If not confirmed, exit the function
+  
+    try {
+      await fetch(
+        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
+        { method: "PUT" }
+      );
+      await axios.put(
+        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
+        {
+          status: "completed",
+        }
+      );
+      alert(
+        "Handyman suspended successfully and report status updated to completed."
+      );
+      fetchReports();
+    } catch (error) {
+      console.error("Error suspending handyman:", error);
+    }
+  };
+  
 
   const handleSendWarning = async (report) => {
     const notificationContent =
@@ -163,7 +164,7 @@ const ViewReports = () => {
               <Button
                 className="custom-btn suspend mb-2"
                 onClick={() =>
-                  handleSuspendHandyman(row.handymanId._id, row._id)
+                  handleSuspendUser(row.userId._id, row._id)
                 }
               >
                 Suspend
@@ -179,7 +180,7 @@ const ViewReports = () => {
             <>
               <Button
                 className="custom-btn suspend mb-2"
-                onClick={() => handleSuspendUser(row.userId._id, row._id)}
+                onClick={() => handleSuspendHandyman(row.handymanId._id, row._id)}
               >
                 Suspend
               </Button>
@@ -195,6 +196,8 @@ const ViewReports = () => {
       ),
     },
   ];
+
+  
 
   return (
     <div className="container">
@@ -242,7 +245,7 @@ const ViewReports = () => {
         <Modal show={showModal} onHide={handleCloseModal} size="lg">
           <Modal.Header closeButton>
             <Modal.Title>
-              {selectedReport?.reportReason || "No Reason Provided"}
+              {"Incident Report Details"}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>

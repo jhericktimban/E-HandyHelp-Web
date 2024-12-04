@@ -97,24 +97,24 @@ const SuspendedHandyman = () => {
       name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
       sortable: true,
-      width: "150px",
+     
     },
     {
       name: "Username",
       selector: (row) => row.username, // Replaced email with username
       sortable: true,
-      width: "200px",
+    
     },
     {
       name: "Account Status",
       selector: (row) => row.accounts_status || "Suspended",
       sortable: true,
-      width: "150px",
+      
     },
     {
-      name: "Actions",
+      name: "Action",
       cell: (row) => (
-        <div className="button-group">
+        <div className="button-group-suspend-handyman">
           <Button
             
             onClick={() => {
@@ -139,7 +139,7 @@ const SuspendedHandyman = () => {
           </Button>
         </div>
       ),
-      width: "200px",
+      
     },
   ];
 

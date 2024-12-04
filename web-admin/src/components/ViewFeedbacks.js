@@ -138,9 +138,9 @@ const ViewFeedbacks = () => {
                 </p>
                 <p>
                   <strong>Sentiment:</strong>{" "}
-                  {sentimentResult.score > 0
+                  {sentimentResult.score  > 0
                     ? "Positive"
-                    : sentimentResult.score < 0
+                    : sentimentResult.score  < 0
                     ? "Negative"
                     : "Neutral"}
                 </p>
