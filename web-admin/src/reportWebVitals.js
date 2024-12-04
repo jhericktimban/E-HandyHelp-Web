@@ -22,3 +22,5 @@ export const reportWebVitals = (onPerfEntry) => {
     onINP(sendToVercelAnalytics); // Include INP for interactivity
   }
 };
+
+export default reportWebVitals;
