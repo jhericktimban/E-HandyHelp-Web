@@ -15,11 +15,11 @@ const sendToVercelAnalytics = (metric) => {
 
 export const reportWebVitals = (onPerfEntry) => {
   if (onPerfEntry && onPerfEntry instanceof Function) {
-    onCLS(sendToVercelAnalytics);
-    onFID(sendToVercelAnalytics);
-    onLCP(sendToVercelAnalytics);
-    onTTFB(sendToVercelAnalytics);
-    onINP(sendToVercelAnalytics); // Include INP for interactivity
+    getCLS(sendToVercelAnalytics);
+    getFID(sendToVercelAnalytics);
+    getLCP(sendToVercelAnalytics);
+    getTTFB(sendToVercelAnalytics);
+    getINP(sendToVercelAnalytics); // Include INP for interactivity
   }
 };
 
