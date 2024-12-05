@@ -4,8 +4,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 require("dotenv").config(); // Load environment variables
 
-// Import the login route
-
+// Import the routes
 const usersRoute = require("./routes/users");
 const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
@@ -17,8 +16,25 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(helmet());
+app.use(helmet()); // Helmet automatically sets some security headers
 app.use(express.json());
+
+// Custom Headers for Security
+app.use((req, res, next) => {
+  // Content-Security-Policy
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+  );
+
+  // X-Frame-Options
+  res.setHeader("X-Frame-Options", "DENY");
+
+  // X-Content-Type-Options
+  res.setHeader("X-Content-Type-Options", "nosniff");
+
+  next();
+});
 
 // MongoDB connection
 mongoose
@@ -30,7 +46,6 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-
 app.use("/api/users", usersRoute);
 app.use("/api/handymen", handymenRoute);
 app.use("/api/dashboard", dashboardRoute);
