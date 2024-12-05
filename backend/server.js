@@ -16,15 +16,15 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(helmet()); // Helmet automatically sets some security headers
+app.use(helmet()); // Provides secure default headers
 app.use(express.json());
 
-// Custom Headers for Security
+// Custom security headers
 app.use((req, res, next) => {
   // Content-Security-Policy
   res.setHeader(
     "Content-Security-Policy",
-    "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self';"
+    "default-src 'self'; img-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
   );
 
   // X-Frame-Options
@@ -38,10 +38,10 @@ app.use((req, res, next) => {
 
 // MongoDB connection
 mongoose
-  .connect(
-    "mongodb+srv://my_database:6mAaP61jyT04DiFU@atlascluster.5hsvgm6.mongodb.net/e_handy_help?retryWrites=true&w=majority&appName=AtlasCluster",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.error("MongoDB connection error:", err));
 
