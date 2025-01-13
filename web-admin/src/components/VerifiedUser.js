@@ -140,7 +140,6 @@ const VerifiedUser = () => {
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
               </p>
               <p>Account Status: {selectedUser.accounts_status}</p>
-              <p>Valid ID: {selectedUser.images}</p>
             </>
           )}
         </Modal.Body>

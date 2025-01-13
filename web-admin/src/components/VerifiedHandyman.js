@@ -153,12 +153,6 @@ const VerifiedHandyman = () => {
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>
-              <p>
-                Valid ID: {selectedHandyman.idImages.join(", ")}
-              </p>
-              <p>
-                CV: {selectedHandyman.certificatesImages.join(", ")}
-              </p>
             </>
           )}
         </Modal.Body>
