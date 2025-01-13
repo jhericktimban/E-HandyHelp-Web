@@ -188,6 +188,9 @@ const PendingHandyman = () => {
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>
+              <p>
+                CV: {selectedHandyman.certificatesImages.join(", ")}
+              </p>
               {selectedHandyman.idImages && selectedHandyman.idImages.length > 0 ? (
                 <div>
                   <strong>ID Images:</strong>
