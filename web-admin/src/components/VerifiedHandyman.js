@@ -149,7 +149,7 @@ const VerifiedHandyman = () => {
                 Description:{" "}
                 {selectedHandyman.accounts_status || "Verified Handyman"}
               </p>
-              <p>Contact: {selectedHandyman.contact}</p>
+              <p>Email: {selectedHandyman.email}</p>
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>

@@ -181,7 +181,7 @@ const SuspendedHandyman = () => {
               </h5>
               <p>Username: {selectedHandyman.username}</p>{" "}
               {/* Updated to display username */}
-              <p>Contact: {selectedHandyman.contact}</p>
+              <p>Email: {selectedHandyman.email}</p>
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>

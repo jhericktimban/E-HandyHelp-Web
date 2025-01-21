@@ -142,7 +142,7 @@ const RejectedHandyman = () => {
                 Name: {selectedHandyman.fname} {selectedHandyman.lname}
               </h5>
               <p>Username: {selectedHandyman.username}</p>
-              <p>Contact: {selectedHandyman.contact}</p>
+              <p>Email: {selectedHandyman.email}</p>
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>

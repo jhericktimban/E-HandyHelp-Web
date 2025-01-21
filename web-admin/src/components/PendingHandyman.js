@@ -184,7 +184,7 @@ const PendingHandyman = () => {
                 Description:{" "}
                 {selectedHandyman.accounts_status || "Pending Approval"}
               </p>
-              <p>Contact: {selectedHandyman.contact}</p>
+              <p>Email: {selectedHandyman.email}</p>
               <p>
                 Specialization: {selectedHandyman.specialization.join(", ")}
               </p>

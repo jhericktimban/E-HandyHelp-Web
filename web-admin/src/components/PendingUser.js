@@ -191,7 +191,7 @@ const PendingUser = () => {
                 Description:{" "}
                 {selectedUser.accounts_status || "Pending Approval"}
               </p>
-              <p>Contact: {selectedUser.contact}</p>
+              <p>Email: {selectedUser.email}</p>
               <p>
                 Date of Birth:{" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}

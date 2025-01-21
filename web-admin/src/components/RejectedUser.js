@@ -133,7 +133,7 @@ const RejectedUser = () => {
                 Name: {selectedUser.fname} {selectedUser.lname}
               </h5>
               <p>Username: {selectedUser.username}</p>
-              <p>Contact: {selectedUser.contact}</p>
+              <p>Email: {selectedUser.email}</p>
               <p>
                 Date of Birth:{" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
