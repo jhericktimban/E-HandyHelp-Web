@@ -41,11 +41,7 @@ const PendingHandyman = () => {
         .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.map((handyman) =>
-              handyman._id === selectedHandyman._id
-                ? { ...handyman, accounts_status: "verified" }
-                : handyman
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
           handleCloseModal();
         })
@@ -54,6 +50,7 @@ const PendingHandyman = () => {
         });
     }
   };
+  
 
   const handleRejectHandyman = () => {
     if (selectedHandyman) {

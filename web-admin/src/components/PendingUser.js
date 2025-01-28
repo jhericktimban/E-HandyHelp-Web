@@ -39,27 +39,22 @@ const PendingUser = () => {
     setSelectedUser(null);
   };
 
-  const handleVerifyUser = async () => {
+  const handleVerifyUser = () => {
     if (selectedUser) {
-      try {
-        await axios.put(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`
-        );
-        setPendingUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user._id === selectedUser._id
-              ? { ...user, account_status: "verified" }
-              : user
-          )
-        );
-        setAlert({ type: "success", message: "User verified successfully." });
-        handleCloseModal();
-      } catch (error) {
-        console.error("Error verifying user:", error);
-        setAlert({ type: "danger", message: "Failed to verify user." });
-      }
+      axios
+        .put(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`)
+        .then(() => {
+          setPendingHandymen(
+            pendingUsers.filter((user) => user._id !== selectedUser._id)
+          );
+          handleCloseModal();
+        })
+        .catch((error) => {
+          console.error("Error verifying user:", error);
+        });
     }
   };
+  
 
   const handleRejectUser = async () => {
     if (selectedUser) {

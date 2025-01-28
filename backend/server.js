@@ -1,23 +1,23 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const helmet = require("helmet");
+import express, { json } from "express";
+import { connect } from "mongoose";
+import cors from "cors";
+import helmet from "helmet";
 require("dotenv").config(); // Load environment variables
 
 // Import the routes
-const usersRoute = require("./routes/users");
-const handymenRoute = require("./routes/handymen");
-const dashboardRoute = require("./routes/dashboard");
-const reportRoute = require("./routes/reports");
-const feedbackRoute = require("./routes/feedbacks");
-const notificationRoute = require("./routes/notifications");
+import usersRoute from "./routes/users";
+import handymenRoute from "./routes/handymen";
+import dashboardRoute from "./routes/dashboard";
+import reportRoute from "./routes/reports";
+import feedbackRoute from "./routes/feedbacks";
+import notificationRoute from "./routes/notifications";
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(helmet()); // Provides secure default headers
-app.use(express.json());
+app.use(json());
 
 // Custom security headers
 app.use((req, res, next) => {
@@ -37,8 +37,7 @@ app.use((req, res, next) => {
 });
 
 // MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI, {
+connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
