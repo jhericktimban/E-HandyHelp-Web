@@ -10,6 +10,8 @@ const RejectedHandyman = () => {
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [rejectedHandymen, setRejectedHandymen] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [alert, setAlert] = useState(null);
+  
 
   // Fetch rejected handymen from the backend
   useEffect(() => {
