@@ -56,6 +56,7 @@ const RejectedHandyman = () => {
       setRejectedHandymen(
         rejectedHandymen.filter((h) => h._id !== selectedHandyman._id)
       ); // Update state after deletion
+      setAlert({message: "Handyman deleted successfully." });
       handleCloseDeleteModal();
     } catch (error) {
       console.error("Error deleting handyman:", error);

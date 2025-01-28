@@ -61,12 +61,9 @@ const PendingHandyman = () => {
         .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.map((handyman) =>
-              handyman._id === selectedHandyman._id
-                ? { ...handyman, accounts_status: "rejected" }
-                : handyman
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
+          setAlert({message: "Handyman rejected successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -83,13 +80,13 @@ const PendingHandyman = () => {
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
       axios
-        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanToDelete}`)
+        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete)
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman)
           );
           setShowDeleteModal(false);
-          alert("Handyman deleted successfully!");
+          setAlert("Handyman deleted successfully!");
         })
         .catch((error) => {
           console.error("Error deleting handyman:", error);

@@ -52,11 +52,11 @@ const SuspendedHandyman = () => {
       await axios.delete(
         `https://e-handyhelp-web-backend.onrender.com/handymen/${selectedHandyman._id}`
       );
-      setAlert({ type: "success", message: "Handyman deleted successfully." });
+      setAlert({message: "Handyman deleted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after deletion
     } catch (error) {
       console.error("Error deleting handyman:", error);
-      setAlert({ type: "danger", message: "Failed to delete handyman." });
+      setAlert({message: "Failed to delete handyman." });
     } finally {
       setShowConfirmDelete(false);
       setSelectedHandyman(null);
@@ -71,7 +71,7 @@ const SuspendedHandyman = () => {
           accounts_status: "verified",
         }
       );
-      setAlert({ type: "success", message: "Suspension lifted successfully." });
+      setAlert({message: "Suspension lifted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after lifting suspension
     } catch (error) {
       console.error("Error lifting suspension:", error);

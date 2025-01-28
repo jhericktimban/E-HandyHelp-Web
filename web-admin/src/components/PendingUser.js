@@ -63,12 +63,8 @@ const PendingUser = () => {
         await axios.put(
           `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/reject`
         );
-        setPendingUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user._id === selectedUser._id
-              ? { ...user, account_status: "rejected" }
-              : user
-          )
+        setPendingUsers(
+          pendingUsers.filter((user) => user._id !== selectedUser._id)
         );
         setAlert({ type: "success", message: "User rejected successfully." });
         handleCloseModal();
@@ -85,13 +81,13 @@ const PendingUser = () => {
         await axios.delete(
           `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
         );
-        setPendingUsers((prevUsers) =>
-          prevUsers.filter((user) => user._id !== selectedUser._id)
-        );
-        setAlert({ type: "success", message: "User deleted successfully." });
+        setPendingUsers(
+            pendingUsers.filter((user) => user._id !== selectedUser._id)
+          );
+        setAlert({message: "User deleted successfully." });
       } catch (error) {
         console.error("Error deleting user:", error);
-        setAlert({ type: "danger", message: "Failed to delete user." });
+        
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);

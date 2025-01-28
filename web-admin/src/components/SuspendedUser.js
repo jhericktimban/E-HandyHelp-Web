@@ -48,11 +48,11 @@ const SuspendedUser = () => {
       await axios.delete(
         `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
       );
-      setAlert({ type: "success", message: "User deleted successfully." });
+      setAlert({message: "User deleted successfully." });
       fetchSuspendedUsers(); // Refresh the list after deletion
     } catch (error) {
       console.error("Error deleting user:", error);
-      setAlert({ type: "danger", message: "Failed to delete user." });
+      setAlert({message: "Failed to delete user." });
     } finally {
       setShowConfirmDelete(false);
       setSelectedUser(null);
@@ -65,13 +65,13 @@ const SuspendedUser = () => {
         `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}/lift-suspension`
       );
       setAlert({
-        type: "success",
+        
         message: `Suspension lifted for ${user.fname} ${user.lname}.`,
       });
       fetchSuspendedUsers(); // Refresh the list after lifting suspension
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({ type: "danger", message: "Failed to lift suspension." });
+      setAlert({message: "Failed to lift suspension." });
     }
   };
 
