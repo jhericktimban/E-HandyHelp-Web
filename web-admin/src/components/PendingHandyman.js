@@ -12,6 +12,8 @@ const PendingHandyman = () => {
   const [pendingHandymen, setPendingHandymen] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [handymanToDelete, setHandymanToDelete] = useState(null);
+  const [alert, setAlert] = useState(null);
+  
 
   // Fetch pending handymen from the backend
   useEffect(() => {
