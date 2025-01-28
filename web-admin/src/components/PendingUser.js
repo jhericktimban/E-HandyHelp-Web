@@ -123,12 +123,8 @@ const PendingUser = () => {
       name: "Actions",
       cell: (row) => (
         <div className="button-group">
-          <Button  
-          onClick={() => handleOpenModal(row)}>
-            Details
-          </Button>
+          <Button onClick={() => handleOpenModal(row)}>Details</Button>
           <Button
-            
             onClick={() => {
               setSelectedUser(row);
               setShowConfirmDelete(true);
@@ -196,7 +192,7 @@ const PendingUser = () => {
                 Date of Birth:{" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
               </p>
-              
+
               {selectedUser.images && selectedUser.images.length > 0 ? (
                 <>
                   <strong>Valid ID:</strong>
@@ -204,9 +200,17 @@ const PendingUser = () => {
                     {selectedUser.images.map((image, index) => (
                       <img
                         key={index}
-                        src={`data:image/jpeg;base64,${image}`}
+                        src={
+                          image.startsWith("data:image")
+                            ? image
+                            : `data:image/png;base64,${image}`
+                        }
                         alt={`Valid ID ${index + 1}`}
-                        style={{ maxWidth: "100%", height: "auto", margin: "5px" }}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          margin: "5px",
+                        }}
                       />
                     ))}
                   </div>
@@ -220,15 +224,9 @@ const PendingUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button  onClick={handleVerifyUser}>
-            Verify
-          </Button>
-          <Button  onClick={handleRejectUser}>
-            Reject
-          </Button>
+          <Button onClick={handleCloseModal}>Close</Button>
+          <Button onClick={handleVerifyUser}>Verify</Button>
+          <Button onClick={handleRejectUser}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
@@ -245,15 +243,8 @@ const PendingUser = () => {
           {selectedUser?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button
-            
-            onClick={() => setShowConfirmDelete(false)}
-          >
-            Cancel
-          </Button>
-          <Button  onClick={handleDeleteUser}>
-            Delete
-          </Button>
+          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
+          <Button onClick={handleDeleteUser}>Delete</Button>
         </Modal.Footer>
       </Modal>
     </div>

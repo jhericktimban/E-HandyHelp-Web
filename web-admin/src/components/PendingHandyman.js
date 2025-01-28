@@ -3,6 +3,7 @@ import { Button, Modal, Form } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/pendinghandyman.css";
+import React from "react";
 
 const PendingHandyman = () => {
   const [showModal, setShowModal] = useState(false);
@@ -186,25 +187,35 @@ const PendingHandyman = () => {
               </p>
               <p>Email: {selectedHandyman.email}</p>
               <p>
-                Specialization: {selectedHandyman.specialization.join(", ")}
+                Date of Birth:{" "}
+                {new Date(selectedHandyman.dateOfBirth).toLocaleDateString()}
               </p>
-              {selectedHandyman.idImages && selectedHandyman.idImages.length > 0 ? (
-                <div>
-                  <strong>ID Images:</strong>
-                  <div className="id-images">
-                    {selectedHandyman.idImages.map((image, index) => (
+
+              {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
+                <>
+                  <strong>Valid ID:</strong>
+                  <div className="valid-id-images">
+                    {selectedHandyman.images.map((image, index) => (
                       <img
                         key={index}
-                        src={`data:image/jpeg;base64,${image}`}
-                        alt={`ID Image ${index + 1}`}
-                        style={{ width: "100%", height: "auto", marginTop: "10px" }}
+                        src={
+                          image.startsWith("data:image")
+                            ? image
+                            : `data:image/png;base64,${image}`
+                        }
+                        alt={`Valid ID ${index + 1}`}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          margin: "5px",
+                        }}
                       />
                     ))}
                   </div>
-                </div>
+                </>
               ) : (
                 <p>
-                  <strong>ID Images:</strong> <em>No ID images provided</em>
+                  <strong>Valid ID:</strong> <em>No ID provided</em>
                 </p>
               )}
             </>
