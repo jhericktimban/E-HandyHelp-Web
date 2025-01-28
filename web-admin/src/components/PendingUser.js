@@ -44,7 +44,7 @@ const PendingUser = () => {
       axios
         .put(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`)
         .then(() => {
-          setPendingHandymen(
+          setPendingUsers(
             pendingUsers.filter((user) => user._id !== selectedUser._id)
           );
           handleCloseModal();
