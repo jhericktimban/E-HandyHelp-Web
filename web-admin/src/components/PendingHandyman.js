@@ -43,6 +43,7 @@ const PendingHandyman = () => {
           setPendingHandymen(
             pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
+          setAlert({message: "Handyman verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {

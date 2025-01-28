@@ -47,6 +47,7 @@ const PendingUser = () => {
           setPendingUsers(
             pendingUsers.filter((user) => user._id !== selectedUser._id)
           );
+          setAlert({message: "User verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
