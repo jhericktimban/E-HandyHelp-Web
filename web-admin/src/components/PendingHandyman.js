@@ -244,7 +244,7 @@ const PendingHandyman = () => {
           <Button  onClick={() => setShowConfirmDelete(false)}>
             Cancel
           </Button>
-          <Button  onClick={setShowConfirmDelete}>
+          <Button  onClick={showConfirmDelete}>
             Delete
           </Button>
         </Modal.Footer>
