@@ -2,7 +2,9 @@ import express, { json } from "express";
 import { connect } from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
-require("dotenv").config(); // Load environment variables
+import dotenv from 'dotenv';
+
+
 
 // Import the routes
 import usersRoute from "./routes/users.js";
@@ -12,6 +14,8 @@ import reportRoute from "./routes/reports.js";
 import feedbackRoute from "./routes/feedbacks.js";
 import notificationRoute from "./routes/notifications.js";
 
+
+dotenv.config();
 const app = express();
 
 // Middleware
