@@ -123,7 +123,7 @@ const VerifiedUser = () => {
       />
 
       {/* Modal for user details */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
@@ -151,7 +151,7 @@ const VerifiedUser = () => {
       </Modal>
 
       {/* Confirmation modal for deletion */}
-      <Modal show={showDeleteConfirm} onHide={handleCloseModal}>
+      <Modal show={showDeleteConfirm} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>

@@ -66,11 +66,11 @@ const PendingUser = () => {
         setPendingUsers(
           pendingUsers.filter((user) => user._id !== selectedUser._id)
         );
-        setAlert({ type: "success", message: "User rejected successfully." });
+        setAlert({message: "User rejected successfully." });
         handleCloseModal();
       } catch (error) {
         console.error("Error rejecting user:", error);
-        setAlert({ type: "danger", message: "Failed to reject user." });
+        setAlert({message: "Failed to reject user." });
       }
     }
   };
@@ -165,7 +165,7 @@ const PendingUser = () => {
       )}
 
       {/* Modal for user details */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
@@ -226,7 +226,7 @@ const PendingUser = () => {
       <Modal
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
-      >
+        centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>

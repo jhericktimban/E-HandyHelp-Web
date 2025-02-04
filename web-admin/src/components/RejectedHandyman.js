@@ -59,7 +59,7 @@ const RejectedHandyman = () => {
         rejectedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
       );
       setAlert({message: "Handyman deleted successfully." });
-      handleCloseDeleteModal();
+      
     } catch (error) {
       console.error("Error deleting handyman:", error);
     }
@@ -138,7 +138,7 @@ const RejectedHandyman = () => {
       </div>
 
       {/* Modal for handyman details */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
@@ -165,7 +165,7 @@ const RejectedHandyman = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showConfirmDelete} onHide={handleCloseDeleteModal}>
+      <Modal show={showConfirmDelete} onHide={handleCloseDeleteModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>

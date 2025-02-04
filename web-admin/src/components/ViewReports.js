@@ -242,7 +242,7 @@ const ViewReports = () => {
       </div>
 
       {selectedReport && (
-        <Modal show={showModal} onHide={handleCloseModal} size="lg">
+        <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
           <Modal.Header  style={{ backgroundColor: "#1960b2" }} closeButton>
             <Modal.Title>
               {"Incident Report Details" }

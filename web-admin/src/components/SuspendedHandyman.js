@@ -78,7 +78,7 @@ const SuspendedHandyman = () => {
       await fetchSuspendedHandymen(); // Refresh data after lifting suspension
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({ type: "danger", message: "Failed to lift suspension." });
+      setAlert({message: "Failed to lift suspension." });
     } finally {
       setShowConfirmLift(false);
       setSelectedHandyman(null);
@@ -172,7 +172,7 @@ const SuspendedHandyman = () => {
       )}
 
       {/* Modal for handyman details */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal show={showModal} onHide={handleCloseModal} centered >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
@@ -203,7 +203,7 @@ const SuspendedHandyman = () => {
       <Modal
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
-      >
+        centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
@@ -225,7 +225,7 @@ const SuspendedHandyman = () => {
       </Modal>
 
       {/* Confirmation Modal for Lifting Suspension */}
-      <Modal show={showConfirmLift} onHide={() => setShowConfirmLift(false)}>
+      <Modal show={showConfirmLift} onHide={() => setShowConfirmLift(false)}centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Lift Suspension</Modal.Title>
         </Modal.Header>
