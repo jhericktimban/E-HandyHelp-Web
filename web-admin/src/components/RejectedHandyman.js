@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
+import { FaUserClock, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import "../css/rejectedhandyman.css";
 
@@ -8,25 +9,24 @@ const RejectedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
-  const [rejectedHandymen, setRejectedHandymen] = useState([]);
+  const [rejectedHandyman, setRejectedHandyman] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
-  
 
-  // Fetch rejected handymen from the backend
+  // Fetch Rejected handyman from the backend
   useEffect(() => {
-    const fetchRejectedHandymen = async () => {
+    const fetchRejectedHandyman = async () => {
       try {
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/handymen/rejected"
         );
-        setRejectedHandymen(response.data);
+        setRejectedHandyman(response.data);
       } catch (error) {
-        console.error("Error fetching rejected handymen:", error);
+        console.error("Error fetching Handymen:", error);
       }
     };
 
-    fetchRejectedHandymen();
+    fetchRejectedHandyman();
   }, []);
 
   const handleOpenModal = (handyman) => {
@@ -39,44 +39,46 @@ const RejectedHandyman = () => {
     setSelectedHandyman(null);
   };
 
-  const handleOpenDeleteModal = (handyman) => {
-    setSelectedHandyman(handyman);
-    setShowConfirmDelete(true);
-  };
 
-  const handleCloseDeleteModal = () => {
-    setShowConfirmDelete(false);
-    setSelectedHandyman(null);
-  };
+  
 
-  // Function to handle the delete action
-  const handleDelete = async () => {
-    try {
-      await axios.delete(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/rejected/${selectedHandyman._id}`
-      ); // Make sure the API endpoint is correct
-      setRejectedHandymen(
-        rejectedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
-      );
-      setAlert({message: "Handyman deleted successfully." });
-      
-    } catch (error) {
-      console.error("Error deleting handyman:", error);
-    }
-    finally {
-      setShowConfirmDelete(false);
-      setSelectedHandyman(null);
+  const handleRejectHandyman = async () => {
+    if (selectedHandyman) {
+      try {
+        await axios.put(
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
+        );
+        setRejectedHandyman(
+          rejectedHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+        );
+        setAlert({message: "Handyman rejected successfully." });
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error rejecting Handyman:", error);
+        setAlert({message: "Failed to reject Handyman." });
+      }
     }
   };
 
-  const filteredHandymen = rejectedHandymen.filter((handyman) => {
-    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
-    return (
-      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (handyman?.username &&
-        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  });
+  const handleDeleteHandyman = async () => {
+    if (selectedHandyman) {
+      try {
+        await axios.delete(
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
+        );
+        setRejectedHandyman(
+          rejectedHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+          );
+        setAlert({message: "Handyman deleted successfully." });
+      } catch (error) {
+        console.error("Error deleting Handyman:", error);
+        
+      } finally {
+        setShowConfirmDelete(false);
+        setSelectedHandyman(null);
+      }
+    }
+  };
 
   const columns = [
     {
@@ -90,23 +92,21 @@ const RejectedHandyman = () => {
       sortable: true,
     },
     {
-      name: "Status",
-      selector: (row) => row.accounts_status || "Rejected",
+      name: "Account Status",
+      selector: (row) => row.account_status || "Rejected",
       sortable: true,
     },
     {
-      name: "Action",
+      name: "Actions",
       cell: (row) => (
         <div className="button-group">
+          <Button onClick={() => handleOpenModal(row)}>Details</Button>
           <Button
-          
-            onClick={() => handleOpenModal(row)}
-            className="mr-2"
+            onClick={() => {
+              setSelectedHandyman(row);
+              setShowConfirmDelete(true);
+            }}
           >
-             Details
-          </Button>
-          <Button
-          onClick={() => handleOpenDeleteModal(row)}>
             Delete
           </Button>
         </div>
@@ -114,9 +114,18 @@ const RejectedHandyman = () => {
     },
   ];
 
+  const filteredHandyman = rejectedHandyman.filter((handyman) => {
+    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
+
   return (
     <div className="content-container rejected-handyman">
-      <h2>Rejected Handymen</h2>
+      <h2>Rejected Handyman</h2>
       <Form.Control
         type="text"
         placeholder="Search by name or username..."
@@ -124,20 +133,23 @@ const RejectedHandyman = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
-      <div>
-        {" "}
-        {/* Removed overflow styling for better layout */}
-        <DataTable
-          columns={columns}
-          data={filteredHandymen} // Use filtered data for display
-          pagination
-          highlightOnHover
-          striped
-          responsive
-        />
-      </div>
+      <DataTable
+        columns={columns}
+        data={filteredHandyman}
+        pagination
+        highlightOnHover
+        striped
+        responsive
+      />
 
-      {/* Modal for handyman details */}
+      {/* Alert for success or error messages */}
+      {alert && (
+        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+          {alert.message}
+        </Alert>
+      )}
+
+      {/* Modal for Handyman details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
@@ -148,38 +160,68 @@ const RejectedHandyman = () => {
               <h5>
                 Name: {selectedHandyman.fname} {selectedHandyman.lname}
               </h5>
-              <p>Username: {selectedHandyman.username}</p>
+              <p>
+                Description:{" "}
+                {selectedHandyman.accounts_status || "Rejected"}
+              </p>
               <p>Email: {selectedHandyman.email}</p>
               <p>
-                Specialization: {selectedHandyman.specialization.join(", ")}
+                Date of Birth:{" "}
+                {new Date(selectedHandyman.dateOfBirth).toLocaleDateString()}
               </p>
-              <p>Account Status: {selectedHandyman.accounts_status}</p>
+
+              {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
+                <>
+                  <strong>Valid ID:</strong>
+                  <div className="valid-id-images">
+                    {selectedHandyman.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={
+                          image.startsWith("data:image")
+                            ? image
+                            : `data:image/png;base64,${image}`
+                        }
+                        alt={`Valid ID ${index + 1}`}
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          margin: "5px",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p>
+                  <strong>Valid ID:</strong> <em>No ID provided</em>
+                </p>
+              )}
             </>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>
-            Close
-          </Button>
+          <Button onClick={handleCloseModal}>Close</Button>
+          <Button onClick={handleVerifyHandyman}>Verify</Button>
+          <Button onClick={handleRejectHandyman}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showConfirmDelete} onHide={handleCloseDeleteModal} centered>
+      {/* Confirmation Modal for Deletion */}
+      <Modal
+        show={showConfirmDelete}
+        onHide={() => setShowConfirmDelete(false)}
+        centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Delete</Modal.Title>
+          <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Are you sure you want to delete the handyman {selectedHandyman?.fname}{" "}
+          Are you sure you want to delete {selectedHandyman?.fname}{" "}
           {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button  onClick={handleCloseDeleteModal}>
-            Cancel
-          </Button>
-          <Button  onClick={handleDelete}>
-            Delete
-          </Button>
+          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
+          <Button onClick={handleDeleteHandyman}>Delete</Button>
         </Modal.Footer>
       </Modal>
     </div>
