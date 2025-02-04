@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Alert} from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/verifieduser.css";
@@ -9,7 +9,8 @@ const VerifiedUser = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [verifiedUsers, setVerifiedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State for delete confirmation
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false); // State for delete confirmation
+  const [alert, setAlert] = useState(null);
 
   // Fetch verified users from the backend
   useEffect(() => {
@@ -35,7 +36,7 @@ const VerifiedUser = () => {
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedUser(null);
-    setShowDeleteConfirm(false); // Reset delete confirmation when modal closes
+    setShowConfirmDelete(false); // Reset delete confirmation when modal closes
   };
 
   const handleDeleteUser = async () => {
@@ -48,9 +49,14 @@ const VerifiedUser = () => {
           (prevUsers) =>
             prevUsers.filter((user) => user._id !== selectedUser._id) // Remove user from state
         );
-        handleCloseModal();
+        setAlert({message: "Handyman deleted successfully!"});
       } catch (error) {
         console.error("Error deleting user:", error);
+      }
+      finally {
+        setShowConfirmDelete(false);
+        setSelectedUser(null);
+        
       }
     }
   };
@@ -93,7 +99,7 @@ const VerifiedUser = () => {
             
             onClick={() => {
               setSelectedUser(row);
-              setShowDeleteConfirm(true);
+              setShowConfirmDelete(true);
             }}
           >
             Delete
@@ -121,6 +127,13 @@ const VerifiedUser = () => {
         striped
         responsive
       />
+
+      {/* Alert for success or error messages */}
+      {alert && (
+              <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+                {alert.message}
+              </Alert>
+            )}
 
       {/* Modal for user details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -151,7 +164,7 @@ const VerifiedUser = () => {
       </Modal>
 
       {/* Confirmation modal for deletion */}
-      <Modal show={showDeleteConfirm} onHide={handleCloseModal} centered>
+      <Modal show={showConfirmDelete} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>

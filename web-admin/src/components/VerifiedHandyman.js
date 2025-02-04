@@ -6,12 +6,11 @@ import "../css/verifiedhandyman.css";
 
 const VerifiedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [verifiedHandymen, setVerifiedHandymen] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   // Fetch verified handymen from the backend
   useEffect(() => {
@@ -39,11 +38,11 @@ const VerifiedHandyman = () => {
 
   const handleOpenDeleteModal = (handyman) => {
     setSelectedHandyman(handyman);
-    setShowDeleteModal(true);
+    setShowConfirmDelete(true);
   };
 
   const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
+    setShowConfirmDelete(false);
     setSelectedHandyman(null);
   };
 
@@ -58,12 +57,14 @@ const VerifiedHandyman = () => {
             (handyman) => handyman._id !== selectedHandyman._id
           )
         );
-        setAlertMessage("Handyman deleted successfully!");
-        setAlertVisible(true);
+        setAlert({message: "Handyman deleted successfully!"});
+        
       } catch (error) {
         console.error("Error deleting handyman:", error);
       } finally {
-        handleCloseDeleteModal();
+        setShowConfirmDelete(false);
+        setSelectedHandyman(null);
+        
       }
     }
   };
@@ -134,6 +135,13 @@ const VerifiedHandyman = () => {
         style={{ minHeight: "400px" }} // Consistent with other component layout
       />
 
+          {/* Alert for success or error messages */}
+             {alert && (
+              <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+                {alert.message}
+              </Alert>
+            )}
+
       {/* Modal for handyman details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
@@ -165,7 +173,7 @@ const VerifiedHandyman = () => {
       </Modal>
 
       {/* Modal for delete confirmation */}
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal} centered>
+      <Modal show={showConfirmDelete} onHide={handleCloseDeleteModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
@@ -186,15 +194,6 @@ const VerifiedHandyman = () => {
         </Modal.Footer>
       </Modal>
 
-      {/* Alert for successful deletion */}
-      <Alert
-       
-        show={alertVisible}
-        onClose={() => setAlertVisible(false)}
-        dismissible
-      >
-        {alertMessage}
-      </Alert>
     </div>
   );
 };

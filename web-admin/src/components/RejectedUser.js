@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/rejecteduser.css";
@@ -9,6 +9,7 @@ const RejectedUser = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false); // State for delete confirmation
   const [selectedUser, setSelectedUser] = useState(null);
   const [rejectedUsers, setRejectedUsers] = useState([]);
+  const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch rejected users from the backend
@@ -120,6 +121,13 @@ const RejectedUser = () => {
         striped
         responsive
       />
+
+       {/* Alert for success or error messages */}
+       {alert && (
+        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Modal for user details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
