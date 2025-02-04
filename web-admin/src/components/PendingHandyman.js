@@ -7,11 +7,10 @@ import "../css/pendinghandyman.css";
 
 const PendingHandyman = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [pendingHandymen, setPendingHandymen] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [handymanToDelete, setHandymanToDelete] = useState(null);
   const [alert, setAlert] = useState(null);
   
 
@@ -72,25 +71,23 @@ const PendingHandyman = () => {
     }
   };
 
-  const handleDeleteHandyman = (handymanId) => {
-    setHandymanToDelete(handymanId);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDeleteHandyman = () => {
-    if (handymanToDelete) {
-      axios
-        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanToDelete._id}`)
-        .then(() => {
-          setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete._id)
+  const handleDeleteHandyman = async () => {
+    if (selectedHandyman) {
+      try {
+        await axios.delete(
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedHandyman._id}`
+        );
+        setPendingUsers(
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
-          setShowDeleteModal(false);
-          setAlert("Handyman deleted successfully!");
-        })
-        .catch((error) => {
-          console.error("Error deleting handyman:", error);
-        });
+        setAlert({message: "Handyman deleted successfully." });
+      } catch (error) {
+        console.error("Error deleting Handyman:", error);
+        
+      } finally {
+        setShowConfirmDelete(false);
+        setSelectedHandyman(null);
+      }
     }
   };
 
@@ -233,8 +230,8 @@ const PendingHandyman = () => {
 
       {/* Confirmation modal for deletion */}
       <Modal
-        show={showDeleteModal}
-        onHide={() => setShowDeleteModal(false)}
+        show={showConfirmDelete}
+        onHide={() => setShowConfirmDelete(false)}
         centered
       >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
@@ -244,7 +241,7 @@ const PendingHandyman = () => {
           <p>Are you sure you want to delete this handyman?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button  onClick={() => setShowDeleteModal(false)}>
+          <Button  onClick={() => setShowConfirmDelete(false)}>
             Cancel
           </Button>
           <Button  onClick={confirmDeleteHandyman}>
