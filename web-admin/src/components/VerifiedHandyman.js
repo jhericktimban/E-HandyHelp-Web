@@ -145,6 +145,7 @@ const VerifiedHandyman = () => {
               <h5>
                 Name: {selectedHandyman.fname} {selectedHandyman.lname}
               </h5>
+              <p>Username: {selectedUser.username}</p>
               <p>
                 Description:{" "}
                 {selectedHandyman.accounts_status || "Verified Handyman"}
