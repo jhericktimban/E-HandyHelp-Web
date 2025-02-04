@@ -83,7 +83,7 @@ const PendingHandyman = () => {
         .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman)
+            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete)
           );
           setShowDeleteModal(false);
           setAlert("Handyman deleted successfully!");
