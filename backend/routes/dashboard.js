@@ -5,6 +5,10 @@ const Handyman = require('../models/Handyman');
 
 router.get('/totals', async (req, res) => {
     try {
+        // Get current timestamp
+        const fiveMinutesAgo = new Date();
+        fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
+
         // Count totals for verified accounts
         const handymanTotal = await Handyman.countDocuments({ accounts_status: 'verified' });
         const usersTotal = await User.countDocuments({ accounts_status: 'verified' });
@@ -17,9 +21,9 @@ router.get('/totals', async (req, res) => {
         const suspendedHandymenTotal = await Handyman.countDocuments({ accounts_status: 'suspended' });
         const suspendedUsersTotal = await User.countDocuments({ accounts_status: 'suspended' });
 
-        // Count totals for logged-in users and handymen
-        const loggedInHandymanTotal = await Handyman.countDocuments({ logged_in: 1 });
-        const loggedInUsersTotal = await User.countDocuments({ logged_in: 1 });
+        // Count real-time logged-in users (last activity within 5 minutes)
+        const loggedInHandymanTotal = await Handyman.countDocuments({ lastActive: { $gte: fiveMinutesAgo } });
+        const loggedInUsersTotal = await User.countDocuments({ lastActive: { $gte: fiveMinutesAgo } });
 
         // Send the response
         res.json({
@@ -37,5 +41,7 @@ router.get('/totals', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
 
 module.exports = router;

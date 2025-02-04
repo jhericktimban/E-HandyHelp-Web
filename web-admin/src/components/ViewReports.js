@@ -54,9 +54,9 @@ const ViewReports = () => {
     const isConfirmed = window.confirm(
       "Are you sure you want to suspend this resident?"
     );
-  
+
     if (!isConfirmed) return; // If not confirmed, exit the function
-  
+
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
@@ -78,14 +78,14 @@ const ViewReports = () => {
       console.error("Error suspending user:", error);
     }
   };
-  
+
   const handleSuspendHandyman = async (handymanId, reportId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to suspend this handyman?"
     );
-  
+
     if (!isConfirmed) return; // If not confirmed, exit the function
-  
+
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
@@ -105,7 +105,6 @@ const ViewReports = () => {
       console.error("Error suspending handyman:", error);
     }
   };
-  
 
   const handleSendWarning = async (report) => {
     const notificationContent =
@@ -133,22 +132,27 @@ const ViewReports = () => {
     {
       name: "Report Reason",
       selector: "reportReason",
-      cell: (row) => row.reportReason || "No Reason Provided",
+      cell: (row) => row?.reportReason || "No Reason Provided",
     },
     {
       name: "Reported By",
       selector: "reportedBy",
       cell: (row) =>
-        row.reported_by === "handyman"
-          ? `${row.handymanId.fname || "N/A"} ${row.handymanId.lname || ""}`
-          : `${row.userId.fname || "N/A"} ${row.userId.lname || ""}`,
+        row?.reported_by === "handyman"
+          ? `${row?.handymanId?.fname || "Unknown"} ${
+              row?.handymanId?.lname || ""
+            }`
+          : `${row?.userId?.fname || "Unknown"} ${row?.userId?.lname || ""}`,
     },
     {
       name: "Date Reported",
       selector: "dateReported",
       cell: (row) =>
-        new Date(row.additionalInfo.dateReported).toLocaleString() || "N/A",
+        row?.additionalInfo?.dateReported
+          ? new Date(row.additionalInfo.dateReported).toLocaleString()
+          : "N/A",
     },
+
     {
       name: "Actions",
       cell: (row) => (
@@ -163,9 +167,7 @@ const ViewReports = () => {
             <>
               <Button
                 className="custom-btn suspend mb-2"
-                onClick={() =>
-                  handleSuspendUser(row.userId._id, row._id)
-                }
+                onClick={() => handleSuspendUser(row.userId._id, row._id)}
               >
                 Suspend
               </Button>
@@ -180,7 +182,9 @@ const ViewReports = () => {
             <>
               <Button
                 className="custom-btn suspend mb-2"
-                onClick={() => handleSuspendHandyman(row.handymanId._id, row._id)}
+                onClick={() =>
+                  handleSuspendHandyman(row.handymanId._id, row._id)
+                }
               >
                 Suspend
               </Button>
@@ -196,8 +200,6 @@ const ViewReports = () => {
       ),
     },
   ];
-
-  
 
   return (
     <div className="container">
@@ -243,23 +245,21 @@ const ViewReports = () => {
 
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
-          <Modal.Header  style={{ backgroundColor: "#1960b2" }} closeButton>
-            <Modal.Title>
-              {"Incident Report Details" }
-              
-            </Modal.Title>
+          <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+            <Modal.Title>{"Incident Report Details"}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
               <strong>Reported By:</strong>{" "}
               {selectedReport?.reported_by === "handyman"
-                ? `${selectedReport?.handymanId?.fname || "N/A"} ${
+                ? `${selectedReport?.handymanId?.fname || "Unknown"} ${
                     selectedReport?.handymanId?.lname || ""
                   }`
-                : `${selectedReport?.userId?.fname || "N/A"} ${
+                : `${selectedReport?.userId?.fname || "Unknown"} ${
                     selectedReport?.userId?.lname || ""
                   }`}
             </p>
+
             <p>
               <strong>Details of Reported Person:</strong>
             </p>
@@ -267,10 +267,10 @@ const ViewReports = () => {
               <li>
                 <strong>Name:</strong>{" "}
                 {selectedReport?.reported_by === "handyman"
-                  ? `${selectedReport?.userId?.fname || "N/A"} ${
+                  ? `${selectedReport?.userId?.fname || "Unknown"} ${
                       selectedReport?.userId?.lname || ""
                     }`
-                  : `${selectedReport?.handymanId?.fname || "N/A"} ${
+                  : `${selectedReport?.handymanId?.fname || "Unknown"} ${
                       selectedReport?.handymanId?.lname || ""
                     }`}
               </li>
@@ -280,9 +280,11 @@ const ViewReports = () => {
               </li>
               <li>
                 <strong>Date Reported:</strong>{" "}
-                {new Date(
-                  selectedReport?.additionalInfo?.dateReported
-                ).toLocaleString() || "N/A"}
+                {selectedReport?.additionalInfo?.dateReported
+                  ? new Date(
+                      selectedReport?.additionalInfo?.dateReported
+                    ).toLocaleString()
+                  : "N/A"}
               </li>
             </ul>
           </Modal.Body>

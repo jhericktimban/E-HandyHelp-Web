@@ -8,8 +8,8 @@ const AdminDashboard = () => {
     const [pendingUsersTotal, setPendingUsersTotal] = useState(0);
     const [suspendedHandymenTotal, setSuspendedHandymenTotal] = useState(0);
     const [suspendedUsersTotal, setSuspendedUsersTotal] = useState(0);
-    const [loggedInHandymanTotal, setLoggedInHandymanTotal] = useState(0);
-    const [loggedInUsersTotal, setLoggedInUsersTotal] = useState(0);
+    const [activeHandymen, setActiveHandymen] = useState(0);
+    const [activeUsers, setActiveUsers] = useState(0);
 
     useEffect(() => {
         const fetchTotals = async () => {
@@ -25,14 +25,31 @@ const AdminDashboard = () => {
                 setPendingUsersTotal(data.pendingUsersTotal);
                 setSuspendedHandymenTotal(data.suspendedHandymenTotal);
                 setSuspendedUsersTotal(data.suspendedUsersTotal);
-                setLoggedInHandymanTotal(data.loggedInHandymanTotal);
-                setLoggedInUsersTotal(data.loggedInUsersTotal);
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             }
         };
 
+        const fetchActiveUsers = async () => {
+            try {
+                const response = await fetch('https://e-handyhelp-web-backend.onrender.com/api/dashboard/active-users');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setActiveHandymen(data.activeHandymen);
+                setActiveUsers(data.activeUsers);
+            } catch (error) {
+                console.error('Error fetching active users:', error);
+            }
+        };
+
         fetchTotals();
+        fetchActiveUsers();
+
+        const interval = setInterval(fetchActiveUsers, 30000); // Poll every 30 seconds
+
+        return () => clearInterval(interval); // Cleanup on unmount
     }, []);
 
     return (
@@ -64,13 +81,13 @@ const AdminDashboard = () => {
                         <h3>Suspended User Accounts</h3>
                         <p>{suspendedUsersTotal}</p>
                     </div>
-                    <div className="stat-box">
-                        <h3>Logged-In Handymen</h3>
-                        <p>{loggedInHandymanTotal}</p>
+                    <div className="stat-box active">
+                        <h3>Active Handymen</h3>
+                        <p>{activeHandymen}</p>
                     </div>
-                    <div className="stat-box">
-                        <h3>Logged-In Users</h3>
-                        <p>{loggedInUsersTotal}</p>
+                    <div className="stat-box active">
+                        <h3>Active Users</h3>
+                        <p>{activeUsers}</p>
                     </div>
                 </div>
             </div>

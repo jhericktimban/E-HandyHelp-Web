@@ -14,6 +14,12 @@ import reportRoute from "./routes/reports.js";
 import feedbackRoute from "./routes/feedbacks.js";
 import notificationRoute from "./routes/notifications.js";
 
+const updateLastActive = require('./models/updateLastActive');
+const authMiddleware = require('./models/authMiddleware'); // Ensure authentication first
+
+// Apply the middleware to all authenticated routes
+app.use(authMiddleware, updateLastActive);
+
 const app = express();
 
 // Middleware
