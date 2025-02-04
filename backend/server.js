@@ -5,7 +5,7 @@ import helmet from "helmet";
 require("dotenv").config(); // Load environment variables
 
 // Import the routes
-import usersRoute from "./routes/users";
+import usersRoute from "./routes/users.js";
 import handymenRoute from "./routes/handymen";
 import dashboardRoute from "./routes/dashboard";
 import reportRoute from "./routes/reports";
