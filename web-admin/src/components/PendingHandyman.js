@@ -72,7 +72,10 @@ const PendingHandyman = () => {
     }
   };
 
-
+  const handleDeleteHandyman = (handymanId) => {
+    setHandymanToDelete(handymanId);
+    setShowDeleteModal(true);
+  };
 
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
