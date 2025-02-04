@@ -2,20 +2,16 @@ import express, { json } from "express";
 import { connect } from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from 'dotenv';
-
-
+require("dotenv").config(); // Load environment variables
 
 // Import the routes
-import usersRoute from "./routes/users.js";
-import handymenRoute from "./routes/handymen.js";
-import dashboardRoute from "./routes/dashboard.js";
-import reportRoute from "./routes/reports.js";
-import feedbackRoute from "./routes/feedbacks.js";
-import notificationRoute from "./routes/notifications.js";
+import usersRoute from "./routes/users";
+import handymenRoute from "./routes/handymen";
+import dashboardRoute from "./routes/dashboard";
+import reportRoute from "./routes/reports";
+import feedbackRoute from "./routes/feedbacks";
+import notificationRoute from "./routes/notifications";
 
-
-dotenv.config();
 const app = express();
 
 // Middleware
