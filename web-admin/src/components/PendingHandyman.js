@@ -80,10 +80,10 @@ const PendingHandyman = () => {
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
       axios
-        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
+        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanToDelete._id}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
+            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete._id)
           );
           setShowDeleteModal(false);
           setAlert("Handyman deleted successfully!");
