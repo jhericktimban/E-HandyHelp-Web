@@ -72,10 +72,7 @@ const PendingHandyman = () => {
     }
   };
 
-  const handleDeleteHandyman = (handymanId) => {
-    setHandymanToDelete(handymanId);
-    setShowDeleteModal(true);
-  };
+
 
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
@@ -83,7 +80,7 @@ const PendingHandyman = () => {
         .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== handymanToDelete)
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
           setShowDeleteModal(false);
           setAlert("Handyman deleted successfully!");
