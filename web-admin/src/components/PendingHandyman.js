@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
+import { FaUserClock, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import "../css/pendinghandyman.css";
-
 
 const PendingHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
-  const [pendingHandymen, setPendingHandymen] = useState([]);
+  const [pendingHandyman, setPendingHandyman] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
-  
 
-  // Fetch pending handymen from the backend
+  // Fetch pending users from the backend
   useEffect(() => {
-    axios
-      .get("https://e-handyhelp-web-backend.onrender.com/api/handymen/pending")
-      .then((response) => {
-        setPendingHandymen(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching handymen:", error);
-      });
+    const fetchPendingHandyman = async () => {
+      try {
+        const response = await axios.get(
+          "https://e-handyhelp-web-backend.onrender.com/api/handymen/pending"
+        );
+        setPendingHandyman(response.data);
+      } catch (error) {
+        console.error("Error fetching Handymen:", error);
+      }
+    };
+
+    fetchPendingHandyman();
   }, []);
 
   const handleOpenModal = (handyman) => {
@@ -41,33 +44,34 @@ const PendingHandyman = () => {
       axios
         .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
-          setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
+          setPendingHandyman(
+            pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
           setAlert({message: "Handyman verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
-          console.error("Error verifying handyman:", error);
+          console.error("Error verifying Handyman:", error);
         });
     }
   };
   
 
-  const handleRejectHandyman = () => {
+  const handleRejectHandyman = async () => {
     if (selectedHandyman) {
-      axios
-        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`)
-        .then(() => {
-          setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
-          );
-          setAlert({message: "Handyman rejected successfully." });
-          handleCloseModal();
-        })
-        .catch((error) => {
-          console.error("Error rejecting handyman:", error);
-        });
+      try {
+        await axios.put(
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
+        );
+        setPendingHandyman(
+          pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+        );
+        setAlert({message: "Handyman rejected successfully." });
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error rejecting Handyman:", error);
+        setAlert({message: "Failed to reject Handyman." });
+      }
     }
   };
 
@@ -75,10 +79,10 @@ const PendingHandyman = () => {
     if (selectedHandyman) {
       try {
         await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedHandyman._id}`
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
         );
-        setPendingHandymen(
-            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
+        setPendingHandyman(
+            pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
         setAlert({message: "Handyman deleted successfully." });
       } catch (error) {
@@ -90,16 +94,6 @@ const PendingHandyman = () => {
       }
     }
   };
-
-  // Filtering handymen based on the search term
-  const filteredHandymen = pendingHandymen.filter((handyman) => {
-    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
-    return (
-      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (handyman?.username &&
-        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  });
 
   const columns = [
     {
@@ -113,24 +107,20 @@ const PendingHandyman = () => {
       sortable: true,
     },
     {
-      name: "Status",
-      selector: (row) => row.accounts_status || "Pending Handyman",
+      name: "Account Status",
+      selector: (row) => row.account_status || "Pending",
       sortable: true,
     },
     {
-      name: "Action",
+      name: "Actions",
       cell: (row) => (
         <div className="button-group">
+          <Button onClick={() => handleOpenModal(row)}>Details</Button>
           <Button
-            
-            onClick={() => handleOpenModal(row)}
-            className="mb-2"
-          >
-            Detail
-          </Button>
-          <Button
-            
-            onClick={() => handleDeleteHandyman(row._id)}
+            onClick={() => {
+              setSelectedHandyman(row);
+              setShowConfirmDelete(true);
+            }}
           >
             Delete
           </Button>
@@ -139,9 +129,18 @@ const PendingHandyman = () => {
     },
   ];
 
+  const filteredHandyman = pendingHandyman.filter((handyman) => {
+    const fullName = `${handyman?.fname || ""} ${handyman?.lname || ""}`;
+    return (
+      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (handyman?.username &&
+        handyman.username.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
+
   return (
     <div className="content-container pending-handyman">
-      <h2>Pending Handymen</h2>
+      <h2>Pending Handyman</h2>
       <Form.Control
         type="text"
         placeholder="Search by name or username..."
@@ -151,21 +150,22 @@ const PendingHandyman = () => {
       />
       <DataTable
         columns={columns}
-        data={filteredHandymen}
+        data={filteredHandyman}
         pagination
         highlightOnHover
+        striped
         responsive
-        customStyles={{
-          table: {
-            style: {
-              width: "100%",
-            },
-          },
-        }}
       />
 
-      {/* Modal for handyman details */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+      {/* Alert for success or error messages */}
+      {alert && (
+        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+          {alert.message}
+        </Alert>
+      )}
+
+      {/* Modal for Handyman details */}
+      <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Handyman Details</Modal.Title>
         </Modal.Header>
@@ -216,37 +216,27 @@ const PendingHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button  onClick={handleCloseModal}>
-            Close
-          </Button>
-          <Button onClick={handleVerifyHandyman}>
-            Verify
-          </Button>
-          <Button  onClick={handleRejectHandyman}>
-            Reject
-          </Button>
+          <Button onClick={handleCloseModal}>Close</Button>
+          <Button onClick={handleVerifyHandyman}>Verify</Button>
+          <Button onClick={handleRejectHandyman}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation modal for deletion */}
+      {/* Confirmation Modal for Deletion */}
       <Modal
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
-        centered
       >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header >
+        </Modal.Header>
         <Modal.Body>
-          <p>Are you sure you want to delete this handyman?</p>
+          Are you sure you want to delete {selectedHandyman?.fname}{" "}
+          {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button  onClick={() => setShowConfirmDelete(false)}>
-            Cancel
-          </Button>
-          <Button  onClick={setShowConfirmDelete}>
-            Delete
-          </Button>
+          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
+          <Button onClick={handleDeleteHandyman}>Delete</Button>
         </Modal.Footer>
       </Modal>
     </div>
