@@ -72,25 +72,25 @@ const PendingHandyman = () => {
     }
   };
 
+  const handleDeleteHandyman = (handymanId) => {
+    setHandymanToDelete(handymanId);
+    setShowDeleteModal(true);
+  };
 
-
-  const handleDeleteHandyman = async () => {
-    if (selectedHandyman) {
-      try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
-        );
-        setPendingHandymen(
+  const confirmDeleteHandyman = () => {
+    if (handymanToDelete) {
+      axios
+        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
+        .then(() => {
+          setPendingHandymen(
             pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
-        setAlert({message: "Handyman deleted successfully." });
-      } catch (error) {
-        console.error("Error deleting handyman:", error);
-        
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedHandyman(null);
-      }
+          setShowDeleteModal(false);
+          setAlert("Handyman deleted successfully!");
+        })
+        .catch((error) => {
+          console.error("Error deleting handyman:", error);
+        });
     }
   };
 
@@ -121,21 +121,25 @@ const PendingHandyman = () => {
       sortable: true,
     },
     {
-          name: "Actions",
-          cell: (row) => (
-            <div className="button-group">
-              <Button onClick={() => handleOpenModal(row)}>Details</Button>
-              <Button
-                onClick={() => {
-                  setSelectedHandyman(row);
-                  setShowConfirmDelete(true);
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          ),
-        },
+      name: "Action",
+      cell: (row) => (
+        <div className="button-group">
+          <Button
+            
+            onClick={() => handleOpenModal(row)}
+            className="mb-2"
+          >
+            Detail
+          </Button>
+          <Button
+            
+            onClick={() => handleDeleteHandyman(row._id)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
   ];
 
   return (
