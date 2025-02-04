@@ -6,7 +6,7 @@ import "../css/rejectedhandyman.css";
 
 const RejectedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); // State for delete confirmation modal
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const [selectedHandyman, setSelectedHandyman] = useState(null);
   const [rejectedHandymen, setRejectedHandymen] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -41,11 +41,11 @@ const RejectedHandyman = () => {
 
   const handleOpenDeleteModal = (handyman) => {
     setSelectedHandyman(handyman);
-    setShowDeleteModal(true);
+    setShowConfirmDelete(true);
   };
 
   const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
+    setShowConfirmDelete(false);
     setSelectedHandyman(null);
   };
 
@@ -165,7 +165,7 @@ const RejectedHandyman = () => {
       </Modal>
 
       {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+      <Modal show={showConfirmDelete} onHide={handleCloseDeleteModal}>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
         </Modal.Header>
