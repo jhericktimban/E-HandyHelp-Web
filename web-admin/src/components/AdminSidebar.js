@@ -107,7 +107,7 @@ const AdminSidebar = ({ onLogout }) => {
           </Link>
         </li>
         <li>
-          <Link to="/dashboard" onClick={onLogout} style={{ cursor: "pointer" }}>
+          <Link to="/" onClick={onLogout} style={{ cursor: "pointer" }}>
             <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
           </Link>
         </li>
