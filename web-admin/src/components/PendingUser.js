@@ -42,12 +42,14 @@ const PendingUser = () => {
   const handleVerifyUser = () => {
     if (selectedUser) {
       axios
-        .put(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`)
+        .put(
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`
+        )
         .then(() => {
           setPendingUsers(
             pendingUsers.filter((user) => user._id !== selectedUser._id)
           );
-          setAlert({message: "User verified successfully." });
+          setAlert({ message: "User verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -55,7 +57,6 @@ const PendingUser = () => {
         });
     }
   };
-  
 
   const handleRejectUser = async () => {
     if (selectedUser) {
@@ -82,12 +83,11 @@ const PendingUser = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
         );
         setPendingUsers(
-            pendingUsers.filter((user) => user._id !== selectedUser._id)
-          );
-        setAlert({message: "User deleted successfully." });
+          pendingUsers.filter((user) => user._id !== selectedUser._id)
+        );
+        setAlert({ message: "User deleted successfully." });
       } catch (error) {
         console.error("Error deleting user:", error);
-        
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
@@ -192,11 +192,7 @@ const PendingUser = () => {
                     {selectedUser.images.map((image, index) => (
                       <img
                         key={index}
-                        src={
-                          image.startsWith("data:image")
-                            ? image
-                            : `data:image/png;base64,${image}`
-                        }
+                        src={`https://e-handyhelp-web-backend.onrender.com${image}`} // Load image from backend
                         alt={`Valid ID ${index + 1}`}
                         style={{
                           maxWidth: "100%",

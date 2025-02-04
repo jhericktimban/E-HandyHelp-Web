@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/pendinghandyman.css";
 
+
 const PendingHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -12,6 +13,7 @@ const PendingHandyman = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [handymanToDelete, setHandymanToDelete] = useState(null);
   const [alert, setAlert] = useState(null);
+  
 
   // Fetch pending handymen from the backend
   useEffect(() => {
@@ -38,16 +40,12 @@ const PendingHandyman = () => {
   const handleVerifyHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`
-        )
+        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter(
-              (handyman) => handyman._id !== selectedHandyman._id
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
-          setAlert({ message: "Handyman verified successfully." });
+          setAlert({message: "Handyman verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -55,20 +53,17 @@ const PendingHandyman = () => {
         });
     }
   };
+  
 
   const handleRejectHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
-        )
+        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter(
-              (handyman) => handyman._id !== selectedHandyman._id
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
-          setAlert({ message: "Handyman rejected successfully." });
+          setAlert({message: "Handyman rejected successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -85,14 +80,10 @@ const PendingHandyman = () => {
   const confirmDeleteHandyman = () => {
     if (handymanToDelete) {
       axios
-        .delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
-        )
+        .delete(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`)
         .then(() => {
           setPendingHandymen(
-            pendingHandymen.filter(
-              (handyman) => handyman._id !== selectedHandyman
-            )
+            pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman)
           );
           setShowDeleteModal(false);
           setAlert("Handyman deleted successfully!");
@@ -133,10 +124,19 @@ const PendingHandyman = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
-          <Button onClick={() => handleOpenModal(row)} className="mb-2">
+          <Button
+            
+            onClick={() => handleOpenModal(row)}
+            className="mb-2"
+          >
             Detail
           </Button>
-          <Button onClick={() => handleDeleteHandyman(row._id)}>Delete</Button>
+          <Button
+            
+            onClick={() => handleDeleteHandyman(row._id)}
+          >
+            Delete
+          </Button>
         </div>
       ),
     },
@@ -195,7 +195,11 @@ const PendingHandyman = () => {
                     {selectedHandyman.images.map((image, index) => (
                       <img
                         key={index}
-                        src={`https://e-handyhelp-web-backend.onrender.com${image}`} // Load image from backend
+                        src={
+                          image.startsWith("data:image")
+                            ? image
+                            : `data:image/png;base64,${image}`
+                        }
                         alt={`Valid ID ${index + 1}`}
                         style={{
                           maxWidth: "100%",
@@ -215,9 +219,15 @@ const PendingHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
-          <Button onClick={handleVerifyHandyman}>Verify</Button>
-          <Button onClick={handleRejectHandyman}>Reject</Button>
+          <Button  onClick={handleCloseModal}>
+            Close
+          </Button>
+          <Button onClick={handleVerifyHandyman}>
+            Verify
+          </Button>
+          <Button  onClick={handleRejectHandyman}>
+            Reject
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -229,13 +239,17 @@ const PendingHandyman = () => {
       >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
+        </Modal.Header >
         <Modal.Body>
           <p>Are you sure you want to delete this handyman?</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setShowDeleteModal(false)}>Cancel</Button>
-          <Button onClick={confirmDeleteHandyman}>Delete</Button>
+          <Button  onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button  onClick={confirmDeleteHandyman}>
+            Delete
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
