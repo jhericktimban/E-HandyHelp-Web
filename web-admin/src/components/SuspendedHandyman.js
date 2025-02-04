@@ -52,6 +52,9 @@ const SuspendedHandyman = () => {
       await axios.delete(
         `https://e-handyhelp-web-backend.onrender.com/handymen/${selectedHandyman._id}`
       );
+      setSuspendedHandymen(
+        suspendedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
+      );
       setAlert({message: "Handyman deleted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after deletion
     } catch (error) {

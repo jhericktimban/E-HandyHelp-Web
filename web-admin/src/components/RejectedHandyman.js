@@ -56,12 +56,16 @@ const RejectedHandyman = () => {
         `https://e-handyhelp-web-backend.onrender.com/api/handymen/rejected/${selectedHandyman._id}`
       ); // Make sure the API endpoint is correct
       setRejectedHandymen(
-        rejectedHandymen.filter((h) => h._id !== selectedHandyman._id)
-      ); // Update state after deletion
+        rejectedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
+      );
       setAlert({message: "Handyman deleted successfully." });
       handleCloseDeleteModal();
     } catch (error) {
       console.error("Error deleting handyman:", error);
+    }
+    finally {
+      setShowConfirmDelete(false);
+      setSelectedHandyman(null);
     }
   };
 
