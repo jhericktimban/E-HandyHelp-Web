@@ -77,7 +77,7 @@ const PendingHandyman = () => {
         await axios.delete(
           `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedHandyman._id}`
         );
-        setPendingUsers(
+        setPendingHandymen(
             pendingHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
           );
         setAlert({message: "Handyman deleted successfully." });
@@ -244,7 +244,7 @@ const PendingHandyman = () => {
           <Button  onClick={() => setShowConfirmDelete(false)}>
             Cancel
           </Button>
-          <Button  onClick={confirmDeleteHandyman}>
+          <Button  onClick={setShowConfirmDelete}>
             Delete
           </Button>
         </Modal.Footer>
