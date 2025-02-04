@@ -202,8 +202,6 @@ const RejectedHandyman = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleCloseModal}>Close</Button>
-          <Button onClick={handleVerifyHandyman}>Verify</Button>
-          <Button onClick={handleRejectHandyman}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
