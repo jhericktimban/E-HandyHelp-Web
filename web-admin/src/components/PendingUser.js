@@ -192,7 +192,7 @@ const PendingUser = () => {
                     {selectedUser.images.map((image, index) => (
                       <img
                         key={index}
-                        src={`https://e-handyhelp-web-backend.onrender.com${image}`} // Load image from backend
+                        src={`https://e-handyhelp-web-backend.onrender.com${image}`}
                         alt={`Valid ID ${index + 1}`}
                         style={{
                           maxWidth: "100%",
