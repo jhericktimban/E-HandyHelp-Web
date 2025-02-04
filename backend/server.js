@@ -2,7 +2,9 @@ import express, { json } from "express";
 import { connect } from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
-require("dotenv").config(); // Load environment variables
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 // Import the routes
 import usersRoute from "./routes/users.js";
