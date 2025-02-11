@@ -190,20 +190,24 @@ const PendingUser = () => {
                   <strong>Valid ID:</strong>
                   <div className="valid-id-images">
                     {selectedUser.images.map((image, index) => (
+                      <a
+                      key={index}
+                      href={image.startsWith("data:image") ? image : `data:image/png;base64,${image}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <img
-                        key={index}
-                        src={
-                          image.startsWith("data:image")
-                            ? image
-                            : `data:image/png;base64,${image}`
-                        }
+                        src={image.startsWith("data:image") ? image : `data:image/png;base64,${image}`}
                         alt={`Valid ID ${index + 1}`}
                         style={{
                           maxWidth: "100%",
                           height: "auto",
                           margin: "5px",
+                          cursor: "pointer",
                         }}
                       />
+                    </a>
+                    
                     ))}
                   </div>
                 </>
