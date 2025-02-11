@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
-import { FaUserClock, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import "../css/pendinguser.css";
 
@@ -12,8 +11,8 @@ const PendingUser = () => {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
+  const [enlargedImage, setEnlargedImage] = useState(null);
 
-  // Fetch pending users from the backend
   useEffect(() => {
     const fetchPendingUsers = async () => {
       try {
@@ -25,7 +24,6 @@ const PendingUser = () => {
         console.error("Error fetching users:", error);
       }
     };
-
     fetchPendingUsers();
   }, []);
 
@@ -39,60 +37,12 @@ const PendingUser = () => {
     setSelectedUser(null);
   };
 
-  const handleVerifyUser = () => {
-    if (selectedUser) {
-      axios
-        .put(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`)
-        .then(() => {
-          setPendingUsers(
-            pendingUsers.filter((user) => user._id !== selectedUser._id)
-          );
-          setAlert({message: "User verified successfully." });
-          handleCloseModal();
-        })
-        .catch((error) => {
-          console.error("Error verifying user:", error);
-        });
-    }
-  };
-  
-
-  const handleRejectUser = async () => {
-    if (selectedUser) {
-      try {
-        await axios.put(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/reject`
-        );
-        setPendingUsers(
-          pendingUsers.filter((user) => user._id !== selectedUser._id)
-        );
-        setAlert({message: "User rejected successfully." });
-        handleCloseModal();
-      } catch (error) {
-        console.error("Error rejecting user:", error);
-        setAlert({message: "Failed to reject user." });
-      }
-    }
+  const handleImageClick = (image) => {
+    setEnlargedImage(image);
   };
 
-  const handleDeleteUser = async () => {
-    if (selectedUser) {
-      try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
-        );
-        setPendingUsers(
-            pendingUsers.filter((user) => user._id !== selectedUser._id)
-          );
-        setAlert({message: "User deleted successfully." });
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedUser(null);
-      }
-    }
+  const handleCloseImageModal = () => {
+    setEnlargedImage(null);
   };
 
   const columns = [
@@ -129,15 +79,6 @@ const PendingUser = () => {
     },
   ];
 
-  const filteredUsers = pendingUsers.filter((user) => {
-    const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
-    return (
-      fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user?.username &&
-        user.username.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  });
-
   return (
     <div className="content-container pending-user">
       <h2>Pending Users</h2>
@@ -148,25 +89,17 @@ const PendingUser = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
-      <DataTable
-        columns={columns}
-        data={filteredUsers}
-        pagination
-        highlightOnHover
-        striped
-        responsive
-      />
+      <DataTable columns={columns} data={pendingUsers} pagination />
 
-      {/* Alert for success or error messages */}
       {alert && (
-        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+        <Alert variant="success" onClose={() => setAlert(null)} dismissible>
           {alert.message}
         </Alert>
       )}
 
       {/* Modal for user details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+        <Modal.Header closeButton>
           <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -175,42 +108,30 @@ const PendingUser = () => {
               <h5>
                 Name: {selectedUser.fname} {selectedUser.lname}
               </h5>
-              <p>
-                Description:{" "}
-                {selectedUser.accounts_status || "Pending Approval"}
-              </p>
               <p>Email: {selectedUser.email}</p>
               <p>
-                Date of Birth:{" "}
+                Date of Birth: {" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
               </p>
-
               {selectedUser.images && selectedUser.images.length > 0 ? (
-                <>
-                  <strong>Valid ID:</strong>
-                  <div className="valid-id-images">
-                    {selectedUser.images.map((image, index) => (
-                      <a
+                <div
+                  className="valid-id-images"
+                  style={{ display: "flex", gap: "5px", flexWrap: "wrap" }}
+                >
+                  {selectedUser.images.map((image, index) => (
+                    <img
                       key={index}
-                      href={image.startsWith("data:image") ? image : `data:image/png;base64,${image}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <img
-                        src={image.startsWith("data:image") ? image : `data:image/png;base64,${image}`}
-                        alt={`Valid ID ${index + 1}`}
-                        style={{
-                          maxWidth: "100%",
-                          height: "auto",
-                          margin: "5px",
-                          cursor: "pointer",
-                        }}
-                      />
-                    </a>
-                    
-                    ))}
-                  </div>
-                </>
+                      src={
+                        image.startsWith("data:image")
+                          ? image
+                          : `data:image/png;base64,${image}`
+                      }
+                      alt={`Valid ID ${index + 1}`}
+                      style={{ width: "80px", cursor: "pointer" }}
+                      onClick={() => handleImageClick(image)}
+                    />
+                  ))}
+                </div>
               ) : (
                 <p>
                   <strong>Valid ID:</strong> <em>No ID provided</em>
@@ -221,26 +142,20 @@ const PendingUser = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={handleCloseModal}>Close</Button>
-          <Button onClick={handleVerifyUser}>Verify</Button>
-          <Button onClick={handleRejectUser}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered>
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedUser?.fname}{" "}
-          {selectedUser?.lname}?
+      {/* Image Modal */}
+      <Modal show={!!enlargedImage} onHide={handleCloseImageModal} centered>
+        <Modal.Body className="text-center">
+          <img
+            src={enlargedImage}
+            alt="Enlarged ID"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button onClick={handleDeleteUser}>Delete</Button>
+          <Button onClick={handleCloseImageModal}>Close</Button>
         </Modal.Footer>
       </Modal>
     </div>
