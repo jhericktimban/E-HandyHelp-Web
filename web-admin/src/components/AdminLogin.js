@@ -8,20 +8,24 @@ const AdminLogin = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Show loading
+
     const Username = "admin";
     const Password = "123pass";
 
-    // Check if entered credentials match the hardcoded values
-    if (username === Username && password === Password) {
-      // Redirect to admin dashboard
-      onLogin(true);
-    } else {
-      alert("Invalid username or password.");
-    }
+    setTimeout(() => { // Simulating async login process
+      if (username === Username && password === Password) {
+        onLogin(true);
+      } else {
+        alert("Invalid username or password.");
+      }
+      setLoading(false); // Hide loading after process
+    }, 2000); // Simulate 2 seconds delay
   };
 
   const togglePasswordVisibility = () => {
@@ -42,6 +46,7 @@ const AdminLogin = ({ onLogin }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
+              disabled={loading} // Disable input when loading
             />
             <FaUserAlt className="icon" />
           </div>
@@ -52,6 +57,7 @@ const AdminLogin = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={loading} // Disable input when loading
             />
             <FaLock className="icon" />
             <span onClick={togglePasswordVisibility} className="toggle-password">
@@ -61,11 +67,13 @@ const AdminLogin = ({ onLogin }) => {
           <div className="remember-forgot">
             <a href="#">Forgot password?</a>
           </div>
-          <button type="submit">Login</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default AdminLogin;
