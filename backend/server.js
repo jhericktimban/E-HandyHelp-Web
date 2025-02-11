@@ -2,9 +2,8 @@ import express, { json } from "express";
 import { connect } from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
-
 
 // Import the routes
 import usersRoute from "./routes/users.js";
@@ -14,8 +13,8 @@ import reportRoute from "./routes/reports.js";
 import feedbackRoute from "./routes/feedbacks.js";
 import notificationRoute from "./routes/notifications.js";
 
-const updateLastActive = require('./models/updateLastActive');
-const authMiddleware = require('./models/authMiddleware'); // Ensure authentication first
+import updateLastActive from ("./models/updateLastActive").default;
+import authMiddleware from ("./models/authMiddleware"); // Ensure authentication first
 
 // Apply the middleware to all authenticated routes
 app.use(authMiddleware, updateLastActive);
@@ -46,9 +45,9 @@ app.use((req, res, next) => {
 
 // MongoDB connection
 connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.error("MongoDB connection error:", err));
 

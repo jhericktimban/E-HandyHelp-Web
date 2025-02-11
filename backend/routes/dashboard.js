@@ -7,7 +7,7 @@ router.get('/totals', async (req, res) => {
     try {
         // Get current timestamp
         const fiveMinutesAgo = new Date();
-        fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
+        fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 1);
 
         // Count totals for verified accounts
         const handymanTotal = await Handyman.countDocuments({ accounts_status: 'verified' });
