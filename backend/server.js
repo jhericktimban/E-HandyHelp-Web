@@ -13,8 +13,8 @@ import reportRoute from "./routes/reports.js";
 import feedbackRoute from "./routes/feedbacks.js";
 import notificationRoute from "./routes/notifications.js";
 
-import updateLastActive from ("./models/updateLastActive").default;
-import authMiddleware from ("./models/authMiddleware"); // Ensure authentication first
+import updateLastActive from "./models/updateLastActive";
+import authMiddleware from "./models/authMiddleware"; // Ensure authentication first
 
 // Apply the middleware to all authenticated routes
 app.use(authMiddleware, updateLastActive);
