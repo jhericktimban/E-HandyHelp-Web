@@ -13,7 +13,6 @@ const ViewFeedbacks = () => {
   const [selectedFeedback, setSelectedFeedback] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [sentimentResult, setSentimentResult] = useState(null);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,8 +26,7 @@ const ViewFeedbacks = () => {
       setFeedbacks(response.data);
     } catch (error) {
       console.error("Error fetching feedback:", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -79,8 +77,7 @@ const ViewFeedbacks = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <Button 
-         onClick={() => handleShowModal(row)}>
+        <Button className="view-details-btn" onClick={() => handleShowModal(row)}>
           View Details
         </Button>
       ),
@@ -88,34 +85,37 @@ const ViewFeedbacks = () => {
   ];
 
   return (
-    <div className="container">
-      <h2 className="view-feedbacks-title">Feedbacks</h2>
-      <DataTable
-        columns={columns}
-        data={feedbacks}
-        pagination
-        highlightOnHover
-        customStyles={{
-          table: {
-            style: {
-              width: "100%",
+    <div className="feedbacks-container">
+      <h2 className="feedbacks-title">Feedbacks</h2>
+      <div className="feedbacks-table-container">
+        <DataTable
+          columns={columns}
+          data={feedbacks}
+          pagination
+          highlightOnHover
+          customStyles={{
+            table: {
+              style: {
+                width: "100%",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", // Table shadow added
+                borderRadius: "10px",
+              },
             },
-          },
-        }}
-        progressPending={loading} 
-
-      />
+          }}
+          progressPending={loading}
+        />
+      </div>
 
       {selectedFeedback && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
-          <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+          <Modal.Header className="modal-header" closeButton>
             <Modal.Title>
               {selectedFeedback.sent_by === "user"
                 ? "Feedback for Handyman"
                 : "Feedback for User"}
             </Modal.Title>
           </Modal.Header>
-          <Modal.Body>
+          <Modal.Body className="modal-body">
             <p>
               <strong>Feedback Text:</strong> {selectedFeedback.feedbackText}
             </p>
@@ -140,15 +140,15 @@ const ViewFeedbacks = () => {
             </p>
 
             {sentimentResult && (
-              <div>
+              <div className="sentiment-result">
                 <p>
                   <strong>Sentiment Score:</strong> {sentimentResult.score}
                 </p>
                 <p>
                   <strong>Sentiment:</strong>{" "}
-                  {sentimentResult.score  > 0
+                  {sentimentResult.score > 0
                     ? "Positive"
-                    : sentimentResult.score  < 0
+                    : sentimentResult.score < 0
                     ? "Negative"
                     : "Neutral"}
                 </p>
@@ -156,7 +156,7 @@ const ViewFeedbacks = () => {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleCloseModal}>
+            <Button className="close-modal-btn" onClick={handleCloseModal}>
               Close
             </Button>
           </Modal.Footer>
