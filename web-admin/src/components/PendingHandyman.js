@@ -257,12 +257,8 @@ const PendingHandyman = () => {
                       onClick={() => setShowImageModal(false)}
                     >
                       <div className="modal-content">
-                        <span
-                          className="close-btn"
-                          onClick={() => setShowImageModal(false)}
-                        >
-                          &times;
-                        </span>
+                        
+                     
                         <img
                           src={
                             selectedHandyman.images[imageIndex].startsWith(
