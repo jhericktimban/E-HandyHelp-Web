@@ -192,8 +192,7 @@ const PendingHandyman = () => {
               <h5>
                 Name: {selectedHandyman.fname} {selectedHandyman.lname}
               </h5>
-              <p>
-                Address:{selectedHandyman.address}</p>
+              <p>Address: {selectedHandyman.address}</p>
               <p>Email: {selectedHandyman.email}</p>
               <p>Username: {selectedHandyman.username}</p>
               <p>Contact: {selectedHandyman.contact}</p>
@@ -211,9 +210,9 @@ const PendingHandyman = () => {
               {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
                 <>
                   <strong>Valid ID:</strong>
-                  <div className="image-carousel">
+                  <div className="image-carousel-handyman">
                     <button
-                      className="carousel-btn left"
+                      className="carousel-btn-handyman left"
                       onClick={() =>
                         setImageIndex((prev) =>
                           prev > 0
@@ -233,11 +232,11 @@ const PendingHandyman = () => {
                           : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
                       }
                       alt={`Valid ID ${imageIndex + 1}`}
-                      className="carousel-image fixed-size"
+                      className="carousel-image-handyman fixed-size"
                       onClick={() => setShowImageModal(true)}
                     />
                     <button
-                      className="carousel-btn right"
+                      className="carousel-btn-handyman right"
                       onClick={() =>
                         setImageIndex((prev) =>
                           prev < selectedHandyman.images.length - 1
@@ -253,10 +252,10 @@ const PendingHandyman = () => {
                   {/* Image Modal for Full-Size View */}
                   {showImageModal && (
                     <div
-                      className="image-modal"
+                      className="image-modal-handyman"
                       onClick={() => setShowImageModal(false)}
                     >
-                      <div className="modal-content">
+                      <div className="modal-content-handyman">
                         
                      
                         <img
@@ -268,7 +267,7 @@ const PendingHandyman = () => {
                               : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
                           }
                           alt={`Valid ID ${imageIndex + 1}`}
-                          className="full-size-image"
+                          className="full-size-image-handyman"
                         />
                       </div>
                     </div>

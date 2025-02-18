@@ -186,7 +186,7 @@ const PendingUser = () => {
               <h5>
                 Name: {selectedUser.fname} {selectedUser.lname}
               </h5>
-              <p>Address:{selectedUser.address}</p>
+              <p>Address: {selectedUser.address}</p>
               <p>Email: {selectedUser.email}</p>
               <p>Username: {selectedUser.username}</p>
               <p>Contact: {selectedUser.contact}</p>
@@ -198,9 +198,9 @@ const PendingUser = () => {
               {selectedUser.images && selectedUser.images.length > 0 ? (
                 <>
                   <strong>Valid ID:</strong>
-                  <div className="image-carousel">
+                  <div className="image-carousel-user">
                     <button
-                      className="carousel-btn left"
+                      className="carousel-btn-user left"
                       onClick={() =>
                         setImageIndex((prev) =>
                           prev > 0
@@ -220,11 +220,11 @@ const PendingUser = () => {
                           : `data:image/png;base64,${selectedUser.images[imageIndex]}`
                       }
                       alt={`Valid ID ${imageIndex + 1}`}
-                      className="carousel-image fixed-size"
+                      className="carousel-image-user fixed-size"
                       onClick={() => setShowImageModal(true)}
                     />
                     <button
-                      className="carousel-btn right"
+                      className="carousel-btn-user right"
                       onClick={() =>
                         setImageIndex((prev) =>
                           prev < selectedUser.images.length - 1
@@ -240,10 +240,10 @@ const PendingUser = () => {
                   {/* Image Modal for Full-Size View */}
                   {showImageModal && (
                     <div
-                      className="image-modal"
+                      className="image-modal-user"
                       onClick={() => setShowImageModal(false)}
                     >
-                      <div className="modal-content">
+                      <div className="modal-content-user">
                        
                         <img
                           src={
@@ -254,7 +254,7 @@ const PendingUser = () => {
                               : `data:image/png;base64,${selectedUser.images[imageIndex]}`
                           }
                           alt={`Valid ID ${imageIndex + 1}`}
-                          className="full-size-image"
+                          className="full-size-image-user"
                         />
                       </div>
                     </div>

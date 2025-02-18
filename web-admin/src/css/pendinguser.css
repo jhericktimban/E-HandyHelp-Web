@@ -110,7 +110,8 @@
     margin-left: 10px; /* Space between buttons */
 }
 
-.image-carousel {
+.image-carousel-user{
+    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -118,7 +119,7 @@
     margin-top: 10px;
   }
   
-  .carousel-btn {
+  .carousel-btn-user {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -134,18 +135,18 @@
     transition: background-color 0.3s;
   }
   
-  .carousel-btn:hover {
+  .carousel-btn-user:hover {
     background-color: rgba(0, 0, 0, 0.7);
   }
   
-  .carousel-btn.left {
+  .carousel-btn-user.left {
     left: 5px;
   }
   
-  .carousel-btn.right {
+  .carousel-btn-user.right {
     right: 5px;
   }
-  .carousel-image.fixed-size {
+  .carousel-image-user.fixed-size {
     width: 250px;
     height: 200px;
     aspect-ratio: 1 / 1;
@@ -156,12 +157,12 @@
   }
   
   
-  .carousel-image.fixed-size:hover {
+  .carousel-image-user.fixed-size:hover {
     transform: scale(1.05);
   }
   
   /* Modal for Full-Size Image */
-  .image-modal {
+  .image-modal-user {
     position: fixed;
     top: 0;
     left: 0;
@@ -174,15 +175,15 @@
     z-index: 1000;
   }
   
-  .modal-content {
+  .modal-content-user{
     position: relative;
   }
   
-  .full-size-image {
+  .full-size-image-user {
     display: block;
     margin: 20px auto; 
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 25%;
+    max-height: 25%;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   }
