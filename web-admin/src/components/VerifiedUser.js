@@ -12,16 +12,22 @@ const VerifiedUser = () => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false); // State for delete confirmation
   const [alert, setAlert] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   // Fetch verified users from the backend
   useEffect(() => {
     const fetchVerifiedUsers = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/users/verified"
         ); // Fetching from backend
         setVerifiedUsers(response.data); // Set the fetched users in state
       } catch (error) {
         console.error("Error fetching verified users:", error);
+      }
+      finally{
+        setLoading(false);
       }
     };
 
@@ -126,6 +132,8 @@ const VerifiedUser = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
+
       />
 
       {/* Alert for success or error messages */}

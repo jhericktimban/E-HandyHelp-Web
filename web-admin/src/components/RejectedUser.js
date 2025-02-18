@@ -12,16 +12,22 @@ const RejectedUser = () => {
   const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [loading, setLoading] = useState(true);
+
   // Fetch rejected users from the backend
   useEffect(() => {
     const fetchRejectedUsers = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/users/rejected"
         );
         setRejectedUsers(response.data);
       } catch (error) {
         console.error("Error fetching rejected users:", error);
+      }
+      finally{
+        setLoading(false);
       }
     };
 
@@ -120,6 +126,8 @@ const RejectedUser = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
+
       />
 
        {/* Alert for success or error messages */}

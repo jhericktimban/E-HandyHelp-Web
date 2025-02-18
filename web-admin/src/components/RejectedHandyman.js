@@ -13,16 +13,22 @@ const RejectedHandyman = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   // Fetch Rejected handyman from the backend
   useEffect(() => {
     const fetchRejectedHandyman = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/handymen/rejected"
         );
         setRejectedHandyman(response.data);
       } catch (error) {
         console.error("Error fetching Handymen:", error);
+      }
+      finally {
+        setLoading(false);
       }
     };
 
@@ -140,6 +146,8 @@ const RejectedHandyman = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
+
       />
 
       {/* Alert for success or error messages */}

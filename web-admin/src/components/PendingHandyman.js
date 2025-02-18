@@ -5,7 +5,6 @@ import { FaUserClock, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import "../css/pendinghandyman.css";
 
-
 const PendingHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -14,16 +13,26 @@ const PendingHandyman = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
+  const [loading, setLoading] = useState(true);
+
   // Fetch pending users from the backend
   useEffect(() => {
     const fetchPendingHandyman = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/handymen/pending"
         );
         setPendingHandyman(response.data);
       } catch (error) {
         console.error("Error fetching Handymen:", error);
+      }
+
+      finally {
+        setLoading(false);
       }
     };
 
@@ -43,12 +52,16 @@ const PendingHandyman = () => {
   const handleVerifyHandyman = () => {
     if (selectedHandyman) {
       axios
-        .put(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`)
+        .put(
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`
+        )
         .then(() => {
           setPendingHandyman(
-            pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+            pendingHandyman.filter(
+              (handyman) => handyman._id !== selectedHandyman._id
+            )
           );
-          setAlert({message: "Handyman verified successfully." });
+          setAlert({ message: "Handyman verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -56,7 +69,6 @@ const PendingHandyman = () => {
         });
     }
   };
-  
 
   const handleRejectHandyman = async () => {
     if (selectedHandyman) {
@@ -65,13 +77,15 @@ const PendingHandyman = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
         );
         setPendingHandyman(
-          pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+          pendingHandyman.filter(
+            (handyman) => handyman._id !== selectedHandyman._id
+          )
         );
-        setAlert({message: "Handyman rejected successfully." });
+        setAlert({ message: "Handyman rejected successfully." });
         handleCloseModal();
       } catch (error) {
         console.error("Error rejecting Handyman:", error);
-        setAlert({message: "Failed to reject Handyman." });
+        setAlert({ message: "Failed to reject Handyman." });
       }
     }
   };
@@ -83,12 +97,13 @@ const PendingHandyman = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
         );
         setPendingHandyman(
-            pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
-          );
-        setAlert({message: "Handyman deleted successfully." });
+          pendingHandyman.filter(
+            (handyman) => handyman._id !== selectedHandyman._id
+          )
+        );
+        setAlert({ message: "Handyman deleted successfully." });
       } catch (error) {
         console.error("Error deleting Handyman:", error);
-        
       } finally {
         setShowConfirmDelete(false);
         setSelectedHandyman(null);
@@ -156,6 +171,7 @@ const PendingHandyman = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
       />
 
       {/* Alert for success or error messages */}
@@ -177,36 +193,90 @@ const PendingHandyman = () => {
                 Name: {selectedHandyman.fname} {selectedHandyman.lname}
               </h5>
               <p>
-                Description:{" "}
-                {selectedHandyman.accounts_status || "Pending Approval"}
-              </p>
+                Address:{selectedHandyman.address}</p>
               <p>Email: {selectedHandyman.email}</p>
+              <p>Username: {selectedHandyman.username}</p>
+              <p>Contact: {selectedHandyman.contact}</p>
+              <p>
+                Specialization:{" "}
+                {Array.isArray(selectedHandyman.specialization)
+                  ? selectedHandyman.specialization.join(", ")
+                  : selectedHandyman.specialization}
+              </p>
+
               <p>
                 Date of Birth:{" "}
                 {new Date(selectedHandyman.dateOfBirth).toLocaleDateString()}
               </p>
-
               {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
                 <>
                   <strong>Valid ID:</strong>
-                  <div className="valid-id-images">
-                    {selectedHandyman.images.map((image, index) => (
-                      <img
-                        key={index}
-                        src={
-                          image.startsWith("data:image")
-                            ? image
-                            : `data:image/png;base64,${image}`
-                        }
-                        alt={`Valid ID ${index + 1}`}
-                        style={{
-                          maxWidth: "100%",
-                          height: "auto",
-                          margin: "5px",
-                        }}
-                      />
-                    ))}
+                  <div className="image-carousel">
+                    <button
+                      className="carousel-btn left"
+                      onClick={() =>
+                        setImageIndex((prev) =>
+                          prev > 0
+                            ? prev - 1
+                            : selectedHandyman.images.length - 1
+                        )
+                      }
+                    >
+                      &#10094;
+                    </button>
+                    <img
+                      src={
+                        selectedHandyman.images[imageIndex].startsWith(
+                          "data:image"
+                        )
+                          ? selectedHandyman.images[imageIndex]
+                          : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
+                      }
+                      alt={`Valid ID ${imageIndex + 1}`}
+                      className="carousel-image fixed-size"
+                      onClick={() => setShowImageModal(true)}
+                    />
+                    <button
+                      className="carousel-btn right"
+                      onClick={() =>
+                        setImageIndex((prev) =>
+                          prev < selectedHandyman.images.length - 1
+                            ? prev + 1
+                            : 0
+                        )
+                      }
+                    >
+                      &#10095;
+                    </button>
                   </div>
+
+                  {/* Image Modal for Full-Size View */}
+                  {showImageModal && (
+                    <div
+                      className="image-modal"
+                      onClick={() => setShowImageModal(false)}
+                    >
+                      <div className="modal-content">
+                        <span
+                          className="close-btn"
+                          onClick={() => setShowImageModal(false)}
+                        >
+                          &times;
+                        </span>
+                        <img
+                          src={
+                            selectedHandyman.images[imageIndex].startsWith(
+                              "data:image"
+                            )
+                              ? selectedHandyman.images[imageIndex]
+                              : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
+                          }
+                          alt={`Valid ID ${imageIndex + 1}`}
+                          className="full-size-image"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <p>
@@ -227,7 +297,8 @@ const PendingHandyman = () => {
       <Modal
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
-        centered>
+        centered
+      >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>

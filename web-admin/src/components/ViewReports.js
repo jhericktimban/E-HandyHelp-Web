@@ -11,12 +11,15 @@ const ViewReports = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchReports(); // Fetch reports on initial load
   }, []);
 
   const fetchReports = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/reports"
       );
@@ -37,6 +40,9 @@ const ViewReports = () => {
       setHandymanReports(handymanReports);
     } catch (error) {
       console.error("Error fetching reports:", error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -219,6 +225,8 @@ const ViewReports = () => {
                   },
                 },
               }}
+              progressPending={loading} 
+
             />
           </div>
         </div>
@@ -238,6 +246,7 @@ const ViewReports = () => {
                   },
                 },
               }}
+              progressPending={loading}
             />
           </div>
         </div>

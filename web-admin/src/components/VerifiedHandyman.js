@@ -12,19 +12,29 @@ const VerifiedHandyman = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   // Fetch verified handymen from the backend
-  useEffect(() => {
-    axios
-      .get(
+  // Fetch verified handymen from the backend
+useEffect(() => {
+  const fetchVerifiedHandymen = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/handymen/verified"
-      )
-      .then((response) => {
-        setVerifiedHandymen(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching verified handymen:", error);
-      });
-  }, []);
+      );
+      setVerifiedHandymen(response.data);
+    } catch (error) {
+      console.error("Error fetching verified handymen:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchVerifiedHandymen();
+}, []);
+
+  
 
   const handleOpenModal = (handyman) => {
     setSelectedHandyman(handyman);
@@ -57,14 +67,12 @@ const VerifiedHandyman = () => {
             (handyman) => handyman._id !== selectedHandyman._id
           )
         );
-        setAlert({message: "Handyman deleted successfully!"});
-        
+        setAlert({ message: "Handyman deleted successfully!" });
       } catch (error) {
         console.error("Error deleting handyman:", error);
       } finally {
         setShowConfirmDelete(false);
         setSelectedHandyman(null);
-        
       }
     }
   };
@@ -99,18 +107,11 @@ const VerifiedHandyman = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
-          <Button 
-          onClick={() => handleOpenModal(row)}>
-            Details
-          </Button>
-          <Button
-            
-            onClick={() => handleOpenDeleteModal(row)}
-            className="ml-2"
-          >
+          <Button onClick={() => handleOpenModal(row)}>Details</Button>
+          <Button onClick={() => handleOpenDeleteModal(row)} className="ml-2">
             Delete
           </Button>
-          </div>
+        </div>
       ),
     },
   ];
@@ -133,14 +134,16 @@ const VerifiedHandyman = () => {
         striped
         responsive
         style={{ minHeight: "400px" }} // Consistent with other component layout
+        progressPending={loading} 
+
       />
 
-          {/* Alert for success or error messages */}
-             {alert && (
-              <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
-                {alert.message}
-              </Alert>
-            )}
+      {/* Alert for success or error messages */}
+      {alert && (
+        <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Modal for handyman details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
@@ -166,9 +169,7 @@ const VerifiedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>
-            Close
-          </Button>
+          <Button onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
@@ -185,15 +186,10 @@ const VerifiedHandyman = () => {
           ?
         </Modal.Body>
         <Modal.Footer>
-          <Button  onClick={handleCloseDeleteModal}>
-            Cancel
-          </Button>
-          <Button  onClick={handleDeleteHandyman}>
-            Delete
-          </Button>
+          <Button onClick={handleCloseDeleteModal}>Cancel</Button>
+          <Button onClick={handleDeleteHandyman}>Delete</Button>
         </Modal.Footer>
       </Modal>
-
     </div>
   );
 };

@@ -12,15 +12,21 @@ const SuspendedUser = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   // Function to fetch suspended users from the backend
   const fetchSuspendedUsers = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/users/suspended"
       );
       setSuspendedUsers(response.data);
     } catch (error) {
       console.error("Error fetching suspended users:", error);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -151,6 +157,8 @@ const SuspendedUser = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
+
       />
 
       {/* Alert for success or error messages */}

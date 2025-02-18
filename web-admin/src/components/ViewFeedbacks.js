@@ -14,16 +14,22 @@ const ViewFeedbacks = () => {
   const [showModal, setShowModal] = useState(false);
   const [sentimentResult, setSentimentResult] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchFeedbacks();
   }, []);
 
   const fetchFeedbacks = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("https://e-handyhelp-web-backend.onrender.com/api/feedback");
       setFeedbacks(response.data);
     } catch (error) {
       console.error("Error fetching feedback:", error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -96,6 +102,8 @@ const ViewFeedbacks = () => {
             },
           },
         }}
+        progressPending={loading} 
+
       />
 
       {selectedFeedback && (

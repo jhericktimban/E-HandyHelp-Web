@@ -13,15 +13,21 @@ const SuspendedHandyman = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
+  const [loading, setLoading] = useState(true);
+
   // Fetch suspended handymen from the backend
   const fetchSuspendedHandymen = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/handymen/suspended"
       );
       setSuspendedHandymen(response.data);
     } catch (error) {
       console.error("Error fetching suspended handymen:", error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -163,6 +169,8 @@ const SuspendedHandyman = () => {
         highlightOnHover
         striped
         responsive
+        progressPending={loading} 
+
       />
 
       {alert && (

@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
+  address: {
+    type: String,
+    required: true,
+  },
   images: { 
   type: [String], // Change this to an array of strings
   default: [] // Default to an empty array
@@ -34,6 +38,7 @@ const userSchema = new mongoose.Schema({
     type: Boolean, 
     required: true 
   },
+  
   accounts_status: { 
     type: String, 
     enum: ['pending', 'verified', 'rejected', 'suspended'],  // Define allowed statuses
