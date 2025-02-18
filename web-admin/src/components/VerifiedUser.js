@@ -24,8 +24,16 @@ const VerifiedUser = () => {
         setLoading(true);
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/users/verified"
-        ); // Fetching from backend
-        setVerifiedUsers(response.data); // Set the fetched users in state
+        );
+
+        const sortedUsers = response.data.sort((a, b) => {
+          return (
+            new Date(b.verifiedAt || b.updatedAt || b.createdAt) -
+            new Date(a.verifiedAt || a.updatedAt || a.createdAt)
+          );
+        });
+
+        setVerifiedUsers(sortedUsers); // Set the sorted users
       } catch (error) {
         console.error("Error fetching verified users:", error);
       } finally {
@@ -39,6 +47,15 @@ const VerifiedUser = () => {
   const handleOpenModal = (user) => {
     setSelectedUser(user);
     setShowModal(true);
+  };
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
   };
 
   const handleCloseModal = () => {
@@ -81,17 +98,14 @@ const VerifiedUser = () => {
     {
       name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
-      sortable: true,
     },
     {
       name: "Username",
       selector: (row) => row.username,
-      sortable: true,
     },
     {
       name: "Account Status",
       selector: (row) => row.accounts_status || "Verified User",
-      sortable: true,
     },
     {
       name: "Action",
@@ -129,6 +143,7 @@ const VerifiedUser = () => {
         striped
         responsive
         progressPending={loading}
+        customStyles={customStyles}
       />
 
       {/* Alert for success or error messages */}

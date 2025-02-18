@@ -15,7 +15,7 @@ const SuspendedHandyman = () => {
 
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
-  
+
   const [loading, setLoading] = useState(true);
 
   // Fetch suspended handymen from the backend
@@ -25,11 +25,16 @@ const SuspendedHandyman = () => {
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/handymen/suspended"
       );
-      setSuspendedHandymen(response.data);
+      const sortedHandyman = response.data.sort((a, b) => {
+        return (
+          new Date(b.suspendedAt || b.updatedAt || b.createdAt) -
+          new Date(a.suspendedAt || a.updatedAt || a.createdAt)
+        );
+      });
+      setSuspendedHandymen(sortedHandyman);
     } catch (error) {
       console.error("Error fetching suspended handymen:", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };
@@ -37,6 +42,15 @@ const SuspendedHandyman = () => {
   useEffect(() => {
     fetchSuspendedHandymen(); // Fetch data when component mounts
   }, []);
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
+  };
 
   const handleOpenModal = (handyman) => {
     setSelectedHandyman(handyman);
@@ -85,11 +99,11 @@ const SuspendedHandyman = () => {
           accounts_status: "verified",
         }
       );
-      setAlert({message: "Suspension lifted successfully." });
+      setAlert({ message: "Suspension lifted successfully." });
       await fetchSuspendedHandymen(); // Refresh data after lifting suspension
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({message: "Failed to lift suspension." });
+      setAlert({ message: "Failed to lift suspension." });
     } finally {
       setShowConfirmLift(false);
       setSelectedHandyman(null);
@@ -110,27 +124,20 @@ const SuspendedHandyman = () => {
     {
       name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
-      sortable: true,
-     
     },
     {
       name: "Username",
       selector: (row) => row.username, // Replaced email with username
-      sortable: true,
-    
     },
     {
       name: "Account Status",
       selector: (row) => row.accounts_status || "Suspended",
-      sortable: true,
-      
     },
     {
       name: "Action",
       cell: (row) => (
         <div className="button-group-suspend-handyman">
           <Button
-            
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmLift();
@@ -139,7 +146,6 @@ const SuspendedHandyman = () => {
             Lift Suspension
           </Button>
           <Button
-           
             onClick={() => {
               setSelectedHandyman(row);
               handleConfirmDelete();
@@ -147,13 +153,9 @@ const SuspendedHandyman = () => {
           >
             Delete
           </Button>
-          <Button 
-          onClick={() => handleOpenModal(row)}>
-             Details
-          </Button>
+          <Button onClick={() => handleOpenModal(row)}>Details</Button>
         </div>
       ),
-      
     },
   ];
 
@@ -174,8 +176,8 @@ const SuspendedHandyman = () => {
         highlightOnHover
         striped
         responsive
-        progressPending={loading} 
-
+        progressPending={loading}
+        customStyles={customStyles}
       />
 
       {alert && (
@@ -185,132 +187,133 @@ const SuspendedHandyman = () => {
       )}
 
       {/* Modal for Handyman details */}
-                 <Modal show={showModal} onHide={handleCloseModal} centered>
-                   <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-                     <Modal.Title>Handyman Details</Modal.Title>
-                   </Modal.Header>
-                   <Modal.Body>
-                     {selectedHandyman && (
-                       <>
-                         <h5>
-                           Name: {selectedHandyman.fname} {selectedHandyman.lname}
-                         </h5>
-                         <p>Address: {selectedHandyman.address}</p>
-                         <p>Email: {selectedHandyman.email}</p>
-                         <p>Username: {selectedHandyman.username}</p>
-                         <p>Contact: {selectedHandyman.contact}</p>
-                         <p>
-                           Specialization:{" "}
-                           {Array.isArray(selectedHandyman.specialization)
-                             ? selectedHandyman.specialization.join(", ")
-                             : selectedHandyman.specialization}
-                         </p>
-           
-                         <p>
-                           Date of Birth:{" "}
-                           {new Date(selectedHandyman.dateOfBirth).toLocaleDateString()}
-                         </p>
-                         {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
-                           <>
-                             <strong>Valid ID:</strong>
-                             <div className="image-carousel-handyman">
-                               <button
-                                 className="carousel-btn-handyman left"
-                                 onClick={() =>
-                                   setImageIndex((prev) =>
-                                     prev > 0
-                                       ? prev - 1
-                                       : selectedHandyman.images.length - 1
-                                   )
-                                 }
-                               >
-                                 &#10094;
-                               </button>
-                               <img
-                                 src={
-                                   selectedHandyman.images[imageIndex].startsWith(
-                                     "data:image"
-                                   )
-                                     ? selectedHandyman.images[imageIndex]
-                                     : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
-                                 }
-                                 alt={`Valid ID ${imageIndex + 1}`}
-                                 className="carousel-image-handyman fixed-size"
-                                 onClick={() => setShowImageModal(true)}
-                               />
-                               <button
-                                 className="carousel-btn-handyman right"
-                                 onClick={() =>
-                                   setImageIndex((prev) =>
-                                     prev < selectedHandyman.images.length - 1
-                                       ? prev + 1
-                                       : 0
-                                   )
-                                 }
-                               >
-                                 &#10095;
-                               </button>
-                             </div>
-           
-                             {/* Image Modal for Full-Size View */}
-                             {showImageModal && (
-                               <div
-                                 className="image-modal-handyman"
-                                 onClick={() => setShowImageModal(false)}
-                               >
-                                 <div className="modal-content-handyman">
-                                   
-                                
-                                   <img
-                                     src={
-                                       selectedHandyman.images[imageIndex].startsWith(
-                                         "data:image"
-                                       )
-                                         ? selectedHandyman.images[imageIndex]
-                                         : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
-                                     }
-                                     alt={`Valid ID ${imageIndex + 1}`}
-                                     className="full-size-image-handyman"
-                                   />
-                                 </div>
-                               </div>
-                             )}
-                           </>
-                         ) : (
-                           <p>
-                             <strong>Valid ID:</strong> <em>No ID provided</em>
-                           </p>
-                         )}
-                       </>
-                     )}
-                   </Modal.Body>
-                   <Modal.Footer>
-                     <Button onClick={handleCloseModal}>Close</Button>
-                     
-                   </Modal.Footer>
-                 </Modal>
-           
-                 {/* Confirmation Modal for Deletion */}
-                 <Modal
-                   show={showConfirmDelete}
-                   onHide={() => setShowConfirmDelete(false)}
-                   centered
-                 >
-                   <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-                     <Modal.Title>Confirm Deletion</Modal.Title>
-                   </Modal.Header>
-                   <Modal.Body>
-                     Are you sure you want to delete {selectedHandyman?.fname}{" "}
-                     {selectedHandyman?.lname}?
-                   </Modal.Body>
-                   <Modal.Footer>
-                     <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-                     <Button onClick={handleDeleteHandyman}>Delete</Button>
-                   </Modal.Footer>
-                 </Modal>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+          <Modal.Title>Handyman Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedHandyman && (
+            <>
+              <h5>
+                Name: {selectedHandyman.fname} {selectedHandyman.lname}
+              </h5>
+              <p>Address: {selectedHandyman.address}</p>
+              <p>Email: {selectedHandyman.email}</p>
+              <p>Username: {selectedHandyman.username}</p>
+              <p>Contact: {selectedHandyman.contact}</p>
+              <p>
+                Specialization:{" "}
+                {Array.isArray(selectedHandyman.specialization)
+                  ? selectedHandyman.specialization.join(", ")
+                  : selectedHandyman.specialization}
+              </p>
+
+              <p>
+                Date of Birth:{" "}
+                {new Date(selectedHandyman.dateOfBirth).toLocaleDateString()}
+              </p>
+              {selectedHandyman.images && selectedHandyman.images.length > 0 ? (
+                <>
+                  <strong>Valid ID:</strong>
+                  <div className="image-carousel-handyman">
+                    <button
+                      className="carousel-btn-handyman left"
+                      onClick={() =>
+                        setImageIndex((prev) =>
+                          prev > 0
+                            ? prev - 1
+                            : selectedHandyman.images.length - 1
+                        )
+                      }
+                    >
+                      &#10094;
+                    </button>
+                    <img
+                      src={
+                        selectedHandyman.images[imageIndex].startsWith(
+                          "data:image"
+                        )
+                          ? selectedHandyman.images[imageIndex]
+                          : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
+                      }
+                      alt={`Valid ID ${imageIndex + 1}`}
+                      className="carousel-image-handyman fixed-size"
+                      onClick={() => setShowImageModal(true)}
+                    />
+                    <button
+                      className="carousel-btn-handyman right"
+                      onClick={() =>
+                        setImageIndex((prev) =>
+                          prev < selectedHandyman.images.length - 1
+                            ? prev + 1
+                            : 0
+                        )
+                      }
+                    >
+                      &#10095;
+                    </button>
+                  </div>
+
+                  {/* Image Modal for Full-Size View */}
+                  {showImageModal && (
+                    <div
+                      className="image-modal-handyman"
+                      onClick={() => setShowImageModal(false)}
+                    >
+                      <div className="modal-content-handyman">
+                        <img
+                          src={
+                            selectedHandyman.images[imageIndex].startsWith(
+                              "data:image"
+                            )
+                              ? selectedHandyman.images[imageIndex]
+                              : `data:image/png;base64,${selectedHandyman.images[imageIndex]}`
+                          }
+                          alt={`Valid ID ${imageIndex + 1}`}
+                          className="full-size-image-handyman"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p>
+                  <strong>Valid ID:</strong> <em>No ID provided</em>
+                </p>
+              )}
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={handleCloseModal}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Confirmation Modal for Deletion */}
+      <Modal
+        show={showConfirmDelete}
+        onHide={() => setShowConfirmDelete(false)}
+        centered
+      >
+        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete {selectedHandyman?.fname}{" "}
+          {selectedHandyman?.lname}?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
+          <Button onClick={handleDeleteHandyman}>Delete</Button>
+        </Modal.Footer>
+      </Modal>
 
       {/* Confirmation Modal for Lifting Suspension */}
-      <Modal show={showConfirmLift} onHide={() => setShowConfirmLift(false)}centered>
+      <Modal
+        show={showConfirmLift}
+        onHide={() => setShowConfirmLift(false)}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Confirm Lift Suspension</Modal.Title>
         </Modal.Header>
@@ -319,12 +322,8 @@ const SuspendedHandyman = () => {
           {selectedHandyman?.fname} {selectedHandyman?.lname}?
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => setShowConfirmLift(false)}>
-            Cancel
-          </Button>
-          <Button onClick={handleLiftSuspension}>
-            Lift Suspension
-          </Button>
+          <Button onClick={() => setShowConfirmLift(false)}>Cancel</Button>
+          <Button onClick={handleLiftSuspension}>Lift Suspension</Button>
         </Modal.Footer>
       </Modal>
     </div>

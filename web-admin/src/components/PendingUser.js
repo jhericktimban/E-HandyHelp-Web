@@ -16,7 +16,7 @@ const PendingUser = () => {
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-   const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Fetch pending users from the backend
   useEffect(() => {
@@ -26,17 +26,33 @@ const PendingUser = () => {
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/users/pending"
         );
-        setPendingUsers(response.data);
+        // Sort pending handymen by creation date (descending)
+        const sortedUsers = response.data.sort((a, b) => {
+          return (
+            new Date(b.createdAt || b.updatedAt || b.pendingAt) -
+            new Date(a.createdAt || a.updatedAt || a.pendingAt)
+          );
+        });
+
+        setPendingUsers(sortedUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
 
     fetchPendingUsers();
   }, []);
+
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
+  };
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
@@ -51,12 +67,14 @@ const PendingUser = () => {
   const handleVerifyUser = () => {
     if (selectedUser) {
       axios
-        .put(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`)
+        .put(
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`
+        )
         .then(() => {
           setPendingUsers(
             pendingUsers.filter((user) => user._id !== selectedUser._id)
           );
-          setAlert({message: "User verified successfully." });
+          setAlert({ message: "User verified successfully." });
           handleCloseModal();
         })
         .catch((error) => {
@@ -64,7 +82,6 @@ const PendingUser = () => {
         });
     }
   };
-  
 
   const handleRejectUser = async () => {
     if (selectedUser) {
@@ -75,11 +92,11 @@ const PendingUser = () => {
         setPendingUsers(
           pendingUsers.filter((user) => user._id !== selectedUser._id)
         );
-        setAlert({message: "User rejected successfully." });
+        setAlert({ message: "User rejected successfully." });
         handleCloseModal();
       } catch (error) {
         console.error("Error rejecting user:", error);
-        setAlert({message: "Failed to reject user." });
+        setAlert({ message: "Failed to reject user." });
       }
     }
   };
@@ -91,12 +108,11 @@ const PendingUser = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
         );
         setPendingUsers(
-            pendingUsers.filter((user) => user._id !== selectedUser._id)
-          );
-        setAlert({message: "User deleted successfully." });
+          pendingUsers.filter((user) => user._id !== selectedUser._id)
+        );
+        setAlert({ message: "User deleted successfully." });
       } catch (error) {
         console.error("Error deleting user:", error);
-        
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
@@ -108,18 +124,15 @@ const PendingUser = () => {
     {
       name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
-      sortable: true,
     },
     {
       name: "Username",
       selector: (row) => row.username,
-      sortable: true,
     },
-    
+
     {
       name: "Account Status",
       selector: (row) => row.account_status || "Pending",
-      sortable: true,
     },
     {
       name: "Actions",
@@ -165,7 +178,8 @@ const PendingUser = () => {
         highlightOnHover
         striped
         responsive
-        progressPending={loading} 
+        progressPending={loading}
+        customStyles={customStyles}
       />
 
       {/* Alert for success or error messages */}
@@ -203,9 +217,7 @@ const PendingUser = () => {
                       className="carousel-btn-user left"
                       onClick={() =>
                         setImageIndex((prev) =>
-                          prev > 0
-                            ? prev - 1
-                            : selectedUser.images.length - 1
+                          prev > 0 ? prev - 1 : selectedUser.images.length - 1
                         )
                       }
                     >
@@ -213,9 +225,7 @@ const PendingUser = () => {
                     </button>
                     <img
                       src={
-                        selectedUser.images[imageIndex].startsWith(
-                          "data:image"
-                        )
+                        selectedUser.images[imageIndex].startsWith("data:image")
                           ? selectedUser.images[imageIndex]
                           : `data:image/png;base64,${selectedUser.images[imageIndex]}`
                       }
@@ -227,9 +237,7 @@ const PendingUser = () => {
                       className="carousel-btn-user right"
                       onClick={() =>
                         setImageIndex((prev) =>
-                          prev < selectedUser.images.length - 1
-                            ? prev + 1
-                            : 0
+                          prev < selectedUser.images.length - 1 ? prev + 1 : 0
                         )
                       }
                     >
@@ -244,7 +252,6 @@ const PendingUser = () => {
                       onClick={() => setShowImageModal(false)}
                     >
                       <div className="modal-content-user">
-                       
                         <img
                           src={
                             selectedUser.images[imageIndex].startsWith(
@@ -279,7 +286,8 @@ const PendingUser = () => {
       <Modal
         show={showConfirmDelete}
         onHide={() => setShowConfirmDelete(false)}
-        centered>
+        centered
+      >
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>

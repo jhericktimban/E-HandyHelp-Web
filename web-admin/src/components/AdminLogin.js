@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from '../assets/ehlogo.png';
+import logo from "../assets/ehlogo.png";
 import "../css/loginstyles.css";
 import { FaUserAlt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,8 @@ const AdminLogin = ({ onLogin }) => {
     const Username = "admin";
     const Password = "123pass";
 
-    setTimeout(() => { // Simulate an async login process
+    setTimeout(() => {
+      // Simulate an async login process
       if (username === Username && password === Password) {
         onLogin(true);
       } else {
@@ -61,7 +62,10 @@ const AdminLogin = ({ onLogin }) => {
               disabled={loading} // Disable input when loading
             />
             <FaLock className="icon" />
-            <span onClick={togglePasswordVisibility} className="toggle-password">
+            <span
+              onClick={togglePasswordVisibility}
+              className="toggle-password"
+            >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>

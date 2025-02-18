@@ -23,6 +23,13 @@ const ViewReports = () => {
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/reports"
       );
+      // Sort by rejection date (descending)
+      const sortedUsers = response.data.sort((a, b) => {
+        return (
+          new Date(b.rejectedAt || b.updatedAt || b.createdAt) -
+          new Date(a.rejectedAt || a.updatedAt || a.createdAt)
+        );
+      });
       const pendingReports = response.data.filter(
         (report) => report.status === "pending"
       );
@@ -40,10 +47,23 @@ const ViewReports = () => {
       setHandymanReports(handymanReports);
     } catch (error) {
       console.error("Error fetching reports:", error);
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
+  };
+
+  const customStyles = {
+    table: {
+      style: {
+        width: "100%",
+      },
+    },
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
   };
 
   const handleShowModal = (report) => {
@@ -218,15 +238,8 @@ const ViewReports = () => {
               data={handymanReports}
               pagination
               highlightOnHover
-              customStyles={{
-                table: {
-                  style: {
-                    width: "100%",
-                  },
-                },
-              }}
-              progressPending={loading} 
-
+              customStyles={customStyles}
+              progressPending={loading}
             />
           </div>
         </div>
@@ -239,13 +252,7 @@ const ViewReports = () => {
               data={userReports}
               pagination
               highlightOnHover
-              customStyles={{
-                table: {
-                  style: {
-                    width: "100%",
-                  },
-                },
-              }}
+              customStyles={customStyles}
               progressPending={loading}
             />
           </div>

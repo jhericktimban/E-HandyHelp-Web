@@ -26,12 +26,19 @@ const PendingHandyman = () => {
         const response = await axios.get(
           "https://e-handyhelp-web-backend.onrender.com/api/handymen/pending"
         );
-        setPendingHandyman(response.data);
+
+        // Sort pending handymen by creation date (descending)
+        const sortedHandymen = response.data.sort((a, b) => {
+          return (
+            new Date(b.createdAt || b.updatedAt || b.pendingAt) -
+            new Date(a.createdAt || a.updatedAt || a.pendingAt)
+          );
+        });
+
+        setPendingHandyman(sortedHandymen);
       } catch (error) {
         console.error("Error fetching Handymen:", error);
-      }
-
-      finally {
+      } finally {
         setLoading(false);
       }
     };
@@ -39,6 +46,14 @@ const PendingHandyman = () => {
     fetchPendingHandyman();
   }, []);
 
+  const customStyles = {
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
+  };
   const handleOpenModal = (handyman) => {
     setSelectedHandyman(handyman);
     setShowModal(true);
@@ -115,17 +130,14 @@ const PendingHandyman = () => {
     {
       name: "Name",
       selector: (row) => `${row.fname} ${row.lname}`,
-      sortable: true,
     },
     {
       name: "Username",
       selector: (row) => row.username,
-      sortable: true,
     },
     {
       name: "Account Status",
       selector: (row) => row.account_status || "Pending",
-      sortable: true,
     },
     {
       name: "Actions",
@@ -171,7 +183,8 @@ const PendingHandyman = () => {
         highlightOnHover
         striped
         responsive
-        progressPending={loading} 
+        progressPending={loading}
+        customStyles={customStyles}
       />
 
       {/* Alert for success or error messages */}
@@ -256,8 +269,6 @@ const PendingHandyman = () => {
                       onClick={() => setShowImageModal(false)}
                     >
                       <div className="modal-content-handyman">
-                        
-                     
                         <img
                           src={
                             selectedHandyman.images[imageIndex].startsWith(

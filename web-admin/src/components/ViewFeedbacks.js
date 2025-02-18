@@ -22,13 +22,40 @@ const ViewFeedbacks = () => {
   const fetchFeedbacks = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("https://e-handyhelp-web-backend.onrender.com/api/feedback");
-      setFeedbacks(response.data);
+      const response = await axios.get(
+        "https://e-handyhelp-web-backend.onrender.com/api/feedback"
+      );
+
+      const sortedFeedbacks = response.data.sort((a, b) => {
+        return (
+          new Date(b.createdAt || b.updatedAt) -
+          new Date(a.createdAt || a.updatedAt)
+        );
+      });
+
+      setFeedbacks(sortedFeedbacks); // Set the sorted feedbacks
     } catch (error) {
       console.error("Error fetching feedback:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const customStyles = {
+    table: {
+      style: {
+        width: "100%",
+        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", // Table shadow added
+        borderRadius: "10px",
+      },
+    },
+
+    headCells: {
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+      },
+    },
   };
 
   const handleShowModal = (feedback) => {
@@ -60,13 +87,17 @@ const ViewFeedbacks = () => {
       selector: (row) =>
         row.sent_by === "user"
           ? `${row.userId?.fname || "N/A"} ${row.userId?.lname || "N/A"}`
-          : `${row.handymanId?.fname || "N/A"} ${row.handymanId?.lname || "N/A"}`,
+          : `${row.handymanId?.fname || "N/A"} ${
+              row.handymanId?.lname || "N/A"
+            }`,
     },
     {
       name: "For",
       selector: (row) =>
         row.sent_by === "user"
-          ? `${row.handymanId?.fname || "N/A"} ${row.handymanId?.lname || "N/A"}`
+          ? `${row.handymanId?.fname || "N/A"} ${
+              row.handymanId?.lname || "N/A"
+            }`
           : `${row.userId?.fname || "N/A"} ${row.userId?.lname || "N/A"}`,
     },
     {
@@ -77,7 +108,10 @@ const ViewFeedbacks = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <Button className="view-details-btn" onClick={() => handleShowModal(row)}>
+        <Button
+          className="view-details-btn"
+          onClick={() => handleShowModal(row)}
+        >
           View Details
         </Button>
       ),
@@ -93,15 +127,7 @@ const ViewFeedbacks = () => {
           data={feedbacks}
           pagination
           highlightOnHover
-          customStyles={{
-            table: {
-              style: {
-                width: "100%",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)", // Table shadow added
-                borderRadius: "10px",
-              },
-            },
-          }}
+          customStyles={customStyles}
           progressPending={loading}
         />
       </div>
@@ -122,14 +148,22 @@ const ViewFeedbacks = () => {
             <p>
               <strong>Feedback By:</strong>{" "}
               {selectedFeedback.sent_by === "user"
-                ? `${selectedFeedback.userId?.fname || "N/A"} ${selectedFeedback.userId?.lname || "N/A"}`
-                : `${selectedFeedback.handymanId?.fname || "N/A"} ${selectedFeedback.handymanId?.lname || "N/A"}`}
+                ? `${selectedFeedback.userId?.fname || "N/A"} ${
+                    selectedFeedback.userId?.lname || "N/A"
+                  }`
+                : `${selectedFeedback.handymanId?.fname || "N/A"} ${
+                    selectedFeedback.handymanId?.lname || "N/A"
+                  }`}
             </p>
             <p>
               <strong>For:</strong>{" "}
               {selectedFeedback.sent_by === "user"
-                ? `${selectedFeedback.handymanId?.fname || "N/A"} ${selectedFeedback.handymanId?.lname || "N/A"}`
-                : `${selectedFeedback.userId?.fname || "N/A"} ${selectedFeedback.userId?.lname || "N/A"}`}
+                ? `${selectedFeedback.handymanId?.fname || "N/A"} ${
+                    selectedFeedback.handymanId?.lname || "N/A"
+                  }`
+                : `${selectedFeedback.userId?.fname || "N/A"} ${
+                    selectedFeedback.userId?.lname || "N/A"
+                  }`}
             </p>
             <p>
               <strong>Rating:</strong> {renderStars(selectedFeedback.rating)}
