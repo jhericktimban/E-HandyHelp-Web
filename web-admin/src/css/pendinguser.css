@@ -181,26 +181,11 @@
   .full-size-image {
     display: block;
     margin: 20px auto; 
-    max-width: 250px;
-    max-height: 250px;
+    max-width: 350px;
+    max-height: 350px;
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
   }
   
-  .close-btn {
-    position: absolute;
-    top: -30px;
-    right: -30px;
-    color: white;
-    font-size: 40px;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-  }
-  
-  .close-btn:hover {
-    color: red;
-  }
-  
-  
+
 
