@@ -14,6 +14,9 @@ const SuspendedUser = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+
   // Function to fetch suspended users from the backend
   const fetchSuspendedUsers = async () => {
     try {
@@ -50,18 +53,23 @@ const SuspendedUser = () => {
   };
 
   const handleDeleteUser = async () => {
-    try {
-      await axios.delete(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
-      );
-      setAlert({message: "User deleted successfully." });
-      fetchSuspendedUsers(); // Refresh the list after deletion
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      setAlert({message: "Failed to delete user." });
-    } finally {
-      setShowConfirmDelete(false);
-      setSelectedUser(null);
+    if (selectedUser) {
+      try {
+        await axios.delete(
+          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
+        );
+        setSuspendedUsers(
+          suspendedUsers.filter(
+            (user) => user._id !== selectedUser._id
+          )
+        );
+        setAlert({ message: "User deleted successfully!" });
+      } catch (error) {
+        console.error("Error deleting user:", error);
+      } finally {
+        setShowConfirmDelete(false);
+        setSelectedUser(null);
+      }
     }
   };
 
@@ -168,58 +176,115 @@ const SuspendedUser = () => {
         </Alert>
       )}
 
-      {/* Modal for user details */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>User Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedUser && (
-            <>
-              <h5>
-                Name: {selectedUser.fname} {selectedUser.lname}
-              </h5>
-              <p>Username: {selectedUser.username}</p>
-              <p>Email: {selectedUser.email}</p>
-              <p>
-                Date of Birth:{" "}
-                {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
-              </p>
-              <p>Account Status: {selectedUser.accounts_status}</p>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button  onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered>
-        <Modal.Header style={{ backgroundColor: "#1960b2" }}closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedUser?.fname}{" "}
-          {selectedUser?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
+     {/* Modal for Handyman details */}
+                <Modal show={showModal} onHide={handleCloseModal} centered>
+                  <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+                    <Modal.Title>Handyman Details</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    {selectedUser && (
+                      <>
+                        <h5>
+                          Name: {selectedUser.fname} {selectedUser.lname}
+                        </h5>
+                        <p>Address: {selectedUser.address}</p>
+                        <p>Email: {selectedUser.email}</p>
+                        <p>Username: {selectedUser.username}</p>
+                        <p>Contact: {selectedUser.contact}</p>
           
-            onClick={() => setShowConfirmDelete(false)}
-          >
-            Cancel
-          </Button>
-          <Button  onClick={handleDeleteUser}>
-            Delete
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                        <p>
+                          Date of Birth:{" "}
+                          {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
+                        </p>
+                        {selectedUser.images && selectedUser.images.length > 0 ? (
+                          <>
+                            <strong>Valid ID:</strong>
+                            <div className="image-carousel-user">
+                              <button
+                                className="carousel-btn-user left"
+                                onClick={() =>
+                                  setImageIndex((prev) =>
+                                    prev > 0 ? prev - 1 : selectedUser.images.length - 1
+                                  )
+                                }
+                              >
+                                &#10094;
+                              </button>
+                              <img
+                                src={
+                                  selectedUser.images[imageIndex].startsWith("data:image")
+                                    ? selectedUser.images[imageIndex]
+                                    : `data:image/png;base64,${selectedUser.images[imageIndex]}`
+                                }
+                                alt={`Valid ID ${imageIndex + 1}`}
+                                className="carousel-image-user fixed-size"
+                                onClick={() => setShowImageModal(true)}
+                              />
+                              <button
+                                className="carousel-btn-user right"
+                                onClick={() =>
+                                  setImageIndex((prev) =>
+                                    prev < selectedUser.images.length - 1 ? prev + 1 : 0
+                                  )
+                                }
+                              >
+                                &#10095;
+                              </button>
+                            </div>
+          
+                            {/* Image Modal for Full-Size View */}
+                            {showImageModal && (
+                              <div
+                                className="image-modal-user"
+                                onClick={() => setShowImageModal(false)}
+                              >
+                                <div className="modal-content-user">
+                                  <img
+                                    src={
+                                      selectedUser.images[imageIndex].startsWith(
+                                        "data:image"
+                                      )
+                                        ? selectedUser.images[imageIndex]
+                                        : `data:image/png;base64,${selectedUser.images[imageIndex]}`
+                                    }
+                                    alt={`Valid ID ${imageIndex + 1}`}
+                                    className="full-size-image-user"
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <p>
+                            <strong>Valid ID:</strong> <em>No ID provided</em>
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button onClick={handleCloseModal}>Close</Button>
+                  </Modal.Footer>
+                </Modal>
+          
+                {/* Confirmation Modal for Deletion */}
+                <Modal
+                  show={showConfirmDelete}
+                  onHide={() => setShowConfirmDelete(false)}
+                  centered
+                >
+                  <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
+                    <Modal.Title>Confirm Deletion</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    Are you sure you want to delete {selectedUser?.fname}{" "}
+                    {selectedUser?.lname}?
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
+                    <Button onClick={handleDeleteUser}>Delete</Button>
+                  </Modal.Footer>
+                </Modal>
     </div>
   );
 };
