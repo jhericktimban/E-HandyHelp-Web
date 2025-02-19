@@ -67,11 +67,11 @@ const AdminDashboard = () => {
             <p>{suspendedUsersTotal}</p>
           </div>
           <div className="stat-box">
-            <h3>Logged-In Handymen</h3>
+            <h3>Active Handymen</h3>
             <p>{loggedInHandymanTotal}</p>
           </div>
           <div className="stat-box">
-            <h3>Logged-In Users</h3>
+            <h3>Active Users</h3>
             <p>{loggedInUsersTotal}</p>
           </div>
         </div>
