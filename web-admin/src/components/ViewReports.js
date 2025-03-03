@@ -23,13 +23,7 @@ const ViewReports = () => {
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/reports"
       );
-      // Sort by rejection date (descending)
-      const sortedUsers = response.data.sort((a, b) => {
-        return (
-          new Date(b.rejectedAt || b.updatedAt || b.createdAt) -
-          new Date(a.rejectedAt || a.updatedAt || a.createdAt)
-        );
-      });
+      
       const pendingReports = response.data.filter(
         (report) => report.status === "pending"
       );

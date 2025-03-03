@@ -69,23 +69,44 @@ const VerifiedHandyman = () => {
   const handleDeleteHandyman = async () => {
     if (selectedHandyman) {
       try {
+        setLoading(true);
+        
+        // Step 1: Delete the handyman
         await axios.delete(
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
         );
-        setVerifiedHandymen(
-          verifiedHandymen.filter(
-            (handyman) => handyman._id !== selectedHandyman._id
-          )
+  
+        // Step 2: Remove from UI
+        setVerifiedHandymen((prevHandymen) =>
+          prevHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
         );
-        setAlert({ message: "Handyman deleted successfully!" });
+  
+        // Step 3: Log the activity
+        await axios.post("https://e-handyhelp-web-backend.onrender.com/api/activity-logs", {
+          action: "Deleted Verified Handyman",
+          description: `Admin deleted handyman ${selectedHandyman.fname} ${selectedHandyman.lname} (${selectedHandyman.username}).`,
+          performedBy: "Admin", // If you have admin authentication, replace this dynamically
+          timestamp: new Date().toISOString(),
+        });
+  
+        setAlert({
+          message: `${selectedHandyman.fname} ${selectedHandyman.lname} has been successfully deleted and logged.`,
+          type: "success",
+        });
       } catch (error) {
         console.error("Error deleting handyman:", error);
+        setAlert({
+          message: "Failed to delete handyman. Please try again later.",
+          type: "danger",
+        });
       } finally {
+        setLoading(false);
         setShowConfirmDelete(false);
         setSelectedHandyman(null);
       }
     }
   };
+  
 
   // Filter verified handymen based on search term
   const filteredHandymen = verifiedHandymen.filter((handyman) => {

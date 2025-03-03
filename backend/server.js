@@ -9,7 +9,7 @@ import handymenRoute from "./routes/handymen.js";
 import dashboardRoute from "./routes/dashboard.js";
 import reportRoute from "./routes/reports.js";
 import feedbackRoute from "./routes/feedbacks.js";
-import notificationRoute from "./routes/notifications.js";
+import activityLogsRoute from "./routes/activityLogs.js";
 
 const app = express();
 
@@ -49,7 +49,7 @@ app.use("/api/handymen", handymenRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/reports", reportRoute);
 app.use("/api/feedback", feedbackRoute);
-app.use("/api/notifications", notificationRoute);
+app.use("/api/activityLogs", activityLogsRoute);
 
 // Port Configuration
 const PORT = process.env.PORT || 8080;

@@ -26,8 +26,8 @@ const SuspendedUser = () => {
       );
       const sortedUsers = response.data.sort((a, b) => {
         return (
-          new Date(b.rejectedAt || b.updatedAt || b.createdAt) -
-          new Date(a.rejectedAt || a.updatedAt || a.createdAt)
+          new Date(b.suspendedAt || b.updatedAt || b.createdAt) -
+          new Date(a.suspendedAt || a.updatedAt || a.createdAt)
         );
       });
 

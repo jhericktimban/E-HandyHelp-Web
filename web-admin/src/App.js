@@ -19,6 +19,7 @@ import VerifiedUser from "./components/VerifiedUser";
 import RejectedUser from "./components/RejectedUser";
 import SuspendedUser from "./components/SuspendedUser";
 import ViewFeedbacks from "./components/ViewFeedbacks";
+import ActivityLogs from "./components/ActivityLogs";  // ✅ Import the ActivityLogs component
 import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../src/css/styles.css";
@@ -35,12 +36,12 @@ const App = () => {
 
   const handleLogin = (status) => {
     setIsLoggedIn(status);
-    localStorage.setItem("isLoggedIn", status); // Save the status to localStorage
+    localStorage.setItem("isLoggedIn", status);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.setItem("isLoggedIn", false); // Update localStorage on logout
+    localStorage.setItem("isLoggedIn", false);
   };
 
   return (
@@ -57,34 +58,17 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Navigate to="/dashboard" />} />
                     <Route path="/dashboard" element={<AdminDashboard />} />
-                    <Route
-                      path="/view-reports"
-                      element={<ViewReports reports={reports} />}
-                    />
-                    <Route
-                      path="/handyman/pending"
-                      element={<PendingHandyman />}
-                    />
-                    <Route
-                      path="/handyman/verified"
-                      element={<VerifiedHandyman />}
-                    />
-                    <Route
-                      path="/handyman/rejected"
-                      element={<RejectedHandyman />}
-                    />
-                    <Route
-                      path="/handyman/suspended"
-                      element={<SuspendedHandyman />}
-                    />
+                    <Route path="/view-reports" element={<ViewReports reports={reports} />} />
+                    <Route path="/handyman/pending" element={<PendingHandyman />} />
+                    <Route path="/handyman/verified" element={<VerifiedHandyman />} />
+                    <Route path="/handyman/rejected" element={<RejectedHandyman />} />
+                    <Route path="/handyman/suspended" element={<SuspendedHandyman />} />
                     <Route path="/users/pending" element={<PendingUser />} />
                     <Route path="/users/verified" element={<VerifiedUser />} />
                     <Route path="/users/rejected" element={<RejectedUser />} />
-                    <Route
-                      path="/users/suspended"
-                      element={<SuspendedUser />}
-                    />
+                    <Route path="/users/suspended" element={<SuspendedUser />} />
                     <Route path="/view-feedbacks" element={<ViewFeedbacks />} />
+                    <Route path="/activity-logs" element={<ActivityLogs />} />  
                   </Routes>
                 </Col>
               </Row>
@@ -94,14 +78,9 @@ const App = () => {
           <AdminLogin onLogin={handleLogin} />
         )}
       </div>
-      
     </Router>
-    
   );
-
 };
-
-
 
 injectSpeedInsights();
 export default App;

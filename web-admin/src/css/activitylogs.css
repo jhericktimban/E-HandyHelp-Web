@@ -1,0 +1,77 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  /* Container */
+  .activity-logs-container {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  /* Title */
+  .activity-logs-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Search Input */
+  .activity-logs-search {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .activity-logs-search:focus {
+    border-color: #007bff;
+  }
+  
+  /* Table Styles */
+  .activity-logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* Table Head */
+  .activity-logs-table thead {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .activity-logs-table th {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  /* Table Body */
+  .activity-logs-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .activity-logs-table tbody tr:hover {
+    background-color: #f1f1f1;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  /* No Logs Message */
+  .no-logs {
+    text-align: center;
+    padding: 15px;
+    color: #888;
+  }
+  

@@ -58,7 +58,7 @@ const AdminSidebar = ({ onLogout }) => {
             style={{
               maxHeight: showHandyman ? "500px" : "0",
               padding: showHandyman ? "10px 0" : "0",
-              transition: "max-height 0.2s ease-out", // Smooth transition
+              transition: "max-height 0.2s ease-out", 
             }}
           >
             <Link to="/handyman/pending">
@@ -111,6 +111,11 @@ const AdminSidebar = ({ onLogout }) => {
         <li>
           <Link to="/view-feedbacks">
             <i className="fa fa-comments" aria-hidden="true"></i> Feedbacks
+          </Link>
+        </li>
+        <li>
+          <Link to="/activity-logs">
+            <i className="fa fa-history" aria-hidden="true"></i> Activity Logs
           </Link>
         </li>
         <li>
