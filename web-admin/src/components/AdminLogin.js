@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import logo from "../assets/ehlogo.png";
 import "../css/loginstyles.css";
-import { FaUserAlt, FaLock, FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { FaUserAlt, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaSpinner } from "react-icons/fa"; // Import spinner icon
 
 const AdminLogin = ({ onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoading(true); // Start loading
   
     const Username = "admin";
     const Password = "123pass";
@@ -21,24 +22,49 @@ const AdminLogin = ({ onLogin }) => {
     setTimeout(async () => {
       if (username === Username && password === Password) {
         onLogin(true);
-        
   
-        // Log the activity
-        await fetch("https://e-handyhelp-web-backend.onrender.com/api/activity-logs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username,
-            action: "Login",
-            description: `${username} logged into the admin panel.`,
-          }),
-        });
+        // Log the successful login attempt
+        try {
+          await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: username,
+              action: "Login",
+              description: "Admin successfully logged in.",
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } catch (error) {
+          console.error("Error logging activity:", error);
+        }
       } else {
         alert("Invalid username or password.");
+  
+        // Log the failed login attempt
+        try {
+          await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: username || "Unknown",
+              action: "Failed Login",
+              description: "Invalid admin login attempt.",
+              timestamp: new Date().toISOString(),
+            }),
+          });
+        } catch (error) {
+          console.error("Error logging activity:", error);
+        }
       }
-      setLoading(false);
-    }, 2000);
+      setLoading(false); // Stop loading
+    }, 2000); // Simulate 2 seconds delay
   };
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -58,7 +84,7 @@ const AdminLogin = ({ onLogin }) => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              disabled={loading}
+              disabled={loading} // Disable input when loading
             />
             <FaUserAlt className="icon" />
           </div>
@@ -69,10 +95,13 @@ const AdminLogin = ({ onLogin }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              disabled={loading}
+              disabled={loading} // Disable input when loading
             />
             <FaLock className="icon" />
-            <span onClick={togglePasswordVisibility} className="toggle-password">
+            <span
+              onClick={togglePasswordVisibility}
+              className="toggle-password"
+            >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>

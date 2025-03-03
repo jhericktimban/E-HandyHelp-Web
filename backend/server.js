@@ -1,22 +1,22 @@
-import express, { json } from "express";
-import { connect } from "mongoose";
-import cors from "cors";
-import helmet from "helmet";
+const express = require("express");
+const { connect } = require("mongoose");
+const cors = require("cors");
+const helmet = require("helmet");
 
-// Import the routes
-import usersRoute from "./routes/users.js";
-import handymenRoute from "./routes/handymen.js";
-import dashboardRoute from "./routes/dashboard.js";
-import reportRoute from "./routes/reports.js";
-import feedbackRoute from "./routes/feedbacks.js";
-import activityLogsRoute from "./routes/activityLogs.js";
+// Import the routes (CommonJS requires `require`)
+const usersRoute = require("./routes/users");
+const handymenRoute = require("./routes/handymen");
+const dashboardRoute = require("./routes/dashboard");
+const reportRoute = require("./routes/reports");
+const feedbackRoute = require("./routes/feedbacks");
+const activityLogRoute = require("./routes/activityLogs");
 
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(helmet()); // Provides secure default headers
-app.use(json());
+app.use(express.json()); // Use `express.json()` instead of `{ json } from "express"`
 
 // Custom security headers
 app.use((req, res, next) => {
@@ -37,9 +37,9 @@ app.use((req, res, next) => {
 
 // MongoDB connection
 connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.error("MongoDB connection error:", err));
 
@@ -49,7 +49,7 @@ app.use("/api/handymen", handymenRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/reports", reportRoute);
 app.use("/api/feedback", feedbackRoute);
-app.use("/api/activityLogs", activityLogsRoute);
+app.use("/api/activityLogs", activityLogRoute);
 
 // Port Configuration
 const PORT = process.env.PORT || 8080;

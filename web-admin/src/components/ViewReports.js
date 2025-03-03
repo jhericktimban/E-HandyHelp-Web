@@ -139,7 +139,7 @@ const ViewReports = () => {
 
     try {
       await axios.post(
-        "https://e-handyhelp-web-backend.onrender.com/api/notifications",
+        "https://api.semaphore.co/api/v4/messages",
         notification
       );
       alert("Warning sent successfully.");

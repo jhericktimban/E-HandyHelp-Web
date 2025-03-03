@@ -1,27 +1,26 @@
 const express = require("express");
+const ActivityLog = require("../models/ActivityLog");
+
 const router = express.Router();
-const ActivityLogs = require("../models/ActivityLog");
 
-
-router.get("/", async (req, res) => {
-  try {
-    const logs = await ActivityLogs.find().sort({ timestamp: -1 });
-    res.status(200).json(logs);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching logs", error });
-  }
-});
-
-
+// Log an activity
 router.post("/", async (req, res) => {
   try {
-    const { username, action, description } = req.body;
-    const newLog = new ActivityLogs({ username, action, description });
+    const { username, action, description, timestamp } = req.body;
+
+    const newLog = new ActivityLog({
+      username,
+      action,
+      description,
+      timestamp,
+    });
+
     await newLog.save();
     res.status(201).json({ message: "Activity logged successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error logging activity", error });
+    console.error("Error logging activity:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-module.exports = router;
+module.exports = router; // Use CommonJS export

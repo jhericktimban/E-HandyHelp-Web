@@ -64,43 +64,27 @@ const PendingHandyman = () => {
     setSelectedHandyman(null);
   };
 
-  const logActivity = async (action, description) => {
-    try {
-      await axios.post("https://e-handyhelp-web-backend.onrender.com/api/activity-logs", {
-        username: "Admin", // You can dynamically fetch the logged-in admin's username
-        action,
-        description,
-        timestamp: new Date().toISOString(),
-      });
-    } catch (error) {
-      console.error("Error logging activity:", error);
-    }
-  };
-  
-  const handleVerifyHandyman = async () => {
+  const handleVerifyHandyman = () => {
     if (selectedHandyman) {
-      try {
-        await axios.put(
+      axios
+        .put(
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`
-        );
-        setPendingHandyman(
-          pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
-        );
-        setAlert({ message: "Handyman verified successfully." });
-  
-        // Log activity
-        await logActivity(
-          "Verify",
-          `Verified handyman ${selectedHandyman.fname} ${selectedHandyman.lname}`
-        );
-  
-        handleCloseModal();
-      } catch (error) {
-        console.error("Error verifying Handyman:", error);
-      }
+        )
+        .then(() => {
+          setPendingHandyman(
+            pendingHandyman.filter(
+              (handyman) => handyman._id !== selectedHandyman._id
+            )
+          );
+          setAlert({ message: "Handyman verified successfully." });
+          handleCloseModal();
+        })
+        .catch((error) => {
+          console.error("Error verifying Handyman:", error);
+        });
     }
   };
-  
+
   const handleRejectHandyman = async () => {
     if (selectedHandyman) {
       try {
@@ -108,16 +92,11 @@ const PendingHandyman = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
         );
         setPendingHandyman(
-          pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+          pendingHandyman.filter(
+            (handyman) => handyman._id !== selectedHandyman._id
+          )
         );
         setAlert({ message: "Handyman rejected successfully." });
-  
-        // Log activity
-        await logActivity(
-          "Reject",
-          `Rejected handyman ${selectedHandyman.fname} ${selectedHandyman.lname}`
-        );
-  
         handleCloseModal();
       } catch (error) {
         console.error("Error rejecting Handyman:", error);
@@ -125,7 +104,7 @@ const PendingHandyman = () => {
       }
     }
   };
-  
+
   const handleDeleteHandyman = async () => {
     if (selectedHandyman) {
       try {
@@ -133,15 +112,11 @@ const PendingHandyman = () => {
           `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
         );
         setPendingHandyman(
-          pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id)
+          pendingHandyman.filter(
+            (handyman) => handyman._id !== selectedHandyman._id
+          )
         );
         setAlert({ message: "Handyman deleted successfully." });
-  
-        // Log activity
-        await logActivity(
-          "Delete",
-          `Deleted handyman ${selectedHandyman.fname} ${selectedHandyman.lname}`
-        );
       } catch (error) {
         console.error("Error deleting Handyman:", error);
       } finally {
@@ -149,7 +124,7 @@ const PendingHandyman = () => {
         setSelectedHandyman(null);
       }
     }
-  };  
+  };
 
   const columns = [
     {

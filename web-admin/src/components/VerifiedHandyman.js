@@ -91,13 +91,13 @@ const VerifiedHandyman = () => {
   
         setAlert({
           message: `${selectedHandyman.fname} ${selectedHandyman.lname} has been successfully deleted and logged.`,
-          type: "success",
+          
         });
       } catch (error) {
         console.error("Error deleting handyman:", error);
         setAlert({
           message: "Failed to delete handyman. Please try again later.",
-          type: "danger",
+          
         });
       } finally {
         setLoading(false);
