@@ -62,20 +62,40 @@ const RejectedHandyman = () => {
     setSelectedHandyman(null);
   };
 
+  const logActivity = async (action, handyman) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${handyman.fname} ${handyman.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+
   const handleDeleteHandyman = async () => {
     if (selectedHandyman) {
       try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
-        );
-        setRejectedHandyman(
-          rejectedHandyman.filter(
-            (handyman) => handyman._id !== selectedHandyman._id
-          )
-        );
-        setAlert({ message: "Handyman deleted successfully." });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`, {
+          method: "DELETE",
+        });
+  
+        setRejectedHandyman(rejectedHandyman.filter((handyman) => handyman._id !== selectedHandyman._id));
+        setAlert({ message: "Handyman deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted Rejected Handyman", selectedHandyman);
       } catch (error) {
-        console.error("Error deleting Handyman:", error);
+        console.error("Error deleting handyman:", error);
+        setAlert({ message: "Failed to delete handyman."});
       } finally {
         setShowConfirmDelete(false);
         setSelectedHandyman(null);

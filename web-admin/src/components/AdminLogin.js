@@ -31,7 +31,7 @@ const AdminLogin = ({ onLogin }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              username: username,
+              username: "Admin",
               action: "Login",
               description: "Admin successfully logged in.",
               timestamp: new Date().toISOString(),
@@ -53,7 +53,7 @@ const AdminLogin = ({ onLogin }) => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              username: username || "Unknown",
+              username: "Admin",
               action: "Failed Login",
               description: "Invalid admin login attempt.",
               timestamp: new Date().toISOString(),

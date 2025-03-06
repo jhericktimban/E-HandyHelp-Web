@@ -64,67 +64,90 @@ const PendingHandyman = () => {
     setSelectedHandyman(null);
   };
 
-  const handleVerifyHandyman = () => {
-    if (selectedHandyman) {
-      axios
-        .put(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`
-        )
-        .then(() => {
-          setPendingHandyman(
-            pendingHandyman.filter(
-              (handyman) => handyman._id !== selectedHandyman._id
-            )
-          );
-          setAlert({ message: "Handyman verified successfully." });
-          handleCloseModal();
-        })
-        .catch((error) => {
-          console.error("Error verifying Handyman:", error);
-        });
+  const logActivity = async (action, handyman) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${handyman.fname} ${handyman.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
     }
   };
-
-  const handleRejectHandyman = async () => {
+  
+  const handleVerifyHandyman = async () => {
     if (selectedHandyman) {
       try {
-        await axios.put(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`
-        );
-        setPendingHandyman(
-          pendingHandyman.filter(
-            (handyman) => handyman._id !== selectedHandyman._id
-          )
-        );
-        setAlert({ message: "Handyman rejected successfully." });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/verify`, {
+          method: "PUT",
+        });
+  
+        setPendingHandyman(pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id));
+        setAlert({ message: "Handyman verified successfully."});
+  
+        // Log Activity
+        await logActivity("Verified Handyman", selectedHandyman);
+  
         handleCloseModal();
       } catch (error) {
-        console.error("Error rejecting Handyman:", error);
-        setAlert({ message: "Failed to reject Handyman." });
+        console.error("Error verifying handyman:", error);
+        setAlert({ message: "Failed to verify handyman."});
       }
     }
   };
-
+  
+  const handleRejectHandyman = async () => {
+    if (selectedHandyman) {
+      try {
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}/reject`, {
+          method: "PUT",
+        });
+  
+        setPendingHandyman(pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id));
+        setAlert({ message: "Handyman rejected successfully." });
+  
+        // Log Activity
+        await logActivity("Rejected Handyman", selectedHandyman);
+  
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error rejecting handyman:", error);
+        setAlert({ message: "Failed to reject handyman."});
+      }
+    }
+  };
+  
   const handleDeleteHandyman = async () => {
     if (selectedHandyman) {
       try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
-        );
-        setPendingHandyman(
-          pendingHandyman.filter(
-            (handyman) => handyman._id !== selectedHandyman._id
-          )
-        );
-        setAlert({ message: "Handyman deleted successfully." });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`, {
+          method: "DELETE",
+        });
+  
+        setPendingHandyman(pendingHandyman.filter((handyman) => handyman._id !== selectedHandyman._id));
+        setAlert({ message: "Handyman deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted Handyman", selectedHandyman);
       } catch (error) {
-        console.error("Error deleting Handyman:", error);
+        console.error("Error deleting handyman:", error);
+        setAlert({ message: "Failed to delete handyman."});
       } finally {
         setShowConfirmDelete(false);
         setSelectedHandyman(null);
       }
     }
   };
+
+  
 
   const columns = [
     {

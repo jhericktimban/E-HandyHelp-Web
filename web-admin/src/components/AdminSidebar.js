@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../assets/ehlogo1.png";
 import "../css/sideBar.css";
 import "font-awesome/css/font-awesome.min.css";
@@ -7,6 +7,9 @@ import "font-awesome/css/font-awesome.min.css";
 const AdminSidebar = ({ onLogout }) => {
   const [showHandyman, setShowHandyman] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const [activeLink, setActiveLink] = useState("");
+
+  const location = useLocation();
 
   // Load saved state from localStorage on component mount
   useEffect(() => {
@@ -14,19 +17,25 @@ const AdminSidebar = ({ onLogout }) => {
     const savedShowUsers = localStorage.getItem("showUsers") === "true";
     setShowHandyman(savedShowHandyman);
     setShowUsers(savedShowUsers);
-  }, []);
 
-  const toggleHandyman = () => {
+    // Set active link based on current URL
+    setActiveLink(location.pathname);
+  }, [location.pathname]);
+
+  const toggleHandyman = (e) => {
+    e.preventDefault(); // Prevent default behavior
     const newShowHandyman = !showHandyman;
     setShowHandyman(newShowHandyman);
     localStorage.setItem("showHandyman", newShowHandyman);
   };
-
-  const toggleUsers = () => {
+  
+  const toggleUsers = (e) => {
+    e.preventDefault(); // Prevent default behavior
     const newShowUsers = !showUsers;
     setShowUsers(newShowUsers);
     localStorage.setItem("showUsers", newShowUsers);
   };
+  
 
   return (
     <div className="admin-sidebar">
@@ -38,14 +47,13 @@ const AdminSidebar = ({ onLogout }) => {
       </div>
       <ul>
         <li>
-          <Link to="/dashboard">
+          <Link to="/dashboard" className={activeLink === "/dashboard" ? "active" : ""}>
             <i className="fa fa-tachometer" aria-hidden="true"></i> Dashboard
           </Link>
         </li>
         <li>
-          <Link to="/view-reports">
-            <i className="fa fa-file-text" aria-hidden="true"></i> Incident
-            Reports
+          <Link to="/view-reports" className={activeLink === "/view-reports" ? "active" : ""}>
+            <i className="fa fa-file-text" aria-hidden="true"></i> Incident Reports
           </Link>
         </li>
         <li>
@@ -53,29 +61,18 @@ const AdminSidebar = ({ onLogout }) => {
             <i className="fa fa-wrench" aria-hidden="true"></i> Handyman
             <span className="icon">{showHandyman ? "-" : "+"}</span>
           </a>
-          <div
-            className={`collapsible-content ${showHandyman ? "active" : ""}`}
-            style={{
-              maxHeight: showHandyman ? "500px" : "0",
-              padding: showHandyman ? "10px 0" : "0",
-              transition: "max-height 0.2s ease-out", 
-            }}
-          >
-            <Link to="/handyman/pending">
-              <i className="fa fa-clock-o" aria-hidden="true"></i> Pending
-              Handyman
+          <div className={`collapsible-content ${showHandyman ? "active" : ""}`}>
+            <Link to="/handyman/pending" className={activeLink === "/handyman/pending" ? "active" : ""}>
+              <i className="fa fa-clock-o" aria-hidden="true"></i> Pending Handyman
             </Link>
-            <Link to="/handyman/verified">
-              <i className="fa fa-check-circle" aria-hidden="true"></i> Verified
-              Handyman
+            <Link to="/handyman/verified" className={activeLink === "/handyman/verified" ? "active" : ""}>
+              <i className="fa fa-check-circle" aria-hidden="true"></i> Verified Handyman
             </Link>
-            <Link to="/handyman/rejected">
-              <i className="fa fa-times-circle" aria-hidden="true"></i> Rejected
-              Handyman
+            <Link to="/handyman/rejected" className={activeLink === "/handyman/rejected" ? "active" : ""}>
+              <i className="fa fa-times-circle" aria-hidden="true"></i> Rejected Handyman
             </Link>
-            <Link to="/handyman/suspended">
-              <i className="fa fa-ban" aria-hidden="true"></i> Suspended
-              Handyman
+            <Link to="/handyman/suspended" className={activeLink === "/handyman/suspended" ? "active" : ""}>
+              <i className="fa fa-ban" aria-hidden="true"></i> Suspended Handyman
             </Link>
           </div>
         </li>
@@ -84,37 +81,28 @@ const AdminSidebar = ({ onLogout }) => {
             <i className="fa fa-users" aria-hidden="true"></i> Users
             <span className="icon">{showUsers ? "-" : "+"}</span>
           </a>
-          <div
-            className={`collapsible-content ${showUsers ? "active" : ""}`}
-            style={{
-              maxHeight: showUsers ? "500px" : "0",
-              padding: showUsers ? "10px 0" : "0",
-              transition: "max-height 0.2s ease-out", // Smooth transition
-            }}
-          >
-            <Link to="/users/pending">
+          <div className={`collapsible-content ${showUsers ? "active" : ""}`}>
+            <Link to="/users/pending" className={activeLink === "/users/pending" ? "active" : ""}>
               <i className="fa fa-clock-o" aria-hidden="true"></i> Pending Users
             </Link>
-            <Link to="/users/verified">
-              <i className="fa fa-check-circle" aria-hidden="true"></i> Verified
-              Users
+            <Link to="/users/verified" className={activeLink === "/users/verified" ? "active" : ""}>
+              <i className="fa fa-check-circle" aria-hidden="true"></i> Verified Users
             </Link>
-            <Link to="/users/rejected">
-              <i className="fa fa-times-circle" aria-hidden="true"></i> Rejected
-              Users
+            <Link to="/users/rejected" className={activeLink === "/users/rejected" ? "active" : ""}>
+              <i className="fa fa-times-circle" aria-hidden="true"></i> Rejected Users
             </Link>
-            <Link to="/users/suspended">
+            <Link to="/users/suspended" className={activeLink === "/users/suspended" ? "active" : ""}>
               <i className="fa fa-ban" aria-hidden="true"></i> Suspended Users
             </Link>
           </div>
         </li>
         <li>
-          <Link to="/view-feedbacks">
+          <Link to="/view-feedbacks" className={activeLink === "/view-feedbacks" ? "active" : ""}>
             <i className="fa fa-comments" aria-hidden="true"></i> Feedbacks
           </Link>
         </li>
         <li>
-          <Link to="/activity-logs">
+          <Link to="/activity-logs" className={activeLink === "/activity-logs" ? "active" : ""}>
             <i className="fa fa-history" aria-hidden="true"></i> Activity Logs
           </Link>
         </li>

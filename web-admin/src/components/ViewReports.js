@@ -70,65 +70,78 @@ const ViewReports = () => {
     setSelectedReport(null);
   };
 
-  const handleSuspendUser = async (userId, reportId) => {
+  const handleSuspendUser = async (user, reportId) => {
+    if (!user) return;
+  
     const isConfirmed = window.confirm(
-      "Are you sure you want to suspend this resident?"
+      `Are you sure you want to suspend ${user.fname} ${user.lname}?`
     );
-
-    if (!isConfirmed) return; // If not confirmed, exit the function
-
+  
+    if (!isConfirmed) return; // Exit if not confirmed
+  
     try {
       await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
-        {
-          method: "PUT",
-        }
+        `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}/suspend`,
+        { method: "PUT" }
       );
+  
       await axios.put(
         `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
-        {
-          status: "completed",
-        }
+        { status: "completed" }
       );
+  
       alert(
-        "User suspended successfully and report status updated to completed."
+        `User ${user.fname} ${user.lname} suspended successfully and report status updated to completed.`
       );
-      fetchReports();
+  
+      // Log Activity
+      await logActivity("Suspended User", user);
+  
+      fetchReports(); // Refresh reports after suspension
     } catch (error) {
       console.error("Error suspending user:", error);
     }
   };
-
-  const handleSuspendHandyman = async (handymanId, reportId) => {
+  
+  const handleSuspendHandyman = async (handyman, reportId) => {
+    if (!handyman) return;
+  
     const isConfirmed = window.confirm(
-      "Are you sure you want to suspend this handyman?"
+      `Are you sure you want to suspend ${handyman.fname} ${handyman.lname}?`
     );
-
-    if (!isConfirmed) return; // If not confirmed, exit the function
-
+  
+    if (!isConfirmed) return; // Exit if not confirmed
+  
     try {
       await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
+        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handyman._id}/suspend`,
         { method: "PUT" }
       );
+  
       await axios.put(
         `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
-        {
-          status: "completed",
-        }
+        { status: "completed" }
       );
+  
       alert(
-        "Handyman suspended successfully and report status updated to completed."
+        `Handyman ${handyman.fname} ${handyman.lname} suspended successfully and report status updated to completed.`
       );
-      fetchReports();
+  
+      // Log Activity
+      await logActivityhandy("Suspended Handyman", handyman);
+  
+      fetchReports(); // Refresh reports after suspension
     } catch (error) {
       console.error("Error suspending handyman:", error);
     }
   };
 
   const handleSendWarning = async (report) => {
+    if (!report) return;
+  
     const notificationContent =
       "Your account is subjected for suspension. Please email us your NTE to avoid account suspension.";
+  
     const notification = {
       handymanId: report.handymanId?._id,
       userId: report.userId?._id,
@@ -136,17 +149,66 @@ const ViewReports = () => {
       notif_for: report.reported_by === "handyman" ? "handyman" : "user",
       date_sent: new Date().toISOString(),
     };
-
+  
     try {
       await axios.post(
         "https://api.semaphore.co/api/v4/messages",
         notification
       );
+  
       alert("Warning sent successfully.");
+  
+      // Determine if the warning is for a handyman or user
+      const warnedPerson = report.handymanId || report.userId;
+  
+      // Log Activity
+      if (warnedPerson) {
+        await logActivity("Sent Warning", warnedPerson);
+      }
     } catch (error) {
       console.error("Error sending warning:", error);
     }
   };
+  
+  
+  const logActivity = async (action, user) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+
+  const logActivityhandy = async (action, handyman) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${handyman.fname} ${handyman.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+  
 
   const columns = [
     {

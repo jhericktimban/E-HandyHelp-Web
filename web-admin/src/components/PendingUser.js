@@ -64,61 +64,90 @@ const PendingUser = () => {
     setSelectedUser(null);
   };
 
-  const handleVerifyUser = () => {
-    if (selectedUser) {
-      axios
-        .put(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`
-        )
-        .then(() => {
-          setPendingUsers(
-            pendingUsers.filter((user) => user._id !== selectedUser._id)
-          );
-          setAlert({ message: "User verified successfully." });
-          handleCloseModal();
-        })
-        .catch((error) => {
-          console.error("Error verifying user:", error);
-        });
+  const logActivity = async (action, user) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
     }
   };
-
-  const handleRejectUser = async () => {
+  
+  const handleVerifyUser = async () => {
     if (selectedUser) {
       try {
-        await axios.put(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/reject`
-        );
-        setPendingUsers(
-          pendingUsers.filter((user) => user._id !== selectedUser._id)
-        );
-        setAlert({ message: "User rejected successfully." });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`, {
+          method: "PUT",
+        });
+  
+        setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
+        setAlert({ message: "User verified successfully."});
+  
+        // Log Activity
+        await logActivity("Verified User", selectedUser);
+  
         handleCloseModal();
       } catch (error) {
-        console.error("Error rejecting user:", error);
-        setAlert({ message: "Failed to reject user." });
+        console.error("Error verifying user:", error);
+        setAlert({ message: "Failed to verify user."});
       }
     }
   };
-
+  
+  const handleRejectUser = async () => {
+    if (selectedUser) {
+      try {
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/reject`, {
+          method: "PUT",
+        });
+  
+        setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
+        setAlert({ message: "User rejected successfully."});
+  
+        // Log Activity
+        await logActivity("Rejected User", selectedUser);
+  
+        handleCloseModal();
+      } catch (error) {
+        console.error("Error rejecting user:", error);
+        setAlert({ message: "Failed to reject user."});
+      }
+    }
+  };
+  
   const handleDeleteUser = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
-        );
-        setPendingUsers(
-          pendingUsers.filter((user) => user._id !== selectedUser._id)
-        );
-        setAlert({ message: "User deleted successfully." });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
+          method: "DELETE",
+        });
+  
+        setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
+        setAlert({ message: "User deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted User", selectedUser);
       } catch (error) {
         console.error("Error deleting user:", error);
+        setAlert({ message: "Failed to delete user."});
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
       }
     }
   };
+  
+  
 
   const columns = [
     {

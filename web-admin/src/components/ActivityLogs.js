@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
+import { Modal, Button } from "react-bootstrap";
 import "../css/activitylogs.css";
 
 const ActivityLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedLog, setSelectedLog] = useState(null); // State to store selected log
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -19,22 +22,25 @@ const ActivityLogs = () => {
         setLoading(false);
       }
     };
-    
 
     fetchLogs();
   }, []);
+
+  // Handle row click to show modal
+  const handleRowClick = (row) => {
+    setSelectedLog(row);
+    setShowModal(true);
+  };
 
   // Define columns for DataTable
   const columns = [
     {
       name: "Username",
       selector: (row) => row.username,
-      sortable: true,
     },
     {
       name: "Action",
       selector: (row) => row.action,
-      sortable: true,
     },
     {
       name: "Description",
@@ -43,7 +49,6 @@ const ActivityLogs = () => {
     {
       name: "Timestamp",
       selector: (row) => new Date(row.timestamp).toLocaleString(),
-      sortable: true,
     },
   ];
 
@@ -60,6 +65,7 @@ const ActivityLogs = () => {
     rows: {
       style: {
         fontSize: "14px",
+        cursor: "pointer", // Indicate clickable rows
       },
     },
   };
@@ -78,7 +84,28 @@ const ActivityLogs = () => {
         responsive
         progressPending={loading}
         customStyles={customStyles}
+        onRowClicked={handleRowClick} // Handle row click
       />
+
+      {/* Modal for Activity Log Details */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+        <Modal.Header closeButton style={{ backgroundColor: "#007bff", color: "#fff" }}>
+          <Modal.Title>Log Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedLog && (
+            <>
+              <p><strong>Username:</strong> {selectedLog.username}</p>
+              <p><strong>Action:</strong> {selectedLog.action}</p>
+              <p><strong>Description:</strong> {selectedLog.description}</p>
+              <p><strong>Timestamp:</strong> {new Date(selectedLog.timestamp).toLocaleString()}</p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

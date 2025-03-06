@@ -7,6 +7,7 @@ import "../css/suspendeduser.css";
 const SuspendedUser = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showConfirmLift, setShowConfirmLift] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [suspendedUsers, setSuspendedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -67,18 +68,40 @@ const SuspendedUser = () => {
     setShowConfirmDelete(true);
   };
 
+  const logActivity = async (action, user) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+
   const handleDeleteUser = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
-        );
-        setSuspendedUsers(
-          suspendedUsers.filter((user) => user._id !== selectedUser._id)
-        );
-        setAlert({ message: "User deleted successfully!" });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
+          method: "DELETE",
+        });
+  
+        setSuspendedUsers(suspendedUsers.filter((user) => user._id !== selectedUser._id));
+        setAlert({ message: "User deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted Suspended User", selectedUser);
       } catch (error) {
         console.error("Error deleting user:", error);
+        setAlert({ message: "Failed to delete user."});
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
@@ -86,18 +109,30 @@ const SuspendedUser = () => {
     }
   };
 
-  const handleLiftSuspension = async (user) => {
+
+  const handleLiftSuspension = async () => {
+    if (!selectedUser) return;
+  
     try {
       await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}/lift-suspension`
+        `https://e-handyhelp-web-backend.onrender.com/api/users/lift-suspension/${selectedUser._id}`,
+        {
+          accounts_status: "verified",
+        }
       );
-      setAlert({
-        message: `Suspension lifted for ${user.fname} ${user.lname}.`,
-      });
-      fetchSuspendedUsers(); // Refresh the list after lifting suspension
+  
+      setAlert({ message: "Suspension lifted successfully."});
+  
+      // Log Activity
+      await logActivity("Lifted Suspension", selectedUser);
+  
+      await fetchSuspendedUsers(); // Refresh data after lifting suspension
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({ message: "Failed to lift suspension." });
+      setAlert({ message: "Failed to lift suspension."});
+    } finally {
+      setShowConfirmLift(false);
+      setSelectedUser(null);
     }
   };
 
@@ -176,10 +211,10 @@ const SuspendedUser = () => {
         </Alert>
       )}
 
-      {/* Modal for Handyman details */}
+      {/* Modal for User details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Handyman Details</Modal.Title>
+          <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedUser && (
@@ -285,6 +320,25 @@ const SuspendedUser = () => {
           <Button onClick={handleDeleteUser}>Delete</Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Confirmation Modal for Lifting Suspension */}
+            <Modal
+              show={showConfirmLift}
+              onHide={() => setShowConfirmLift(false)}
+              centered
+            >
+              <Modal.Header closeButton>
+                <Modal.Title>Confirm Lift Suspension</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Are you sure you want to lift the suspension for{" "}
+                {selectedUser?.fname} {selectedUser?.lname}?
+              </Modal.Body>
+              <Modal.Footer>
+                <Button onClick={() => setShowConfirmLift(false)}>Cancel</Button>
+                <Button onClick={handleLiftSuspension}>Lift Suspension</Button>
+              </Modal.Footer>
+            </Modal>
     </div>
   );
 };

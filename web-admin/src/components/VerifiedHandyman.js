@@ -66,41 +66,41 @@ const VerifiedHandyman = () => {
     setShowConfirmDelete(true);
   };
 
+  const logActivity = async (action, handyman) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${handyman.fname} ${handyman.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+
   const handleDeleteHandyman = async () => {
     if (selectedHandyman) {
       try {
-        setLoading(true);
-        
-        // Step 1: Delete the handyman
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`
-        );
-  
-        // Step 2: Remove from UI
-        setVerifiedHandymen((prevHandymen) =>
-          prevHandymen.filter((handyman) => handyman._id !== selectedHandyman._id)
-        );
-  
-        // Step 3: Log the activity
-        await axios.post("https://e-handyhelp-web-backend.onrender.com/api/activity-logs", {
-          action: "Deleted Verified Handyman",
-          description: `Admin deleted handyman ${selectedHandyman.fname} ${selectedHandyman.lname} (${selectedHandyman.username}).`,
-          performedBy: "Admin", // If you have admin authentication, replace this dynamically
-          timestamp: new Date().toISOString(),
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`, {
+          method: "DELETE",
         });
   
-        setAlert({
-          message: `${selectedHandyman.fname} ${selectedHandyman.lname} has been successfully deleted and logged.`,
-          
-        });
+        setVerifiedHandymen(verifiedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id));
+        setAlert({ message: "Handyman deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted Verified Handyman", selectedHandyman);
       } catch (error) {
         console.error("Error deleting handyman:", error);
-        setAlert({
-          message: "Failed to delete handyman. Please try again later.",
-          
-        });
+        setAlert({ message: "Failed to delete handyman."});
       } finally {
-        setLoading(false);
         setShowConfirmDelete(false);
         setSelectedHandyman(null);
       }

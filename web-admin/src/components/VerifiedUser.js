@@ -64,25 +64,47 @@ const VerifiedUser = () => {
     setShowConfirmDelete(false); // Reset delete confirmation when modal closes
   };
 
+  const logActivity = async (action, user) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+
   const handleDeleteUser = async () => {
     if (selectedUser) {
       try {
-        await axios.delete(
-          `https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`
-        ); // Call delete API
-        setVerifiedUsers(
-          (prevUsers) =>
-            prevUsers.filter((user) => user._id !== selectedUser._id) // Remove user from state
-        );
-        setAlert({ message: "Handyman deleted successfully!" });
+        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
+          method: "DELETE",
+        });
+  
+        setVerifiedUsers(verifiedUsers.filter((user) => user._id !== selectedUser._id));
+        setAlert({ message: "User deleted successfully."});
+  
+        // Log Activity
+        await logActivity("Deleted Verified User", selectedUser);
       } catch (error) {
         console.error("Error deleting user:", error);
+        setAlert({ message: "Failed to delete user."});
       } finally {
         setShowConfirmDelete(false);
         setSelectedUser(null);
       }
     }
   };
+
 
   // Filter verified users based on search term
   const filteredUsers = verifiedUsers.filter((user) => {
@@ -153,10 +175,10 @@ const VerifiedUser = () => {
         </Alert>
       )}
 
-      {/* Modal for Handyman details */}
+      {/* Modal for User details */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Handyman Details</Modal.Title>
+          <Modal.Title>User Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedUser && (
