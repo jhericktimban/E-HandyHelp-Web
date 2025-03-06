@@ -15,7 +15,7 @@ const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
 const reportRoute = require("./routes/reports");
 const feedbackRoute = require("./routes/feedbacks");
-const activityLogsRoute = require("./routes/activityLogs");
+const activityLogsRoute = require("./routes/activitylogs");
 
 const app = express();
 
