@@ -6,5 +6,6 @@ const activityLogSchema = new mongoose.Schema({
   description: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
 });
+const ActivityLog = mongoose.model('ActivityLog', activityLogSchema);
 
-module.exports = mongoose.model("ActivityLog", activityLogSchema); // Use CommonJS export
+module.exports = ActivityLog;

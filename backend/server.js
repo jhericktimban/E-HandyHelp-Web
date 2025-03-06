@@ -1,3 +1,9 @@
+// Load environment variables first with explicit path
+require("dotenv").config({ path: "./backend/.env" });
+
+// Debugging: Check if MONGO_URI is loaded
+console.log("MONGO_URI:", process.env.MONGO_URI);
+
 const express = require("express");
 const { connect } = require("mongoose");
 const cors = require("cors");
@@ -9,7 +15,7 @@ const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
 const reportRoute = require("./routes/reports");
 const feedbackRoute = require("./routes/feedbacks");
-const activityLogRoute = require("./routes/activityLogs");
+const activityLogRoute = require("./routes/activitylogs");
 
 const app = express();
 
