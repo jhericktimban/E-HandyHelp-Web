@@ -11,6 +11,7 @@ const ActivityLogs = () => {
       try {
         const response = await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs");
         const data = await response.json();
+        console.log("Fetched Logs:", data); // Debugging line
         setLogs(data);
       } catch (error) {
         console.error("Error fetching logs:", error);
@@ -18,6 +19,7 @@ const ActivityLogs = () => {
         setLoading(false);
       }
     };
+    
 
     fetchLogs();
   }, []);
