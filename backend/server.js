@@ -15,7 +15,7 @@ const handymenRoute = require("./routes/handymen");
 const dashboardRoute = require("./routes/dashboard");
 const reportRoute = require("./routes/reports");
 const feedbackRoute = require("./routes/feedbacks");
-const activityLogRoute = require("./routes/activityLogs");
+const activityLogsRoute = require("./routes/activitylogs");
 
 const app = express();
 
@@ -55,7 +55,7 @@ app.use("/api/handymen", handymenRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/reports", reportRoute);
 app.use("/api/feedback", feedbackRoute);
-app.use("/api/activityLogs", activityLogRoute);
+app.use("/api/activityLogs", activityLogsRoute);
 
 // Port Configuration
 const PORT = process.env.PORT || 8080;
