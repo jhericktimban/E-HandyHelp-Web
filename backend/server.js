@@ -1,5 +1,5 @@
 // Load environment variables first with explicit path
-require("dotenv").config({ path: "./backend/.env" });
+require("dotenv").config();
 
 // Debugging: Check if MONGO_URI is loaded
 console.log("MONGO_URI:", process.env.MONGO_URI);

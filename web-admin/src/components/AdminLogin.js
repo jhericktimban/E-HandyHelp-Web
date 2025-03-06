@@ -40,8 +40,10 @@ const AdminLogin = ({ onLogin }) => {
         } catch (error) {
           console.error("Error logging activity:", error);
         }
+        setLoading(false); // Stop loading after success
       } else {
         alert("Invalid username or password.");
+        setLoading(false); // Stop loading immediately for failed login
   
         // Log the failed login attempt
         try {
@@ -61,9 +63,9 @@ const AdminLogin = ({ onLogin }) => {
           console.error("Error logging activity:", error);
         }
       }
-      setLoading(false); // Stop loading
-    }, 2000); // Simulate 2 seconds delay
+    }, 2000); // Simulate 2 seconds delay for valid login only
   };
+  
   
 
   const togglePasswordVisibility = () => {
