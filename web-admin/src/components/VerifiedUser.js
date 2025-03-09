@@ -3,6 +3,12 @@ import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/verifieduser.css";
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaBan,
+  FaTrash,
+} from "react-icons/fa";
 
 const VerifiedUser = () => {
   const [showModal, setShowModal] = useState(false);
@@ -74,7 +80,7 @@ const VerifiedUser = () => {
         body: JSON.stringify({
           username: "Admin", // Replace with dynamic admin username if available
           action: action,
-          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          description: `Admin ${action.toLowerCase()} user: ${user.fname} ${user.lname}`,
           timestamp: new Date().toISOString(),
         }),
       });
@@ -83,27 +89,59 @@ const VerifiedUser = () => {
     }
   };
 
-  const handleDeleteUser = async () => {
-    if (selectedUser) {
-      try {
-        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
-          method: "DELETE",
-        });
-  
-        setVerifiedUsers(verifiedUsers.filter((user) => user._id !== selectedUser._id));
-        setAlert({ message: "User deleted successfully."});
-  
-        // Log Activity
-        await logActivity("Deleted Verified User", selectedUser);
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        setAlert({ message: "Failed to delete user."});
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedUser(null);
-      }
-    }
-  };
+  const handleDeleteUser = async (user) => {
+            const result = await Swal.fire({
+              title: "Are you sure?",
+              text: `You are about to delete ${user.fname} ${user.lname}. This action cannot be undone.`,
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Yes, delete it",
+              cancelButtonText: "Cancel",
+              customClass: {
+                confirmButton: "custom-confirm-btn",
+              },
+            });
+          
+            if (!result.isConfirmed) return;
+          
+            Swal.fire({
+              title: "Deleting...",
+              text: "Please wait while we delete the user.",
+              allowEscapeKey: false,
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading(); // Show loading spinner
+              },
+            });
+          
+            try {
+              await fetch(
+                `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}`,
+                { method: "DELETE" }
+              );
+          
+              setVerifiedUsers((prevUser) =>
+                prevUser.filter((u) => u._id !== user._id)
+              );
+          
+              await logActivity("Deleted Verified User", user);
+          
+              Swal.fire({
+                title: "Deleted!",
+                text: "User deleted successfully.",
+                icon: "success",
+                showConfirmButton: true,
+              });
+            } catch (error) {
+              console.error("Error deleting user:", error);
+          
+              Swal.fire({
+                title: "Error",
+                text: "Failed to delete user. Please try again.",
+                icon: "error",
+              });
+            }
+          };
 
 
   // Filter verified users based on search term
@@ -133,14 +171,19 @@ const VerifiedUser = () => {
       name: "Action",
       cell: (row) => (
         <div className="button-group">
-          <Button onClick={() => handleOpenModal(row)}>Details</Button>
+          <Button onClick={() => handleOpenModal(row)}
+            title="Details"
+            >
+            <FaEye/>
+          </Button>
           <Button
             onClick={() => {
-              setSelectedUser(row);
-              setShowConfirmDelete(true);
+              handleDeleteUser(row);
+             
             }}
+            title="Delete"
           >
-            Delete
+            <FaTrash/>
           </Button>
         </div>
       ),
@@ -262,28 +305,12 @@ const VerifiedUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button style={{ backgroundColor: "#727475", borderColor: "#727475", color: "#fff" }}
+          onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered
-      >
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedUser?.fname}{" "}
-          {selectedUser?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button onClick={handleDeleteUser}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
+      
     </div>
   );
 };

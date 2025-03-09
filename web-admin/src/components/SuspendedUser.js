@@ -3,46 +3,50 @@ import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/suspendeduser.css";
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaBan,
+  FaTrash,
+} from "react-icons/fa";
+
 
 const SuspendedUser = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [showConfirmLift, setShowConfirmLift] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [suspendedUsers, setSuspendedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [alert, setAlert] = useState(null);
 
-  const [loading, setLoading] = useState(true);
-
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-  // Function to fetch suspended users from the backend
+  const [loading, setLoading] = useState(true);
+
+  // Fetch suspended users from the backend
   const fetchSuspendedUsers = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/users/suspended"
       );
-      const sortedUsers = response.data.sort((a, b) => {
+      const sortedUser = response.data.sort((a, b) => {
         return (
           new Date(b.suspendedAt || b.updatedAt || b.createdAt) -
           new Date(a.suspendedAt || a.updatedAt || a.createdAt)
         );
       });
-
-      setSuspendedUsers(sortedUsers);
+      setSuspendedUsers(sortedUser);
     } catch (error) {
-      console.error("Error fetching suspended users:", error);
+      console.error("Error fetching suspended user:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch suspended users when component mounts
   useEffect(() => {
-    fetchSuspendedUsers();
+    fetchSuspendedUsers(); 
   }, []);
 
   const customStyles = {
@@ -68,6 +72,9 @@ const SuspendedUser = () => {
     setShowConfirmDelete(true);
   };
 
+
+
+  
   const logActivity = async (action, user) => {
     try {
       await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
@@ -87,32 +94,87 @@ const SuspendedUser = () => {
     }
   };
 
-  const handleDeleteUser = async () => {
-    if (selectedUser) {
-      try {
-        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
-          method: "DELETE",
-        });
+  const handleDeleteUser = async (user) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to delete ${user.fname} ${user.lname}. This action cannot be undone.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "custom-confirm-btn",
+      },
+    });
   
-        setSuspendedUsers(suspendedUsers.filter((user) => user._id !== selectedUser._id));
-        setAlert({ message: "User deleted successfully."});
+    if (!result.isConfirmed) return;
   
-        // Log Activity
-        await logActivity("Deleted Suspended User", selectedUser);
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        setAlert({ message: "Failed to delete user."});
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedUser(null);
-      }
+    Swal.fire({
+      title: "Deleting...",
+      text: "Please wait while we delete the user.",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
+  
+    try {
+      await fetch(
+        `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}`,
+        { method: "DELETE" }
+      );
+  
+      setSuspendedUsers((prevUser) =>
+        prevUser.filter((u) => u._id !== user._id)
+      );
+  
+      await logActivity("Deleted Suspended User", user);
+  
+      Swal.fire({
+        title: "Deleted!",
+        text: "User deleted successfully.",
+        icon: "success",
+        showConfirmButton: true,
+      });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+  
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete user. Please try again.",
+        icon: "error",
+      });
     }
   };
 
-
   const handleLiftSuspension = async () => {
+
+    const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "This will lift the suspension for the user.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "custom-confirm-btn",
+          },
+        });
+    
+    if (!result.isConfirmed) return;
+     // Show loading popup
+        Swal.fire({
+          title: "Lifting...",
+          text: "Please wait while we lift the suspension.",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          didOpen: () => {
+            Swal.showLoading(); // Show loading spinner
+          },
+        });
+
     if (!selectedUser) return;
-  
     try {
       await axios.put(
         `https://e-handyhelp-web-backend.onrender.com/api/users/lift-suspension/${selectedUser._id}`,
@@ -127,16 +189,20 @@ const SuspendedUser = () => {
       await logActivity("Lifted Suspension", selectedUser);
   
       await fetchSuspendedUsers(); // Refresh data after lifting suspension
+      Swal.fire("Lifted!", "User suspension lifted successfully.", "success");
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({ message: "Failed to lift suspension."});
+      Swal.fire(
+              "Error",
+              "Failed to lift suspension. Please try again.",
+              "error"
+            );
     } finally {
-      setShowConfirmLift(false);
       setSelectedUser(null);
     }
   };
 
-  // Filter suspended users based on search term
+  // Filter suspended handymen based on search term
   const filteredUsers = suspendedUsers.filter((user) => {
     const fullName = `${user?.fname || ""} ${user?.lname || ""}`;
     return (
@@ -145,6 +211,7 @@ const SuspendedUser = () => {
         user.username.toLowerCase().includes(searchTerm.toLowerCase()))
     );
   });
+
   const columns = [
     {
       name: "Name",
@@ -152,7 +219,7 @@ const SuspendedUser = () => {
     },
     {
       name: "Username",
-      selector: (row) => row.username,
+      selector: (row) => row.username, // Replaced email with username
     },
     {
       name: "Account Status",
@@ -160,24 +227,30 @@ const SuspendedUser = () => {
     },
     {
       name: "Action",
-      selector: (row) => row.id, // Set a unique identifier
       cell: (row) => (
-        <div className="action-cell">
-          <Button onClick={() => handleOpenModal(row)} className="btn">
-            Details
-          </Button>
+        <div className="d-flex gap-2">
+          <Button onClick={() => handleOpenModal(row)}
+            title="Details"
+            ><FaEye /></Button>
           <Button
             onClick={() => {
               setSelectedUser(row);
-              handleConfirmDelete();
+              handleLiftSuspension();
             }}
-            className="btn"
+            title="Lift Suspension"
+            >
+            <FaBan />
+          </Button>
+          <Button
+            onClick={() => {
+              handleDeleteUser(row);
+              
+            }}
+            title="Delete"
           >
-            Delete
+            <FaTrash />
           </Button>
-          <Button onClick={() => handleLiftSuspension(row)} className="btn">
-            Lift Suspension
-          </Button>
+          
         </div>
       ),
     },
@@ -204,7 +277,6 @@ const SuspendedUser = () => {
         customStyles={customStyles}
       />
 
-      {/* Alert for success or error messages */}
       {alert && (
         <Alert variant={alert.type} onClose={() => setAlert(null)} dismissible>
           {alert.message}
@@ -226,7 +298,6 @@ const SuspendedUser = () => {
               <p>Email: {selectedUser.email}</p>
               <p>Username: {selectedUser.username}</p>
               <p>Contact: {selectedUser.contact}</p>
-
               <p>
                 Date of Birth:{" "}
                 {new Date(selectedUser.dateOfBirth).toLocaleDateString()}
@@ -239,7 +310,9 @@ const SuspendedUser = () => {
                       className="carousel-btn-user left"
                       onClick={() =>
                         setImageIndex((prev) =>
-                          prev > 0 ? prev - 1 : selectedUser.images.length - 1
+                          prev > 0
+                            ? prev - 1
+                            : selectedUser.images.length - 1
                         )
                       }
                     >
@@ -247,7 +320,9 @@ const SuspendedUser = () => {
                     </button>
                     <img
                       src={
-                        selectedUser.images[imageIndex].startsWith("data:image")
+                        selectedUser.images[imageIndex].startsWith(
+                          "data:image"
+                        )
                           ? selectedUser.images[imageIndex]
                           : `data:image/png;base64,${selectedUser.images[imageIndex]}`
                       }
@@ -259,7 +334,9 @@ const SuspendedUser = () => {
                       className="carousel-btn-user right"
                       onClick={() =>
                         setImageIndex((prev) =>
-                          prev < selectedUser.images.length - 1 ? prev + 1 : 0
+                          prev < selectedUser.images.length - 1
+                            ? prev + 1
+                            : 0
                         )
                       }
                     >
@@ -298,47 +375,14 @@ const SuspendedUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }} 
+          onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered
-      >
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedUser?.fname}{" "}
-          {selectedUser?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button onClick={handleDeleteUser}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
+     
 
-      {/* Confirmation Modal for Lifting Suspension */}
-            <Modal
-              show={showConfirmLift}
-              onHide={() => setShowConfirmLift(false)}
-              centered
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Confirm Lift Suspension</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                Are you sure you want to lift the suspension for{" "}
-                {selectedUser?.fname} {selectedUser?.lname}?
-              </Modal.Body>
-              <Modal.Footer>
-                <Button onClick={() => setShowConfirmLift(false)}>Cancel</Button>
-                <Button onClick={handleLiftSuspension}>Lift Suspension</Button>
-              </Modal.Footer>
-            </Modal>
+     
     </div>
   );
 };

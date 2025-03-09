@@ -76,6 +76,7 @@ router.put('/:id/suspend', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 // DELETE /api/handymen/:id
 router.delete('/:id', async (req, res) => {
   try {

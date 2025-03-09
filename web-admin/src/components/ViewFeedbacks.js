@@ -5,6 +5,12 @@
   import { FaStar } from "react-icons/fa";
   import Sentiment from "sentiment";
   import "../css/feedback.css";
+  import Swal from "sweetalert2";
+  import {
+    FaEye,
+    FaBan,
+    FaTrash,
+  } from "react-icons/fa";
 
   const sentimentAnalyzer = new Sentiment();
 
@@ -111,8 +117,9 @@
           <Button
             className="view-details-btn"
             onClick={() => handleShowModal(row)}
+            title="Details"
           >
-            View Details
+            <FaEye/>
           </Button>
         ),
       },
@@ -190,7 +197,8 @@
               )}
             </Modal.Body>
             <Modal.Footer>
-              <Button className="close-modal-btn" onClick={handleCloseModal}>
+              <Button style={{ backgroundColor: "#727475", borderColor: "#727475", color: "#fff" }}
+              className="close-modal-btn" onClick={handleCloseModal}>
                 Close
               </Button>
             </Modal.Footer>

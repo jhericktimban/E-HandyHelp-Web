@@ -2,6 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 import axios from "axios";
 import DataTable from "react-data-table-component";
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaBan,
+  FaExclamationTriangle,
+  FaInfoCircle,
+} from "react-icons/fa";
 import "../css/ViewReports.css";
 
 const ViewReports = () => {
@@ -14,7 +21,7 @@ const ViewReports = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchReports(); // Fetch reports on initial load
+    fetchReports();
   }, []);
 
   const fetchReports = async () => {
@@ -23,19 +30,21 @@ const ViewReports = () => {
       const response = await axios.get(
         "https://e-handyhelp-web-backend.onrender.com/api/reports"
       );
-      
-      const pendingReports = response.data.filter(
-        (report) => report.status === "pending"
-      );
-
-      // Separate reports based on who reported them
+  
+      const pendingReports = response.data
+        .filter((report) => report.status === "pending")
+        .sort((a, b) => 
+          new Date(b?.additionalInfo?.dateReported) - 
+          new Date(a?.additionalInfo?.dateReported)
+        );
+  
       const userReports = pendingReports.filter(
         (report) => report.reported_by === "user"
       );
       const handymanReports = pendingReports.filter(
         (report) => report.reported_by === "handyman"
       );
-
+  
       setReports(pendingReports);
       setUserReports(userReports);
       setHandymanReports(handymanReports);
@@ -45,18 +54,14 @@ const ViewReports = () => {
       setLoading(false);
     }
   };
+  
 
   const customStyles = {
     table: {
-      style: {
-        width: "100%",
-      },
+      style: { width: "100%" },
     },
     headCells: {
-      style: {
-        fontWeight: "bold",
-        fontSize: "16px",
-      },
+      style: { fontWeight: "bold", fontSize: "16px" },
     },
   };
 
@@ -70,18 +75,83 @@ const ViewReports = () => {
     setSelectedReport(null);
   };
 
-  const handleSuspendUser = async (user, reportId) => {
-    if (!user) return;
-  
-    const isConfirmed = window.confirm(
-      `Are you sure you want to suspend ${user.fname} ${user.lname}?`
-    );
-  
-    if (!isConfirmed) return; // Exit if not confirmed
+  const logActivityuser = async (action, user) => {
+    if (!user) {
+      console.error("User data is missing for logging activity.");
+      return;
+    }
   
     try {
       await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}/suspend`,
+        "https://e-handyhelp-web-backend.onrender.com/api/activityLogs",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: "Admin",
+            action: action,
+            description: `Admin ${action.toLowerCase()}: ${user?.fname || "Unknown"} ${user?.lname || ""}`,
+            timestamp: new Date().toISOString(),
+          }),
+        }
+      );
+    } catch (error) {
+      console.error("Error logging user activity:", error);
+    }
+  };
+  
+  const logActivityhandy = async (action, handyman) => {
+    if (!handyman) {
+      console.error("Handyman data is missing for logging activity.");
+      return;
+    }
+  
+    try {
+      await fetch(
+        "https://e-handyhelp-web-backend.onrender.com/api/activityLogs",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: "Admin",
+            action: action,
+            description: `Admin ${action.toLowerCase()}: ${handyman?.fname || "Unknown"} ${handyman?.lname || ""}`,
+            timestamp: new Date().toISOString(),
+          }),
+        }
+      );
+    } catch (error) {
+      console.error("Error logging handyman activity:", error);
+    }
+  };
+  
+
+  const handleSuspendUser = async (userId, reportId, user) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will suspend the user.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+      customClass: { confirmButton: "custom-confirm-btn" },
+    });
+  
+    if (!result.isConfirmed) return;
+  
+    Swal.fire({
+      title: "Suspending...",
+      text: "Please wait while we suspend the user.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+  
+    try {
+      await fetch(
+        `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
         { method: "PUT" }
       );
   
@@ -90,31 +160,45 @@ const ViewReports = () => {
         { status: "completed" }
       );
   
-      alert(
-        `User ${user.fname} ${user.lname} suspended successfully and report status updated to completed.`
-      );
+      if (user) {
+        await logActivityuser("Suspended User", user);
+      }
   
-      // Log Activity
-      await logActivity("Suspended User", user);
+      Swal.fire("Suspended!", "User suspended successfully.", "success");
   
-      fetchReports(); // Refresh reports after suspension
+      fetchReports();
     } catch (error) {
       console.error("Error suspending user:", error);
+      Swal.fire("Error", "Failed to suspend user. Please try again.", "error");
     }
   };
   
-  const handleSuspendHandyman = async (handyman, reportId) => {
-    if (!handyman) return;
+  const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will suspend the handyman.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+      customClass: { confirmButton: "custom-confirm-btn" },
+    });
   
-    const isConfirmed = window.confirm(
-      `Are you sure you want to suspend ${handyman.fname} ${handyman.lname}?`
-    );
+    if (!result.isConfirmed) return;
   
-    if (!isConfirmed) return; // Exit if not confirmed
+    Swal.fire({
+      title: "Suspending...",
+      text: "Please wait while we suspend the handyman.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
   
     try {
       await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handyman._id}/suspend`,
+        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
         { method: "PUT" }
       );
   
@@ -123,108 +207,39 @@ const ViewReports = () => {
         { status: "completed" }
       );
   
-      alert(
-        `Handyman ${handyman.fname} ${handyman.lname} suspended successfully and report status updated to completed.`
-      );
+      if (handyman) {
+        await logActivityhandy("Suspended Handyman", handyman);
+      }
   
-      // Log Activity
-      await logActivityhandy("Suspended Handyman", handyman);
+      Swal.fire("Suspended!", "Handyman suspended successfully.", "success");
   
-      fetchReports(); // Refresh reports after suspension
+      fetchReports();
     } catch (error) {
       console.error("Error suspending handyman:", error);
-    }
-  };
-
-  const handleSendWarning = async (report) => {
-    if (!report) return;
-  
-    const notificationContent =
-      "Your account is subjected for suspension. Please email us your NTE to avoid account suspension.";
-  
-    const notification = {
-      handymanId: report.handymanId?._id,
-      userId: report.userId?._id,
-      notification_content: notificationContent,
-      notif_for: report.reported_by === "handyman" ? "handyman" : "user",
-      date_sent: new Date().toISOString(),
-    };
-  
-    try {
-      await axios.post(
-        "https://api.semaphore.co/api/v4/messages",
-        notification
+      Swal.fire(
+        "Error",
+        "Failed to suspend handyman. Please try again.",
+        "error"
       );
-  
-      alert("Warning sent successfully.");
-  
-      // Determine if the warning is for a handyman or user
-      const warnedPerson = report.handymanId || report.userId;
-  
-      // Log Activity
-      if (warnedPerson) {
-        await logActivity("Sent Warning", warnedPerson);
-      }
-    } catch (error) {
-      console.error("Error sending warning:", error);
     }
   };
   
   
-  const logActivity = async (action, user) => {
-    try {
-      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "Admin", // Replace with dynamic admin username if available
-          action: action,
-          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      console.error("Error logging activity:", error);
-    }
-  };
 
-  const logActivityhandy = async (action, handyman) => {
-    try {
-      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "Admin", // Replace with dynamic admin username if available
-          action: action,
-          description: `Admin ${action.toLowerCase()}: ${handyman.fname} ${handyman.lname}`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      console.error("Error logging activity:", error);
-    }
+  const handleSendWarning = async () => {
+    Swal.fire({
+      icon: "warning",
+      title: "Warning Sent",
+      text: "The warning has been successfully sent.",
+      confirmButtonColor: "#1960b2",
+    });
   };
-  
 
   const columns = [
     {
       name: "Report Reason",
       selector: "reportReason",
       cell: (row) => row?.reportReason || "No Reason Provided",
-    },
-    {
-      name: "Reported By",
-      selector: "reportedBy",
-      cell: (row) =>
-        row?.reported_by === "handyman"
-          ? `${row?.handymanId?.fname || "Unknown"} ${
-              row?.handymanId?.lname || ""
-            }`
-          : `${row?.userId?.fname || "Unknown"} ${row?.userId?.lname || ""}`,
     },
     {
       name: "Date Reported",
@@ -236,48 +251,46 @@ const ViewReports = () => {
     },
 
     {
+      name: "Reported By",
+      selector: "reportedBy",
+      cell: (row) =>
+        row?.reported_by === "handyman"
+          ? `${row?.handymanId?.fname || "Unknown"} ${
+              row?.handymanId?.lname || ""
+            }`
+          : `${row?.userId?.fname || "Unknown"} ${row?.userId?.lname || ""}`,
+    },
+    {
       name: "Actions",
       cell: (row) => (
-        <div className="d-flex flex-column">
+        <div className="d-flex gap-2">
           <Button
-            className="custom-btn details mb-2"
+            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
             onClick={() => handleShowModal(row)}
+            title="Details"
           >
-            Details
+            <FaEye />
           </Button>
-          {row.reported_by === "handyman" ? (
-            <>
-              <Button
-                className="custom-btn suspend mb-2"
-                onClick={() => handleSuspendUser(row.userId._id, row._id)}
-              >
-                Suspend
-              </Button>
-              <Button
-                className="custom-btn warning mb-2"
-                onClick={() => handleSendWarning(row)}
-              >
-                Send Warning
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                className="custom-btn suspend mb-2"
-                onClick={() =>
-                  handleSuspendHandyman(row.handymanId._id, row._id)
-                }
-              >
-                Suspend
-              </Button>
-              <Button
-                className="custom-btn warning mb-2"
-                onClick={() => handleSendWarning(row)}
-              >
-                Send Warning
-              </Button>
-            </>
-          )}
+          <Button
+            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
+            onClick={() =>
+              row.reported_by === "handyman"
+                ? handleSuspendUser(row.userId._id, row._id)
+                : handleSuspendHandyman(row.handymanId._id, row._id)
+                
+            }
+            
+            title="Suspend"
+          >
+            <FaBan />
+          </Button>
+          <Button
+            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
+            onClick={() => handleSendWarning(row)}
+            title="Send Warning"
+          >
+            <FaExclamationTriangle />
+          </Button>
         </div>
       ),
     },
@@ -285,36 +298,29 @@ const ViewReports = () => {
 
   return (
     <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <h2 className="view-reports-title">Reported by Handymen</h2>
-          <div className="table-responsive">
-            <DataTable
-              columns={columns}
-              data={handymanReports}
-              pagination
-              highlightOnHover
-              customStyles={customStyles}
-              progressPending={loading}
-            />
-          </div>
-        </div>
-
-        <div className="col-12 mt-4">
-          <h2 className="view-reports-title">Reported by Resident</h2>
-          <div className="table-responsive">
-            <DataTable
-              columns={columns}
-              data={userReports}
-              pagination
-              highlightOnHover
-              customStyles={customStyles}
-              progressPending={loading}
-            />
-          </div>
-        </div>
+      <h2 className="view-reports-title">Reported by Handymen</h2>
+      <div className="table-responsive">
+        <DataTable
+          columns={columns}
+          data={handymanReports}
+          pagination
+          highlightOnHover
+          customStyles={customStyles}
+          progressPending={loading}
+        />
       </div>
 
+      <h2 className="view-reports-title mt-15">Reported by Resident</h2>
+      <div className="table-responsive">
+        <DataTable
+          columns={columns}
+          data={userReports}
+          pagination
+          highlightOnHover
+          customStyles={customStyles}
+          progressPending={loading}
+        />
+      </div>
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
           <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
@@ -361,7 +367,8 @@ const ViewReports = () => {
             </ul>
           </Modal.Body>
           <Modal.Footer>
-            <Button onClick={handleCloseModal}>Close</Button>
+            <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }}
+            onClick={handleCloseModal}>Close</Button>
           </Modal.Footer>
         </Modal>
       )}

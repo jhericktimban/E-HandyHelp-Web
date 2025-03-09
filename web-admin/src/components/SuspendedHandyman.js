@@ -3,6 +3,13 @@ import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/suspendedhandyman.css";
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaBan,
+  FaTrash,
+} from "react-icons/fa";
+
 
 const SuspendedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
@@ -90,53 +97,120 @@ const SuspendedHandyman = () => {
     }
   };
 
-  const handleDeleteHandyman = async () => {
-    if (selectedHandyman) {
-      try {
-        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`, {
-          method: "DELETE",
+  const handleDeleteHandyman = async (handyman) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: `You are about to delete ${handyman.fname} ${handyman.lname}. This action cannot be undone.`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "custom-confirm-btn",
+          },
         });
-  
-        setSuspendedHandymen(suspendedHandymen.filter((handyman) => handyman._id !== selectedHandyman._id));
-        setAlert({ message: "Handyman deleted successfully."});
-  
-        // Log Activity
-        await logActivity("Deleted Suspended Handyman", selectedHandyman);
-      } catch (error) {
-        console.error("Error deleting handyman:", error);
-        setAlert({ message: "Failed to delete handyman."});
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedHandyman(null);
-      }
-    }
-  };
+      
+        if (!result.isConfirmed) return;
+      
+        Swal.fire({
+          title: "Deleting...",
+          text: "Please wait while we delete the handyman.",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading(); // Show loading spinner
+          },
+        });
+      
+        try {
+          await fetch(
+            `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handyman._id}`,
+            { method: "DELETE" }
+          );
+      
+          setSuspendedHandymen((prevHandymen) =>
+            prevHandymen.filter((h) => h._id !== handyman._id)
+          );
+      
+          await logActivity("Deleted Suspended Handyman", handyman);
+      
+          Swal.fire({
+            title: "Deleted!",
+            text: "Handyman deleted successfully.",
+            icon: "success",
+            showConfirmButton: true,
+          });
+        } catch (error) {
+          console.error("Error deleting handyman:", error);
+      
+          Swal.fire({
+            title: "Error",
+            text: "Failed to delete handyman. Please try again.",
+            icon: "error",
+          });
+        }
+      };
 
-  const handleLiftSuspension = async () => {
-    if (!selectedHandyman) return;
+  const handleLiftSuspension = async (handyman) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will lift the suspension for the handyman.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "custom-confirm-btn",
+      },
+    });
   
+    if (!result.isConfirmed) return;
+  
+    
+  
+    Swal.fire({
+      title: "Lifting Suspension...",
+      text: "Please wait while we lift the suspension.",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
+
+    
     try {
       await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/lift-suspension/${selectedHandyman._id}`,
+        `https://e-handyhelp-web-backend.onrender.com/api/handymen/lift-suspension/${handyman._id}`,
         {
           accounts_status: "verified",
         }
       );
+      setSuspendedHandymen((prevHandymen) =>
+        prevHandymen.filter((h) => h._id !== handyman._id)
+      );
   
-      setAlert({ message: "Suspension lifted successfully."});
-  
-      // Log Activity
-      await logActivity("Lifted Suspension", selectedHandyman);
-  
+      await logActivity("Lifted Suspension", handyman);
       await fetchSuspendedHandymen(); // Refresh data after lifting suspension
+  
+      Swal.fire({
+        title: "Success!",
+        text: "Suspension lifted successfully.",
+        icon: "success",
+        
+        showConfirmButton: true,
+      });
+  
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      setAlert({ message: "Failed to lift suspension."});
-    } finally {
-      setShowConfirmLift(false);
-      setSelectedHandyman(null);
-    }
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to lift suspension.",
+        icon: "error",
+      });
+    } 
   };
+  
 
   // Filter suspended handymen based on search term
   const filteredHandymen = suspendedHandymen.filter((handyman) => {
@@ -164,24 +238,24 @@ const SuspendedHandyman = () => {
     {
       name: "Action",
       cell: (row) => (
-        <div className="button-group-suspend-handyman">
+        <div className="d-flex gap-2">
+          <Button onClick={() => handleOpenModal(row)}><FaEye /></Button>
           <Button
-            onClick={() => {
-              setSelectedHandyman(row);
-              handleConfirmLift();
+            onClick={() => {  
+              handleLiftSuspension(row);
             }}
-          >
-            Lift Suspension
+            >
+            <FaBan />
           </Button>
           <Button
             onClick={() => {
-              setSelectedHandyman(row);
-              handleConfirmDelete();
+              handleDeleteHandyman(row);
+             
             }}
           >
-            Delete
+            <FaTrash />
           </Button>
-          <Button onClick={() => handleOpenModal(row)}>Details</Button>
+          
         </div>
       ),
     },
@@ -313,47 +387,14 @@ const SuspendedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }} 
+          onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered
-      >
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedHandyman?.fname}{" "}
-          {selectedHandyman?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button onClick={handleDeleteHandyman}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
+     
 
-      {/* Confirmation Modal for Lifting Suspension */}
-      <Modal
-        show={showConfirmLift}
-        onHide={() => setShowConfirmLift(false)}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Confirm Lift Suspension</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to lift the suspension for{" "}
-          {selectedHandyman?.fname} {selectedHandyman?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowConfirmLift(false)}>Cancel</Button>
-          <Button onClick={handleLiftSuspension}>Lift Suspension</Button>
-        </Modal.Footer>
-      </Modal>
+      
     </div>
   );
 };

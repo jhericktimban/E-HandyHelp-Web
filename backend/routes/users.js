@@ -45,6 +45,30 @@ router.get('/suspended', async (req, res) => {
   }
 });
 
+router.put('/:id/suspend', async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      { accounts_status: 'suspended' }, 
+      { new: true }
+    );
+    
+    if (!updatedUser) {
+      console.log(`User with ID ${userId} not found.`);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log(`User suspended successfully:`, updatedUser);
+    res.json({ message: 'User suspended successfully' });
+  } catch (error) {
+    console.error('Error suspending user:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
 // Verify user
 router.put('/:id/verify', async (req, res) => {
   try {
@@ -81,7 +105,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 // Lift suspension route
-router.put('/:id/lift-suspension', async (req, res) => {
+router.put('/lift-suspension/:id', async (req, res) => {
   try {
     const userId = req.params.id;
 

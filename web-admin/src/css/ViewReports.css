@@ -163,3 +163,18 @@
         font-size: 13px;
     }
 }
+
+.custom-confirm-btn {
+    background-color: #1960b2 !important; /* Red color */
+    border-color: #1960b2 !important;
+    color: #fff !important; /* White text for contrast */
+  }
+  
+
+  .custom-cancel-btn {
+    background-color: #727475 !important; /* Red color */
+    border-color: #727475 !important;
+    color: #fff !important; /* White text for contrast */
+  }
+
+  

@@ -4,6 +4,12 @@ import DataTable from "react-data-table-component";
 import axios from "axios";
 import "../css/rejectedhandyman.css";
 
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaTrash,
+} from "react-icons/fa";
+
 const RejectedHandyman = () => {
   const [showModal, setShowModal] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -81,27 +87,59 @@ const RejectedHandyman = () => {
     }
   };
 
-  const handleDeleteHandyman = async () => {
-    if (selectedHandyman) {
-      try {
-        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/handymen/${selectedHandyman._id}`, {
-          method: "DELETE",
+  const handleDeleteHandyman = async (handyman) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: `You are about to delete ${handyman.fname} ${handyman.lname}. This action cannot be undone.`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "custom-confirm-btn",
+          },
         });
-  
-        setRejectedHandyman(rejectedHandyman.filter((handyman) => handyman._id !== selectedHandyman._id));
-        setAlert({ message: "Handyman deleted successfully."});
-  
-        // Log Activity
-        await logActivity("Deleted Rejected Handyman", selectedHandyman);
-      } catch (error) {
-        console.error("Error deleting handyman:", error);
-        setAlert({ message: "Failed to delete handyman."});
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedHandyman(null);
-      }
-    }
-  };
+      
+        if (!result.isConfirmed) return;
+      
+        Swal.fire({
+          title: "Deleting...",
+          text: "Please wait while we delete the handyman.",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading(); // Show loading spinner
+          },
+        });
+      
+        try {
+          await fetch(
+            `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handyman._id}`,
+            { method: "DELETE" }
+          );
+      
+          setRejectedHandyman((prevHandymen) =>
+            prevHandymen.filter((h) => h._id !== handyman._id)
+          );
+      
+          await logActivity("Deleted Rejected Handyman", handyman);
+      
+          Swal.fire({
+            title: "Deleted!",
+            text: "Handyman deleted successfully.",
+            icon: "success",
+            showConfirmButton: true,
+          });
+        } catch (error) {
+          console.error("Error deleting handyman:", error);
+      
+          Swal.fire({
+            title: "Error",
+            text: "Failed to delete handyman. Please try again.",
+            icon: "error",
+          });
+        }
+      };
 
   const columns = [
     {
@@ -120,14 +158,17 @@ const RejectedHandyman = () => {
       name: "Actions",
       cell: (row) => (
         <div className="button-group">
-          <Button onClick={() => handleOpenModal(row)}>Details</Button>
+          <Button onClick={() => handleOpenModal(row)}
+            title="Details"
+            ><FaEye/></Button>
           <Button
             onClick={() => {
-              setSelectedHandyman(row);
-              setShowConfirmDelete(true);
+              handleDeleteHandyman(row);
+              
             }}
+            title="Delete"
           >
-            Delete
+            <FaTrash/>
           </Button>
         </div>
       ),
@@ -270,28 +311,12 @@ const RejectedHandyman = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
+          <Button style={{ backgroundColor: "#727475", borderColor: "#727475", color: "#fff" }}
+          onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Confirmation Modal for Deletion */}
-      <Modal
-        show={showConfirmDelete}
-        onHide={() => setShowConfirmDelete(false)}
-        centered
-      >
-        <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
-          <Modal.Title>Confirm Deletion</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to delete {selectedHandyman?.fname}{" "}
-          {selectedHandyman?.lname}?
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={() => setShowConfirmDelete(false)}>Cancel</Button>
-          <Button onClick={handleDeleteHandyman}>Delete</Button>
-        </Modal.Footer>
-      </Modal>
+      
     </div>
   );
 };

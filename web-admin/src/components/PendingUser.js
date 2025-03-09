@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Alert } from "react-bootstrap";
 import DataTable from "react-data-table-component";
-import { FaUserClock, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import "../css/pendinguser.css";
+import Swal from "sweetalert2";
+import {
+  FaEye,
+  FaTrash,
+} from "react-icons/fa";
+
 
 const PendingUser = () => {
   const [showModal, setShowModal] = useState(false);
@@ -84,6 +89,31 @@ const PendingUser = () => {
   };
   
   const handleVerifyUser = async () => {
+    const result = await Swal.fire({
+                  title: "Are you sure?",
+                  text: "This will verified the user.",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonText: "Yes",
+                  cancelButtonText: "Cancel",
+                  customClass: {
+                    confirmButton: "custom-confirm-btn",
+                    cancelButton: "custom-cancel-btn",
+                  },
+                });
+            
+            if (!result.isConfirmed) return;
+        
+            Swal.fire({
+                  title: "Verifying...",
+                  text: "Please wait while we verify the user.",
+                  allowEscapeKey: false,
+                  allowOutsideClick: false,
+                  didOpen: () => {
+                    Swal.showLoading(); // Show loading spinner
+                  },
+                });
+
     if (selectedUser) {
       try {
         await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/verify`, {
@@ -91,20 +121,50 @@ const PendingUser = () => {
         });
   
         setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
-        setAlert({ message: "User verified successfully."});
+        
   
         // Log Activity
         await logActivity("Verified User", selectedUser);
-  
-        handleCloseModal();
+          Swal.fire("Verified!", "User verified successfully.", "success");
+          handleCloseModal();
       } catch (error) {
         console.error("Error verifying user:", error);
-        setAlert({ message: "Failed to verify user."});
+        Swal.fire({
+                  title: "Error",
+                  text: "Failed to delete user. Please try again.",
+                  icon: "error",
+                });
       }
     }
   };
   
   const handleRejectUser = async () => {
+    const result = await Swal.fire({
+          title: "Are you sure?",
+          text: "This will reject the user.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "custom-confirm-btn",
+            cancelButton: "custom-cancel-btn",
+          },
+        });
+    
+        if (!result.isConfirmed) return;
+    
+          Swal.fire({
+                title: "Rejecting...",
+                text: "Please wait while we reject the user.",
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                  Swal.showLoading(); // Show loading spinner
+                },
+              });
+
+
     if (selectedUser) {
       try {
         await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}/reject`, {
@@ -112,40 +172,76 @@ const PendingUser = () => {
         });
   
         setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
-        setAlert({ message: "User rejected successfully."});
+        
   
         // Log Activity
         await logActivity("Rejected User", selectedUser);
-  
-        handleCloseModal();
+          Swal.fire("Rejected!", "User rejected successfully.", "success");
+          handleCloseModal();
       } catch (error) {
         console.error("Error rejecting user:", error);
-        setAlert({ message: "Failed to reject user."});
+        Swal.fire({
+                  title: "Error",
+                  text: "Failed to reject user. Please try again.",
+                  icon: "error",
+                });
       }
     }
   };
   
-  const handleDeleteUser = async () => {
-    if (selectedUser) {
-      try {
-        await fetch(`https://e-handyhelp-web-backend.onrender.com/api/users/${selectedUser._id}`, {
-          method: "DELETE",
+  const handleDeleteUser = async (user) => {
+        const result = await Swal.fire({
+          title: "Are you sure?",
+          text: `You are about to delete ${user.fname} ${user.lname}. This action cannot be undone.`,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it",
+          cancelButtonText: "Cancel",
+          customClass: {
+            confirmButton: "custom-confirm-btn",
+          },
         });
-  
-        setPendingUsers(pendingUsers.filter((user) => user._id !== selectedUser._id));
-        setAlert({ message: "User deleted successfully."});
-  
-        // Log Activity
-        await logActivity("Deleted User", selectedUser);
-      } catch (error) {
-        console.error("Error deleting user:", error);
-        setAlert({ message: "Failed to delete user."});
-      } finally {
-        setShowConfirmDelete(false);
-        setSelectedUser(null);
-      }
-    }
-  };
+      
+        if (!result.isConfirmed) return;
+      
+        Swal.fire({
+          title: "Deleting...",
+          text: "Please wait while we delete the user.",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading(); // Show loading spinner
+          },
+        });
+      
+        try {
+          await fetch(
+            `https://e-handyhelp-web-backend.onrender.com/api/users/${user._id}`,
+            { method: "DELETE" }
+          );
+      
+          setPendingUsers((prevUser) =>
+            prevUser.filter((u) => u._id !== user._id)
+          );
+      
+          await logActivity("Deleted Pending User", user);
+      
+          Swal.fire({
+            title: "Deleted!",
+            text: "User deleted successfully.",
+            icon: "success",
+            showConfirmButton: true,
+          });
+        } catch (error) {
+          console.error("Error deleting user:", error);
+      
+          Swal.fire({
+            title: "Error",
+            text: "Failed to delete user. Please try again.",
+            icon: "error",
+          });
+        }
+      };
   
   
 
@@ -167,14 +263,18 @@ const PendingUser = () => {
       name: "Actions",
       cell: (row) => (
         <div className="button-group">
-          <Button onClick={() => handleOpenModal(row)}>Details</Button>
+          <Button onClick={() => handleOpenModal(row)}
+          title="Details"
+            >
+              <FaEye/></Button>
           <Button
             onClick={() => {
-              setSelectedUser(row);
-              setShowConfirmDelete(true);
+              handleDeleteUser(row);
+              
             }}
+            title="Delete"
           >
-            Delete
+            <FaTrash/>
           </Button>
         </div>
       ),
@@ -305,9 +405,12 @@ const PendingUser = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleCloseModal}>Close</Button>
-          <Button onClick={handleVerifyUser}>Verify</Button>
-          <Button onClick={handleRejectUser}>Reject</Button>
+          <Button style={{ backgroundColor: "#727475", borderColor: "#727475", color: "#fff" }}
+          onClick={handleCloseModal}>Close</Button>
+          <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }}
+          onClick={handleVerifyUser}>Verify</Button>
+          <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }}
+          onClick={handleRejectUser}>Reject</Button>
         </Modal.Footer>
       </Modal>
 
