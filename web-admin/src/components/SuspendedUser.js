@@ -234,8 +234,8 @@ const SuspendedUser = () => {
             ><FaEye /></Button>
           <Button
             onClick={() => {
-              setSelectedUser(row);
-              handleLiftSuspension();
+              
+              handleLiftSuspension(row);
             }}
             title="Lift Suspension"
             >
