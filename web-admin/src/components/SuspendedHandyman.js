@@ -190,7 +190,7 @@ const SuspendedHandyman = () => {
         prevHandymen.filter((h) => h._id !== handyman._id)
       );
   
-      await logActivity("Lifted Suspension", handyman);
+      await logActivity("Lifted Handyman Suspension", handyman);
       await fetchSuspendedHandymen(); // Refresh data after lifting suspension
   
       Swal.fire({

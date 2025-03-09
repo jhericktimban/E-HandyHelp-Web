@@ -69,25 +69,25 @@ const PendingUser = () => {
     setSelectedUser(null);
   };
 
-  const logActivity = async (action, user) => {
-    try {
-      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "Admin", // Replace with dynamic admin username if available
-          action: action,
-          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      console.error("Error logging activity:", error);
-    }
-  };
-  
+    const logActivity = async (action, user) => {
+      try {
+        await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "Admin", // Replace with dynamic admin username if available
+            action: action,
+            description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (error) {
+        console.error("Error logging activity:", error);
+      }
+    };
+    
   const handleVerifyUser = async () => {
     const result = await Swal.fire({
                   title: "Are you sure?",

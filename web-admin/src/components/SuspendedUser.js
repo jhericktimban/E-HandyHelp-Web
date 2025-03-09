@@ -148,59 +148,66 @@ const SuspendedUser = () => {
     }
   };
 
-  const handleLiftSuspension = async () => {
-
+  const handleLiftSuspension = async (user) => {
     const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "This will lift the suspension for the user.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Yes",
-          cancelButtonText: "Cancel",
-          customClass: {
-            confirmButton: "custom-confirm-btn",
-          },
-        });
-    
+      title: "Are you sure?",
+      text: "This will lift the suspension for the user.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "Cancel",
+      customClass: {
+        confirmButton: "custom-confirm-btn",
+      },
+    });
+  
     if (!result.isConfirmed) return;
-     // Show loading popup
-        Swal.fire({
-          title: "Lifting...",
-          text: "Please wait while we lift the suspension.",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          didOpen: () => {
-            Swal.showLoading(); // Show loading spinner
-          },
-        });
+  
+    
+  
+    Swal.fire({
+      title: "Lifting Suspension...",
+      text: "Please wait while we lift the suspension.",
+      allowEscapeKey: false,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading(); // Show loading spinner
+      },
+    });
 
-    if (!selectedUser) return;
+    
     try {
       await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/lift-suspension/${selectedUser._id}`,
+        `https://e-handyhelp-web-backend.onrender.com/api/users/lift-suspension/${user._id}`,
         {
           accounts_status: "verified",
         }
       );
+      setSuspendedUsers((prevUser) =>
+        prevUser.filter((u) => u._id !== user._id)
+      );
   
-      setAlert({ message: "Suspension lifted successfully."});
-  
-      // Log Activity
-      await logActivity("Lifted Suspension", selectedUser);
-  
+      await logActivity("Lifted User Suspension", user);
       await fetchSuspendedUsers(); // Refresh data after lifting suspension
-      Swal.fire("Lifted!", "User suspension lifted successfully.", "success");
+  
+      Swal.fire({
+        title: "Success!",
+        text: "Suspension lifted successfully.",
+        icon: "success",
+        
+        showConfirmButton: true,
+      });
+  
     } catch (error) {
       console.error("Error lifting suspension:", error);
-      Swal.fire(
-              "Error",
-              "Failed to lift suspension. Please try again.",
-              "error"
-            );
-    } finally {
-      setSelectedUser(null);
-    }
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to lift suspension.",
+        icon: "error",
+      });
+    } 
   };
+  
 
   // Filter suspended handymen based on search term
   const filteredUsers = suspendedUsers.filter((user) => {

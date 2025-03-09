@@ -12,7 +12,7 @@ import {
 import "../css/ViewReports.css";
 
 const ViewReports = () => {
-  const [reports, setReports] = useState([]);
+  
   const [userReports, setUserReports] = useState([]);
   const [handymanReports, setHandymanReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
@@ -45,7 +45,7 @@ const ViewReports = () => {
         (report) => report.reported_by === "handyman"
       );
   
-      setReports(pendingReports);
+      
       setUserReports(userReports);
       setHandymanReports(handymanReports);
     } catch (error) {
@@ -75,56 +75,25 @@ const ViewReports = () => {
     setSelectedReport(null);
   };
 
-  const logActivityuser = async (action, user) => {
-    if (!user) {
-      console.error("User data is missing for logging activity.");
-      return;
-    }
-  
+  const logActivity = async (action, user) => {
     try {
-      await fetch(
-        "https://e-handyhelp-web-backend.onrender.com/api/activityLogs",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: "Admin",
-            action: action,
-            description: `Admin ${action.toLowerCase()}: ${user?.fname || "Unknown"} ${user?.lname || ""}`,
-            timestamp: new Date().toISOString(),
-          }),
-        }
-      );
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()}: ${user.fname} ${user.lname}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
     } catch (error) {
-      console.error("Error logging user activity:", error);
+      console.error("Error logging activity:", error);
     }
   };
-  
-  const logActivityhandy = async (action, handyman) => {
-    if (!handyman) {
-      console.error("Handyman data is missing for logging activity.");
-      return;
-    }
-  
-    try {
-      await fetch(
-        "https://e-handyhelp-web-backend.onrender.com/api/activityLogs",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: "Admin",
-            action: action,
-            description: `Admin ${action.toLowerCase()}: ${handyman?.fname || "Unknown"} ${handyman?.lname || ""}`,
-            timestamp: new Date().toISOString(),
-          }),
-        }
-      );
-    } catch (error) {
-      console.error("Error logging handyman activity:", error);
-    }
-  };
-  
+
 
   const handleSuspendUser = async (userId, reportId, user) => {
     const result = await Swal.fire({
@@ -136,9 +105,9 @@ const ViewReports = () => {
       cancelButtonText: "Cancel",
       customClass: { confirmButton: "custom-confirm-btn" },
     });
-  
+
     if (!result.isConfirmed) return;
-  
+
     Swal.fire({
       title: "Suspending...",
       text: "Please wait while we suspend the user.",
@@ -148,30 +117,29 @@ const ViewReports = () => {
         Swal.showLoading();
       },
     });
-  
+
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
         { method: "PUT" }
       );
-  
+
       await axios.put(
         `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
         { status: "completed" }
       );
-  
-      if (user) {
-        await logActivityuser("Suspended User", user);
-      }
-  
+
+      await logActivity("Suspended User", user);
+
       Swal.fire("Suspended!", "User suspended successfully.", "success");
-  
+
       fetchReports();
     } catch (error) {
       console.error("Error suspending user:", error);
       Swal.fire("Error", "Failed to suspend user. Please try again.", "error");
     }
   };
+
   
   const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
     const result = await Swal.fire({
@@ -183,9 +151,9 @@ const ViewReports = () => {
       cancelButtonText: "Cancel",
       customClass: { confirmButton: "custom-confirm-btn" },
     });
-  
+
     if (!result.isConfirmed) return;
-  
+
     Swal.fire({
       title: "Suspending...",
       text: "Please wait while we suspend the handyman.",
@@ -195,36 +163,30 @@ const ViewReports = () => {
         Swal.showLoading();
       },
     });
-  
+
     try {
       await fetch(
         `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
         { method: "PUT" }
       );
-  
+
       await axios.put(
         `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
         { status: "completed" }
       );
-  
-      if (handyman) {
-        await logActivityhandy("Suspended Handyman", handyman);
-      }
-  
+
+      await logActivity("Suspended Handyman", handyman);
+
       Swal.fire("Suspended!", "Handyman suspended successfully.", "success");
-  
+
       fetchReports();
     } catch (error) {
       console.error("Error suspending handyman:", error);
-      Swal.fire(
-        "Error",
-        "Failed to suspend handyman. Please try again.",
-        "error"
-      );
+      Swal.fire("Error", "Failed to suspend handyman. Please try again.", "error");
     }
   };
-  
-  
+
+
 
   const handleSendWarning = async () => {
     Swal.fire({
