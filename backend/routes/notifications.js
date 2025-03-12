@@ -58,7 +58,7 @@ router.post('/send-warning', async (req, res) => {
             if (error) {
                 console.error("Nodemailer Error:", error);
             } else {
-                console.log("Email Sent:", info.response);
+                console.log("Email Sent to:", recipientEmail);
             }
         });
           
