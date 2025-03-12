@@ -1,79 +1,62 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Notification = require('../models/Notification'); // Adjust the path to your Handyman model
-const axios = require('axios');
-const Handyman = require('../models/Handyman');
-const User = require('../models/User');
+const nodemailer = require("nodemailer");
+const Notification = require("../models/Notification");
+const User = require("../models/User");
+const Handyman = require("../models/Handyman");
 
-// Semaphore API credentials
-const semaphoreApiKey = '6ce2d9ac9d5da878b0a9bb7b62aaddc5';
-const semaphoreApiUrl = 'https://api.semaphore.co/api/v4/messages';
+// Nodemailer Transporter
+const transporter = nodemailer.createTransport({
+  service: "Gmail", // Or use your preferred email provider
+  auth: {
+    user: process.env.EMAIL_USER, // Your Gmail or other email service
+    pass: process.env.EMAIL_PASS, // App password or generated password for security
+  },
+});
 
-// Function to send SMS using Semaphore
-const sendSms = async (contactNumber, message) => {
-    try {
-        const response = await axios.post(semaphoreApiUrl, {
-            apikey: semaphoreApiKey,
-            number: contactNumber,
-            message: message,
-            sendername: 'Thesis' // Customize the sender name if needed
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error sending SMS:', error);
-        throw error;
+// Send Warning Notification
+router.post('/send-warning', async (req, res) => {
+    const { handymanId, userId, reported_by } = req.body;
+
+    const notificationContent =
+      "Your account is subjected for suspension. Please email us your NTE to avoid account suspension.";
+
+    // Identify if the recipient is a Handyman or User
+    let recipientEmail;
+    if (reported_by === "handyman") {
+      const handyman = await Handyman.findById(handymanId);
+      if (!handyman) return res.status(404).json({ message: "Handyman not found." });
+      recipientEmail = handyman.email;
+    } else {
+      const user = await User.findById(userId);
+      if (!user) return res.status(404).json({ message: "User not found." });
+      recipientEmail = user.email;
     }
-};
 
-router.post('/', async (req, res) => {
+    const newNotification = new Notification({
+      handymanId,
+      userId,
+      notification_content: notificationContent,
+      notif_for: reported_by === "handyman" ? "handyman" : "user",
+      date_sent: new Date().toISOString(),
+    });
+
     try {
-        const { handymanId, userId, notification_content, notif_for } = req.body;
+        // Save notification in the database
+        await newNotification.save();
 
-        // Create the notification object
-        const notification = new Notification({
-            handymanId,
-            userId,
-            notification_content,
-            notif_for,
-            date_sent: new Date(),
+        // Send Email Notification
+        await transporter.sendMail({
+          from: `"E-HandyHelp Support" <${process.env.EMAIL_USER}>`,
+          to: recipientEmail,
+          subject: "Warning: Account Suspension Notice",
+          text: notificationContent,
         });
 
-        // Send the SMS notification based on `notif_for`
-        let contactNumber;
-        let message = 'Your account has been subjected to suspension, it will be suspended in 3 days if you do not email us your NTE.';
-
-        if (notif_for === 'handyman' && handymanId) {
-            // Fetch the handyman's contact number
-            const handyman = await Handyman.findById(handymanId);
-            if (handyman && handyman.contact) {
-                contactNumber = handyman.contact;
-            } else {
-                return res.status(400).json({ message: 'Handyman contact not found' });
-            }
-        } else if (notif_for === 'user' && userId) {
-            // Fetch the user's contact number
-            const user = await User.findById(userId);
-            if (user && user.contact) {
-                contactNumber = user.contact;
-            } else {
-                return res.status(400).json({ message: 'User contact not found' });
-            }
-        } else {
-            return res.status(400).json({ message: 'Invalid notif_for value or missing ID' });
-        }
-
-        // Send SMS if a valid contact number was found
-        if (contactNumber) {
-            await sendSms(contactNumber, message);
-        }
-
-        // Save the notification in the database
-        await notification.save();
-
-        res.status(201).json({ message: 'Notification and SMS sent successfully', notification });
+        res.status(200).json({ message: 'Warning sent successfully.' });
     } catch (error) {
-        console.error('Error details:', error);  // Log the full error details for debugging
-        res.status(500).json({ message: 'Error sending notification', error });
+        console.error("Error sending warning:", error);
+        res.status(500).json({ error: "Failed to send warning." });
     }
 });
 

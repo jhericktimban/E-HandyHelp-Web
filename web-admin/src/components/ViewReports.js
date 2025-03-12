@@ -97,52 +97,55 @@ const ViewReports = () => {
 
   const handleSuspendUser = async (userId, reportId, user) => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This will suspend the user.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel",
-      customClass: { confirmButton: "custom-confirm-btn" },
+        title: "Are you sure?",
+        text: "This will suspend the user.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
+        customClass: { confirmButton: "custom-confirm-btn" },
     });
 
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Suspending...",
-      text: "Please wait while we suspend the user.",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
+        title: "Suspending...",
+        text: "Please wait while we suspend the user.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
     });
 
     try {
-      await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
-        { method: "PUT" }
-      );
+        const response = await fetch(
+            `https://e-handyhelp-web-backend.onrender.com/api/users/${userId}/suspend`,
+            { method: "PUT" }
+        );
 
-      await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
-        { status: "completed" }
-      );
+        const data = await response.json();
 
-      await logActivity("Suspended User", user);
+        if (response.status === 400 && data.message === 'This user is already suspended.') {
+            Swal.fire("Already Suspended", "This user is already suspended.", "info");
+            return;
+        }
 
-      Swal.fire("Suspended!", "User suspended successfully.", "success");
+        await logActivity("Suspended User", user);
 
-      fetchReports();
+        Swal.fire("Suspended!", "User suspended successfully.", "success");
+
+        fetchReports();
     } catch (error) {
-      console.error("Error suspending user:", error);
-      Swal.fire("Error", "Failed to suspend user. Please try again.", "error");
+        console.error("Error suspending user:", error);
+        Swal.fire("Error", "Failed to suspend user. Please try again.", "error");
     }
-  };
+};
 
-  
-  const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
-    const result = await Swal.fire({
+ 
+    
+const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
+  const result = await Swal.fire({
       title: "Are you sure?",
       text: "This will suspend the handyman.",
       icon: "warning",
@@ -150,52 +153,78 @@ const ViewReports = () => {
       confirmButtonText: "Yes",
       cancelButtonText: "Cancel",
       customClass: { confirmButton: "custom-confirm-btn" },
-    });
+  });
 
-    if (!result.isConfirmed) return;
+  if (!result.isConfirmed) return;
 
-    Swal.fire({
+  Swal.fire({
       title: "Suspending...",
       text: "Please wait while we suspend the handyman.",
       allowOutsideClick: false,
       allowEscapeKey: false,
       didOpen: () => {
-        Swal.showLoading();
+          Swal.showLoading();
       },
-    });
+  });
 
-    try {
-      await fetch(
-        `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
-        { method: "PUT" }
+  try {
+      const response = await fetch(
+          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
+          { method: "PUT" }
       );
 
-      await axios.put(
-        `https://e-handyhelp-web-backend.onrender.com/api/reports/${reportId}`,
-        { status: "completed" }
-      );
+      const data = await response.json();
+
+      if (response.status === 400 && data.message === 'This handyman is already suspended.') {
+          Swal.fire("Already Suspended", "This handyman is already suspended.", "info");
+          return;
+      }
 
       await logActivity("Suspended Handyman", handyman);
 
       Swal.fire("Suspended!", "Handyman suspended successfully.", "success");
 
       fetchReports();
-    } catch (error) {
+  } catch (error) {
       console.error("Error suspending handyman:", error);
       Swal.fire("Error", "Failed to suspend handyman. Please try again.", "error");
+  }
+};
+
+
+const handleSendWarning = async (report) => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "Do you want to send a warning to this account?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, send it!",
+    cancelButtonText: "Cancel",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await axios.post(
+        "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
+        {
+          handymanId: report.handymanId?._id,
+          userId: report.userId?._id,
+          reported_by: report.reported_by
+        }
+      );
+
+      await logActivity("Sent Warning", report);
+
+      Swal.fire("Warning Sent", "Warning has been successfully sent.", "success");
+    } catch (error) {
+      console.error("Error sending warning:", error);
+      Swal.fire("Error", "Failed to send warning. Please try again.", "error");
     }
-  };
+  }
+};
 
-
-
-  const handleSendWarning = async () => {
-    Swal.fire({
-      icon: "warning",
-      title: "Warning Sent",
-      text: "The warning has been successfully sent.",
-      confirmButtonColor: "#1960b2",
-    });
-  };
 
   const columns = [
     {

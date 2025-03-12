@@ -16,6 +16,7 @@ const dashboardRoute = require("./routes/dashboard");
 const reportRoute = require("./routes/reports");
 const feedbackRoute = require("./routes/feedbacks");
 const activityLogsRoute = require("./routes/activitylog");
+const notificationRoute = require("./routes/notifications"); // Import the route
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/dashboard", dashboardRoute);
 app.use("/api/reports", reportRoute);
 app.use("/api/feedback", feedbackRoute);
 app.use("/api/activityLogs", activityLogsRoute);
+app.use("/api/notifications", notificationRoute); // Register the route
 
 // Port Configuration
 const PORT = process.env.PORT || 8080;
