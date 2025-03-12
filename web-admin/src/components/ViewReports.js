@@ -204,7 +204,17 @@ const handleSendWarning = async (report) => {
     cancelButtonText: "Cancel",
   });
 
-  if (result.isConfirmed) {
+  if (result.isConfirmed) 
+    Swal.fire({
+      title: "Sending a warning...",
+      text: "Please wait while we send the warning.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+          Swal.showLoading();
+      },
+  });
+  {
     try {
       await axios.post(
         "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
