@@ -50,7 +50,7 @@ router.post('/send-warning', async (req, res) => {
 
         // Send Email Notification
         transporter.sendMail({
-            from: `"E-HandyHelp Support" <${process.env.EMAIL_USER}>`,
+            from: '"E-HandyHelp Team" <ehandyhelpteam@gmail.com>',
             to: recipientEmail,
             subject: "Warning: Account Suspension Notice",
             text: notificationContent,
