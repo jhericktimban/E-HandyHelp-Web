@@ -27,13 +27,13 @@ router.post('/send-warning', async (req, res) => {
 
     // Identify if the recipient is a Handyman or User
     if (reported_by === "handyman") {
-      const handyman = await Handyman.findById(handymanId);
-      if (!handyman) return res.status(404).json({ message: "Handyman not found." });
-      recipientEmail = handyman.email;
-    } else {
       const user = await User.findById(userId);
       if (!user) return res.status(404).json({ message: "User not found." });
       recipientEmail = user.email;
+    } else {
+      const handyman = await Handyman.findById(handymanId);
+      if (!handyman) return res.status(404).json({ message: "Handyman not found." });
+      recipientEmail = handyman.email;
     }
 
     const newNotification = new Notification({
