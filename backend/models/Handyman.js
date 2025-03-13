@@ -15,11 +15,6 @@ const handymanSchema = new mongoose.Schema({
     required: true,
     unique: true, // Ensure unique usernames
   },
-  email: { 
-    type: String, 
-    required: true, 
-    unique: true 
-  },
   password: {
     type: String,
     required: true,
@@ -56,6 +51,10 @@ const handymanSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'verified', 'rejected', 'suspended'], // Possible statuses
     default: 'pending', // Default to pending
+  },
+  logged_in: {
+    type: Number,
+    default: 0, // Default to 0, meaning not logged in
   },
 }, {
   timestamps: true, // Automatically create createdAt and updatedAt fields

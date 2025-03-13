@@ -198,13 +198,13 @@ const handleSendWarning = async (report) => {
     text: "Do you want to send a warning to this account?",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, send it!",
+    confirmButtonText: "Yes",
     cancelButtonText: "Cancel",
+    customClass: { confirmButton: "custom-confirm-btn" }
   });
 
-  if (result.isConfirmed) 
+  if (!result.isConfirmed) return;
+
     Swal.fire({
       title: "Sending a warning...",
       text: "Please wait while we send the warning.",
@@ -368,7 +368,7 @@ const handleSendWarning = async (report) => {
             </ul>
           </Modal.Body>
           <Modal.Footer>
-            <Button style={{ backgroundColor: "#1960b2", borderColor: "#1960b2", color: "#fff" }}
+            <Button style={{ backgroundColor: "#727475", borderColor: "#727475", color: "#fff" }}
             onClick={handleCloseModal}>Close</Button>
           </Modal.Footer>
         </Modal>

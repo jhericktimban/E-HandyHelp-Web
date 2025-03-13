@@ -9,11 +9,6 @@ const userSchema = new mongoose.Schema({
     type: String, 
     required: true 
   },
-  username: {
-    type: String,
-    required: true,
-    unique: true, // Ensure unique usernames
-  },
   email: { 
     type: String, 
     required: true, 
@@ -48,6 +43,10 @@ const userSchema = new mongoose.Schema({
     type: String, 
     enum: ['pending', 'verified', 'rejected', 'suspended'],  // Define allowed statuses
     default: 'pending'  // Default status set to 'pending'
+  },
+  logged_in: {
+    type: Number,
+    default: 0, // Default to 0, meaning not logged in
   },
 }, 
 { 
