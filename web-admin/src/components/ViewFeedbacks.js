@@ -43,6 +43,30 @@ const ViewFeedbacks = () => {
     }
   };
 
+  const logActivity = async (action, feedback) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()} feedback from ${
+            feedback.userId?.fname || "N/A"
+          } ${feedback.userId?.lname || "N/A"} to ${
+            feedback.handymanId?.fname || "N/A"
+          } ${feedback.handymanId?.lname || "N/A"}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+  
+
   const handleDeleteFeedback = async (feedback) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -75,6 +99,7 @@ const ViewFeedbacks = () => {
       setFilteredFeedbacks((prevFeedbacks) =>
         prevFeedbacks.filter((f) => f._id !== feedback._id)
       );
+      await logActivity("Deleted a Feedback", feedback);
   
       Swal.fire({
         title: "Deleted!",
