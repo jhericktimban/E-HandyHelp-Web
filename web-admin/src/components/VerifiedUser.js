@@ -8,6 +8,7 @@ import {
   FaEye,
   FaBan,
   FaTrash,
+  FaSync,
 } from "react-icons/fa";
 
 const VerifiedUser = () => {
@@ -24,7 +25,7 @@ const VerifiedUser = () => {
   const [imageIndex, setImageIndex] = useState(0);
 
   // Fetch verified users from the backend
-  useEffect(() => {
+  
     const fetchVerifiedUsers = async () => {
       try {
         setLoading(true);
@@ -46,7 +47,7 @@ const VerifiedUser = () => {
         setLoading(false);
       }
     };
-
+     useEffect(() => {
     fetchVerifiedUsers();
   }, []);
 
@@ -60,6 +61,19 @@ const VerifiedUser = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
@@ -200,6 +214,18 @@ const VerifiedUser = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                    <Button
+                      className="refresh-btn"
+                      onClick={fetchVerifiedUsers}
+                      style={{
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
+                      }}
+                    >
+                      <FaSync /> Refresh
+                    </Button>
+                  </div>
       <DataTable
         columns={columns}
         data={filteredUsers} // Use the filtered users

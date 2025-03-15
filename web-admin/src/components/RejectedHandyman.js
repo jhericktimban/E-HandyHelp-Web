@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import {
   FaEye,
   FaTrash,
+  FaSync,
 } from "react-icons/fa";
 
 const RejectedHandyman = () => {
@@ -24,7 +25,7 @@ const RejectedHandyman = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch Rejected handyman from the backend
-  useEffect(() => {
+  
     const fetchRejectedHandyman = async () => {
       try {
         setLoading(true);
@@ -46,6 +47,7 @@ const RejectedHandyman = () => {
       }
     };
 
+    useEffect(() => {
     fetchRejectedHandyman();
   }, []);
 
@@ -54,10 +56,22 @@ const RejectedHandyman = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
-
   const handleOpenModal = (handyman) => {
     setSelectedHandyman(handyman);
     setShowModal(true);
@@ -186,7 +200,7 @@ const RejectedHandyman = () => {
 
   return (
     <div className="content-container rejected-handyman">
-      <h2>Rejected Handyman</h2>
+      <h2>Rejected Handymen</h2>
       <Form.Control
         type="text"
         placeholder="Search by name or username..."
@@ -194,6 +208,18 @@ const RejectedHandyman = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                    <Button
+                      className="refresh-btn"
+                      onClick={fetchRejectedHandyman}
+                      style={{
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
+                      }}
+                    >
+                      <FaSync /> Refresh
+                    </Button>
+                  </div>
       <DataTable
         columns={columns}
         data={filteredHandyman}

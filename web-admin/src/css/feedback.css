@@ -1,11 +1,12 @@
 /* Main container styling for feedbacks */
 .feedbacks-container {
+    margin-top: 60px;
     padding: 20px;
     background-color: #f4f4f4;
-    border-radius: 20px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px;    
     max-width: 1200px;
-    margin: 30px auto;
+    
   }
   
   /* Title styling */
@@ -21,8 +22,8 @@
   .feedbacks-table-container {
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   }
+  
   
   /* Button styling */
   .view-details-btn {
@@ -72,6 +73,19 @@
   
   .close-modal-btn:hover {
     background-color: #a71d2a;
+  }
+
+  .custom-confirm-btn {
+    background-color: #1960b2 !important; /* Red color */
+    border-color: #1960b2 !important;
+    color: #fff !important; /* White text for contrast */
+  }
+  
+
+  .custom-cancel-btn {
+    background-color: #727475 !important; /* Red color */
+    border-color: #727475 !important;
+    color: #fff !important; /* White text for contrast */
   }
   
   /* Responsive adjustments */

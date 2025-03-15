@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import {
   FaEye,
   FaTrash,
+  FaSync,
 } from "react-icons/fa";
 
 
@@ -24,7 +25,7 @@ const PendingUser = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch pending users from the backend
-  useEffect(() => {
+  
     const fetchPendingUsers = async () => {
       try {
         setLoading(true);
@@ -46,7 +47,7 @@ const PendingUser = () => {
         setLoading(false);
       }
     };
-
+    useEffect(() => {
     fetchPendingUsers();
   }, []);
 
@@ -55,6 +56,19 @@ const PendingUser = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
@@ -300,6 +314,18 @@ const PendingUser = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                    <Button
+                      className="refresh-btn"
+                      onClick={fetchPendingUsers}
+                      style={{
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
+                      }}
+                    >
+                      <FaSync /> Refresh
+                    </Button>
+                  </div>
       <DataTable
         columns={columns}
         data={filteredUsers}

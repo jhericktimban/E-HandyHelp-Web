@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import {
   FaEye,
   FaTrash,
+  FaSync,
 } from "react-icons/fa";
 
 
@@ -24,7 +25,6 @@ const PendingHandyman = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch pending users from the backend
-  useEffect(() => {
     const fetchPendingHandyman = async () => {
       try {
         setLoading(true);
@@ -48,6 +48,7 @@ const PendingHandyman = () => {
       }
     };
 
+    useEffect(() => {
     fetchPendingHandyman();
   }, []);
 
@@ -56,6 +57,19 @@ const PendingHandyman = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
@@ -289,7 +303,7 @@ const PendingHandyman = () => {
 
   return (
     <div className="content-container pending-handyman">
-      <h2>Pending Handyman</h2>
+      <h2>Pending Handymen</h2>
       <Form.Control
         type="text"
         placeholder="Search by name or username..."
@@ -297,6 +311,18 @@ const PendingHandyman = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+              <Button
+                className="refresh-btn"
+                onClick={fetchPendingHandyman}
+                style={{
+                  backgroundColor: "#1960b2",
+                  borderColor: "#1960b2",
+                }}
+              >
+                <FaSync /> Refresh
+              </Button>
+            </div>
       <DataTable
         columns={columns}
         data={filteredHandyman}

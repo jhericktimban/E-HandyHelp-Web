@@ -6,15 +6,15 @@ import "../css/activitylogs.css";
 const ActivityLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLog, setSelectedLog] = useState(null); // State to store selected log
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     const fetchLogs = async () => {
       try {
         const response = await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs");
         const data = await response.json();
-        console.log("Fetched Logs:", data); // Debugging line
+        console.log("Fetched Logs:", data);
         setLogs(data);
       } catch (error) {
         console.error("Error fetching logs:", error);
@@ -26,33 +26,34 @@ const ActivityLogs = () => {
     fetchLogs();
   }, []);
 
-  // Handle row click to show modal
   const handleRowClick = (row) => {
     setSelectedLog(row);
     setShowModal(true);
   };
 
-  // Define columns for DataTable
   const columns = [
     {
       name: "Username",
       selector: (row) => row.username,
+      sortable: true,
     },
     {
       name: "Action",
       selector: (row) => row.action,
+      sortable: true,
     },
     {
       name: "Description",
       selector: (row) => row.description,
+      wrap: true, // Wrap long text for better readability
     },
     {
       name: "Timestamp",
       selector: (row) => new Date(row.timestamp).toLocaleString(),
+      sortable: true,
     },
   ];
 
-  // Custom styles for DataTable
   const customStyles = {
     headCells: {
       style: {
@@ -60,12 +61,17 @@ const ActivityLogs = () => {
         fontSize: "16px",
         backgroundColor: "#007bff",
         color: "#fff",
+        textAlign: "center",
       },
     },
     rows: {
       style: {
         fontSize: "14px",
-        cursor: "pointer", // Indicate clickable rows
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
@@ -74,32 +80,32 @@ const ActivityLogs = () => {
     <div className="activity-logs-container">
       <h2 className="activity-logs-title">Activity Logs</h2>
 
-      {/* Data Table */}
-      <DataTable
-        columns={columns}
-        data={logs}
-        pagination
-        highlightOnHover
-        striped
-        responsive
-        progressPending={loading}
-        customStyles={customStyles}
-        onRowClicked={handleRowClick} // Handle row click
-      />
+      <div className="table-responsive">
+        <DataTable
+          columns={columns}
+          data={logs}
+          pagination
+          highlightOnHover
+          striped
+          responsive
+          progressPending={loading}
+          customStyles={customStyles}
+          onRowClicked={handleRowClick}
+        />
+      </div>
 
-      {/* Modal for Activity Log Details */}
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton style={{ backgroundColor: "#007bff", color: "#fff" }}>
           <Modal.Title>Log Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {selectedLog && (
-            <>
+            <div className="log-details">
               <p><strong>Username:</strong> {selectedLog.username}</p>
               <p><strong>Action:</strong> {selectedLog.action}</p>
               <p><strong>Description:</strong> {selectedLog.description}</p>
               <p><strong>Timestamp:</strong> {new Date(selectedLog.timestamp).toLocaleString()}</p>
-            </>
+            </div>
           )}
         </Modal.Body>
         <Modal.Footer>

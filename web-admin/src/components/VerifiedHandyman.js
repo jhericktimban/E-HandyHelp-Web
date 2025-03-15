@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import {
   FaEye,
   FaBan,
+  FaSync,
   FaTrash,
 } from "react-icons/fa";
 
@@ -24,7 +25,7 @@ const VerifiedHandyman = () => {
   const [loading, setLoading] = useState(true);
 
   // Fetch verified handymen from the backend
-  useEffect(() => {
+ 
     const fetchVerifiedHandymen = async () => {
       try {
         setLoading(true);
@@ -44,7 +45,7 @@ const VerifiedHandyman = () => {
         setLoading(false);
       }
     };
-
+    useEffect(() => {
     fetchVerifiedHandymen();
   }, []);
 
@@ -53,6 +54,19 @@ const VerifiedHandyman = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
       },
     },
   };
@@ -200,6 +214,18 @@ const VerifiedHandyman = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="mb-3"
       />
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                    <Button
+                      className="refresh-btn"
+                      onClick={fetchVerifiedHandymen}
+                      style={{
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
+                      }}
+                    >
+                      <FaSync /> Refresh
+                    </Button>
+                  </div>
       <DataTable
         columns={columns}
         data={filteredHandymen}

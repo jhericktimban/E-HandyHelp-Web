@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import {
   FaEye,
   FaBan,
+  FaSync,
   FaExclamationTriangle,
   FaInfoCircle,
 } from "react-icons/fa";
