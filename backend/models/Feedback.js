@@ -21,11 +21,11 @@ const feedbackSchema = new mongoose.Schema({
     min: 1,
     max: 5 // Ensure the rating is between 1 and 5
   },
-  timestamp: {
-    type: Date,
-    default: Date.now // Automatically set to the current date
-  }
-});
+},
+{ 
+  timestamps: true  // Automatically manage createdAt and updatedAt timestamps
+}
+);
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);
 
