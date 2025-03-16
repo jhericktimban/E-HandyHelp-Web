@@ -10,10 +10,10 @@ import {
   FaExclamationTriangle,
   FaInfoCircle,
 } from "react-icons/fa";
-import "../css/ViewReports.css";
+import "../css/viewhandymanreports.css";
 
-const ViewReports = () => {
-  
+const ViewUserReports = () => {
+    
   const [userReports, setUserReports] = useState([]);
   const [handymanReports, setHandymanReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
@@ -58,11 +58,24 @@ const ViewReports = () => {
   
 
   const customStyles = {
-    table: {
-      style: { width: "100%" },
-    },
     headCells: {
-      style: { fontWeight: "bold", fontSize: "16px" },
+      style: {
+        fontWeight: "bold",
+        fontSize: "16px",
+        backgroundColor: "#1960b2",
+        color: "#fff",
+        textAlign: "center",
+      },
+    },
+    rows: {
+      style: {
+        fontSize: "14px",
+        backgroundColor: "#f8f9fa",
+        '&:nth-of-type(odd)': {
+          backgroundColor: "#e9ecef", // Alternating row color
+        },
+        cursor: "pointer",
+      },
     },
   };
 
@@ -133,7 +146,6 @@ const ViewReports = () => {
         }
 
         await logActivity("Suspended User", user);
-
         Swal.fire("Suspended!", "User suspended successfully.", "success");
 
         fetchReports();
@@ -144,53 +156,6 @@ const ViewReports = () => {
 };
 
  
-    
-const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
-  const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "This will suspend the handyman.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes",
-      cancelButtonText: "Cancel",
-      customClass: { confirmButton: "custom-confirm-btn" },
-  });
-
-  if (!result.isConfirmed) return;
-
-  Swal.fire({
-      title: "Suspending...",
-      text: "Please wait while we suspend the handyman.",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-          Swal.showLoading();
-      },
-  });
-
-  try {
-      const response = await fetch(
-          `https://e-handyhelp-web-backend.onrender.com/api/handymen/${handymanId}/suspend`,
-          { method: "PUT" }
-      );
-
-      const data = await response.json();
-
-      if (response.status === 400 && data.message === 'This handyman is already suspended.') {
-          Swal.fire("Already Suspended", "This handyman is already suspended.", "info");
-          return;
-      }
-
-      await logActivity("Suspended Handyman", handyman);
-
-      Swal.fire("Suspended!", "Handyman suspended successfully.", "success");
-
-      fetchReports();
-  } catch (error) {
-      console.error("Error suspending handyman:", error);
-      Swal.fire("Error", "Failed to suspend handyman. Please try again.", "error");
-  }
-};
 
 
 const handleSendWarning = async (report) => {
@@ -267,27 +232,22 @@ const handleSendWarning = async (report) => {
       cell: (row) => (
         <div className="d-flex gap-2">
           <Button
-            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
+            className="view-details-btn"
             onClick={() => handleShowModal(row)}
             title="Details"
           >
             <FaEye />
           </Button>
           <Button
-            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
-            onClick={() =>
-              row.reported_by === "handyman"
-                ? handleSuspendUser(row.userId._id, row._id)
-                : handleSuspendHandyman(row.handymanId._id, row._id)
-                
-            }
+            
+            onClick={() => handleSuspendUser(row.userId._id, row._id, row.userId)}
+
             
             title="Suspend"
           >
             <FaBan />
           </Button>
           <Button
-            style={{ backgroundColor: "#007bff", borderColor: "#007bff" }}
             onClick={() => handleSendWarning(row)}
             title="Send Warning"
           >
@@ -299,8 +259,8 @@ const handleSendWarning = async (report) => {
   ];
 
   return (
-    <div className="container">
-      <h2 className="view-reports-title">Reported by Handymen</h2>
+    <div className="view-reports-container">
+      <h2 className="view-reports-title">Reported User</h2>
       <div className="table-responsive">
         <DataTable
           columns={columns}
@@ -312,17 +272,6 @@ const handleSendWarning = async (report) => {
         />
       </div>
 
-      <h2 className="view-reports-title mt-15">Reported by Resident</h2>
-      <div className="table-responsive">
-        <DataTable
-          columns={columns}
-          data={userReports}
-          pagination
-          highlightOnHover
-          customStyles={customStyles}
-          progressPending={loading}
-        />
-      </div>
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
           <Modal.Header style={{ backgroundColor: "#1960b2" }} closeButton>
@@ -378,4 +327,4 @@ const handleSendWarning = async (report) => {
   );
 };
 
-export default ViewReports;
+export default ViewUserReports;

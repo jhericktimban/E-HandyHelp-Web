@@ -9,7 +9,6 @@ import {
 import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import AdminSidebar from "./components/AdminSidebar";
-import ViewReports from "./components/ViewReports";
 import PendingHandyman from "./components/PendingHandyman";
 import VerifiedHandyman from "./components/VerifiedHandyman";
 import RejectedHandyman from "./components/RejectedHandyman";
@@ -19,7 +18,9 @@ import VerifiedUser from "./components/VerifiedUser";
 import RejectedUser from "./components/RejectedUser";
 import SuspendedUser from "./components/SuspendedUser";
 import ViewFeedbacks from "./components/ViewFeedbacks";
-import ActivityLogs from "./components/ActivityLogs";  // ✅ Import the ActivityLogs component
+import ActivityLogs from "./components/ActivityLogs"; 
+import ViewHandymanReports from "./components/ReportedUser";
+import ViewUserReports from "./components/ReportedHandy";
 import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../src/css/styles.css";
@@ -58,7 +59,6 @@ const App = () => {
                   <Routes>
                     <Route path="/" element={<Navigate to="/dashboard" />} />
                     <Route path="/dashboard" element={<AdminDashboard />} />
-                    <Route path="/view-reports" element={<ViewReports reports={reports} />} />
                     <Route path="/handyman/pending" element={<PendingHandyman />} />
                     <Route path="/handyman/verified" element={<VerifiedHandyman />} />
                     <Route path="/handyman/rejected" element={<RejectedHandyman />} />
@@ -69,6 +69,9 @@ const App = () => {
                     <Route path="/users/suspended" element={<SuspendedUser />} />
                     <Route path="/view-feedbacks" element={<ViewFeedbacks />} />
                     <Route path="/activity-logs" element={<ActivityLogs />} />  
+                    <Route path="/reports/handyman" element={<ViewHandymanReports />} />
+                    <Route path="/reports/users" element={<ViewUserReports />} />
+
                   </Routes>
                 </Col>
               </Row>

@@ -1,8 +1,7 @@
 /* Container styling for the Verified Handyman component */
 .verified-handyman {
-    margin-top: 60px;
+    margin-top: 15px;
     margin-right: 20px;
-
     padding: 20px; /* Padding for the container */
     background-color: #f8f8f8; /* Light background for contrast */
     border-radius: 8px; /* Rounded corners for the container */
@@ -29,6 +28,7 @@
     display: flex; /* Use flexbox for button layout */
     justify-content: space-between; /* Space out buttons */
     width: 100%;
+    gap: 2px;
 }
 
 /* DataTable styling */

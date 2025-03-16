@@ -5,7 +5,7 @@
     border-radius: 8px; /* Rounded corners for the container */
     box-shadow: 0px 0px 5px;
     max-width: 1200px; /* Max width for the container */
-    margin-top: 60px;
+    margin-top: 15px;
     margin-right: 20px;
 }
 
@@ -27,6 +27,7 @@
 .button-group {
     display: flex; /* Use flexbox for button layout */
     justify-content: space-between; /* Space out buttons */
+    gap: 2px;
 }
 
 .button-group .btn {

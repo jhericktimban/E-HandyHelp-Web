@@ -7,35 +7,43 @@ import "font-awesome/css/font-awesome.min.css";
 const AdminSidebar = ({ onLogout }) => {
   const [showHandyman, setShowHandyman] = useState(false);
   const [showUsers, setShowUsers] = useState(false);
+  const [showReports, setShowReports] = useState(false); // Added for reports dropdown
   const [activeLink, setActiveLink] = useState("");
 
   const location = useLocation();
 
-  // Load saved state from localStorage on component mount
   useEffect(() => {
     const savedShowHandyman = localStorage.getItem("showHandyman") === "true";
     const savedShowUsers = localStorage.getItem("showUsers") === "true";
+    const savedShowReports = localStorage.getItem("showReports") === "true";
+    
     setShowHandyman(savedShowHandyman);
     setShowUsers(savedShowUsers);
+    setShowReports(savedShowReports);
 
-    // Set active link based on current URL
     setActiveLink(location.pathname);
   }, [location.pathname]);
 
   const toggleHandyman = (e) => {
-    e.preventDefault(); // Prevent default behavior
+    e.preventDefault();
     const newShowHandyman = !showHandyman;
     setShowHandyman(newShowHandyman);
     localStorage.setItem("showHandyman", newShowHandyman);
   };
-  
+
   const toggleUsers = (e) => {
-    e.preventDefault(); // Prevent default behavior
+    e.preventDefault();
     const newShowUsers = !showUsers;
     setShowUsers(newShowUsers);
     localStorage.setItem("showUsers", newShowUsers);
   };
-  
+
+  const toggleReports = (e) => {
+    e.preventDefault();
+    const newShowReports = !showReports;
+    setShowReports(newShowReports);
+    localStorage.setItem("showReports", newShowReports);
+  };
 
   return (
     <div className="admin-sidebar">
@@ -52,9 +60,18 @@ const AdminSidebar = ({ onLogout }) => {
           </Link>
         </li>
         <li>
-          <Link to="/view-reports" className={activeLink === "/view-reports" ? "active" : ""}>
+          <a className="collapsible" onClick={toggleReports}>
             <i className="fa fa-file-text" aria-hidden="true"></i> Incident Reports
-          </Link>
+            <span className="icon">{showReports ? "-" : "+"}</span>
+          </a>
+          <div className={`collapsible-content ${showReports ? "active" : ""}`}>
+            <Link to="/reports/handyman" className={activeLink === "/reports/handyman" ? "active" : ""}>
+              <i className="fa fa-wrench" aria-hidden="true"></i> Reported by Handyman
+            </Link>
+            <Link to="/reports/users" className={activeLink === "/reports/users" ? "active" : ""}>
+              <i className="fa fa-users" aria-hidden="true"></i> Reported by Users
+            </Link>
+          </div>
         </li>
         <li>
           <a className="collapsible" onClick={toggleHandyman}>

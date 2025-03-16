@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Modal, Button } from "react-bootstrap";
 import "../css/activitylogs.css";
+import {
+  FaSync,
+} from "react-icons/fa";
 
 const ActivityLogs = () => {
   const [logs, setLogs] = useState([]);
@@ -9,9 +12,10 @@ const ActivityLogs = () => {
   const [selectedLog, setSelectedLog] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
+  
     const fetchLogs = async () => {
       try {
+        setLoading(true);
         const response = await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs");
         const data = await response.json();
         console.log("Fetched Logs:", data);
@@ -22,7 +26,7 @@ const ActivityLogs = () => {
         setLoading(false);
       }
     };
-
+    useEffect(() => {
     fetchLogs();
   }, []);
 
@@ -35,12 +39,12 @@ const ActivityLogs = () => {
     {
       name: "Username",
       selector: (row) => row.username,
-      sortable: true,
+      
     },
     {
       name: "Action",
       selector: (row) => row.action,
-      sortable: true,
+     
     },
     {
       name: "Description",
@@ -50,7 +54,7 @@ const ActivityLogs = () => {
     {
       name: "Timestamp",
       selector: (row) => new Date(row.timestamp).toLocaleString(),
-      sortable: true,
+      
     },
   ];
 
@@ -59,7 +63,7 @@ const ActivityLogs = () => {
       style: {
         fontWeight: "bold",
         fontSize: "16px",
-        backgroundColor: "#007bff",
+        backgroundColor: "#1960b2",
         color: "#fff",
         textAlign: "center",
       },
@@ -79,7 +83,17 @@ const ActivityLogs = () => {
   return (
     <div className="activity-logs-container">
       <h2 className="activity-logs-title">Activity Logs</h2>
-
+      <div className="refresh-btn">
+              <Button
+                onClick={fetchLogs}
+                style={{
+                  backgroundColor: "#1960b2",
+                  borderColor: "#1960b2",
+                }}
+              >
+                <FaSync /> Refresh
+              </Button>
+      </div>
       <div className="table-responsive">
         <DataTable
           columns={columns}

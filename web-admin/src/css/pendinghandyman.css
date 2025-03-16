@@ -1,6 +1,6 @@
 /* Container styling for the Pending Handyman component */
 .pending-handyman {
-    margin-top: 60px;
+    margin-top: 15px;
     margin-right: 20px;
     padding: 20px; /* Padding for the container */
     background-color: #f8f8f8; /* Light background for contrast */
@@ -34,6 +34,7 @@
 /* Button styling */
 .button-group {
     display: flex; /* Use flexbox for button layout */
+    gap: 2px;
     justify-content: space-between; /* Space out buttons */
     width: 100%;
 }

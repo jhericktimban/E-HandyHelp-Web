@@ -53,7 +53,7 @@ const ViewFeedbacks = () => {
         body: JSON.stringify({
           username: "Admin", // Replace with dynamic admin username if available
           action: action,
-          description: `Admin ${action.toLowerCase()} feedback from ${
+          description: `Admin ${action.toLowerCase()} from ${
             feedback.userId?.fname || "N/A"
           } ${feedback.userId?.lname || "N/A"} to ${
             feedback.handymanId?.fname || "N/A"
