@@ -107,6 +107,26 @@ const ViewHandymanReports = () => {
       console.error("Error logging activity:", error);
     }
   };
+
+  const logActivitywarning = async (action, reportedUserName) => {
+    try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "Admin", // Replace with dynamic admin username if available
+          action: action,
+          description: `Admin ${action.toLowerCase()} to ${reportedUserName}`,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+    } catch (error) {
+      console.error("Error logging activity:", error);
+    }
+  };
+  
     
 const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
   const result = await Swal.fire({
@@ -169,35 +189,40 @@ const handleSendWarning = async (report) => {
 
   if (!result.isConfirmed) return;
 
-    Swal.fire({
-      title: "Sending a warning...",
-      text: "Please wait while we send the warning.",
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-          Swal.showLoading();
-      },
+  Swal.fire({
+    title: "Sending a warning...",
+    text: "Please wait while we send the warning.",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
   });
-  {
-    try {
-      await axios.post(
-        "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
-        {
-          handymanId: report.handymanId?._id,
-          userId: report.userId?._id,
-          reported_by: report.reported_by
-        }
-      );
 
-      await logActivity("Sent Warning", report);
+  try {
+    const response = await axios.post(
+      "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
+      {
+        handymanId: report.handymanId?._id,
+        userId: report.userId?._id,
+        reported_by: report.reported_by
+      }
+    );
 
-      Swal.fire("Warning Sent", "Warning has been successfully sent.", "success");
-    } catch (error) {
-      console.error("Error sending warning:", error);
-      Swal.fire("Error", "Failed to send warning. Please try again.", "error");
-    }
+    // Extract reported user's name for activity log
+    const reportedUserName = report.handymanId
+      ? `${report.handymanId.fname} ${report.handymanId.lname}`
+      : `${report.userId.fname} ${report.userId.lname}`;
+
+    await logActivitywarning("Sent Warning", reportedUserName);
+
+    Swal.fire("Warning Sent", "Warning has been successfully sent.", "success");
+  } catch (error) {
+    console.error("Error sending warning:", error);
+    Swal.fire("Error", "Failed to send warning. Please try again.", "error");
   }
 };
+
 
 
   const columns = [
