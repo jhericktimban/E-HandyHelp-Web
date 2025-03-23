@@ -107,11 +107,6 @@ const ViewHandymanReports = () => {
       console.error("Error logging activity:", error);
     }
   };
-
-
-
-
- 
     
 const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
   const result = await Swal.fire({
