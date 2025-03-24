@@ -42,61 +42,61 @@ const ActivityLogs = () => {
 
 
   const handleClearSelected = async () => {
-      if (selectedRows.length === 0) {
-          Swal.fire({
-              title: "No Logs Selected",
-              text: "Please select logs to delete.",
-              icon: "info",
-              confirmButtonText: "OK",
-          });
-          return;
-      }
-  
-      const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "This will permanently delete the selected logs.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonText: "Yes, delete!",
-          cancelButtonText: "Cancel",
-          customClass: { confirmButton: "custom-confirm-btn" },
-      });
-  
-      if (!result.isConfirmed) return;
-  
-      Swal.fire({
-          title: "Deleting...",
-          text: "Please wait while we delete the selected logs.",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          didOpen: () => {
-              Swal.showLoading();
-          },
-      });
-  
-      try {
-          const response = await fetch(
-              "https://e-handyhelp-web-backend.onrender.com/api/delete-logs",
-              {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({ logIds: selectedRows.map((log) => log._id) }),
-              }
-          );
-  
-          if (response.ok) {
-              Swal.fire("Deleted!", "Selected logs deleted successfully.", "success");
-              fetchLogs(); // Refresh the logs after deletion
-              setSelectedRows([]); // Clear selected rows
-          } else {
-              Swal.fire("Failed", "Failed to delete logs. Please try again.", "error");
-          }
-      } catch (error) {
-          console.error("Error deleting logs:", error);
-          Swal.fire("Error", "An error occurred while deleting logs.", "error");
-      }
-  };
-  
+    if (selectedRows.length === 0) {
+        Swal.fire({
+            title: "No Logs Selected",
+            text: "Please select logs to delete.",
+            icon: "info",
+            confirmButtonText: "OK",
+        });
+        return;
+    }
+
+    const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "This will permanently delete the selected logs.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete!",
+        cancelButtonText: "Cancel",
+        customClass: { confirmButton: "custom-confirm-btn" },
+    });
+
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
+        title: "Deleting...",
+        text: "Please wait while we delete the selected logs.",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+
+    try {
+        const response = await fetch(
+            "https://e-handyhelp-web-backend.onrender.com/api/activityLogs", // Updated endpoint
+            {
+                method: "DELETE", // Changed method to DELETE
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ logIds: selectedRows.map((log) => log._id) }),
+            }
+        );
+
+        if (response.ok) {
+            Swal.fire("Deleted!", "Selected logs deleted successfully.", "success");
+            fetchLogs(); // Refresh the logs after deletion
+            setSelectedRows([]); // Clear selected rows
+        } else {
+            Swal.fire("Failed", "Failed to delete logs. Please try again.", "error");
+        }
+    } catch (error) {
+        console.error("Error deleting logs:", error);
+        Swal.fire("Error", "An error occurred while deleting logs.", "error");
+    }
+};
+
 
   const columns = [
     {
