@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
 });
 
 // ✅ Delete selected activity logs (DELETE)
-router.delete("/", async (req, res) => {
+router.delete("/delete-logs", async (req, res) => {
   try {
       const { logIds } = req.body;
 
