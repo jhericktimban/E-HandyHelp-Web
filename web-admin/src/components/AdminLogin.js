@@ -107,9 +107,7 @@ const AdminLogin = ({ onLogin }) => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          <div className="remember-forgot">
-            <a href="#">Forgot password?</a>
-          </div>
+          
           <button type="submit" disabled={loading}>
             {loading ? <FaSpinner className="spinner" /> : "Login"}
           </button>
