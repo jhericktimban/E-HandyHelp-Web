@@ -9,7 +9,7 @@ import {
   FaBan,
   FaSync,
   FaExclamationTriangle,
-  
+  FaTrash
 } from "react-icons/fa";
 
 const ViewHandymanReports = () => {
@@ -18,7 +18,7 @@ const ViewHandymanReports = () => {
   const [handymanReports, setHandymanReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  const [selectedRows, setSelectedRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -89,6 +89,74 @@ const ViewHandymanReports = () => {
     setSelectedReport(null);
   };
 
+  const handleRowSelect = ({ selectedRows }) => {
+    setSelectedRows(selectedRows);
+};
+
+const handleClearSelected = async () => {
+  if (selectedRows.length === 0) {
+      Swal.fire({
+          title: "No Reports Selected",
+          text: "Please select reports to delete.",
+          icon: "info",
+          confirmButtonText: "OK",
+      });
+      return;
+  }
+
+  const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete the selected reports.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
+      customClass: { confirmButton: "custom-confirm-btn" },
+  });
+
+  if (!result.isConfirmed) return;
+
+  Swal.fire({
+      title: "Deleting...",
+      text: "Please wait while we delete the selected reports.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+          Swal.showLoading();
+      },
+  });
+
+  try {
+      const response = await axios.delete(
+          "https://e-handyhelp-web-backend.onrender.com/api/reports",
+          {
+              data: { reportIds: selectedRows.map((report) => report._id) },
+          }
+      );
+
+      if (response.status === 200) {
+          Swal.fire("Deleted!", "Selected reports deleted successfully.", "success");
+           // Log the activity for each deleted report
+           await Promise.all(
+            selectedRows.map((report) =>
+                logActivity("Deleted Report", {
+                    fname: report.reportedBy, 
+                    lname: "",
+                })
+            )
+        );
+          fetchReports(); // Refresh the table after deletion
+          setSelectedRows([]); // Clear selected rows
+      } else {
+          Swal.fire("Failed", "Failed to delete reports. Please try again.", "error");
+      }
+  } catch (error) {
+      console.error("Error deleting reports:", error);
+      Swal.fire("Error", "An error occurred while deleting reports.", "error");
+  }
+};
+
+
   const logActivity = async (action, handyman) => {
     try {
       await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
@@ -108,24 +176,6 @@ const ViewHandymanReports = () => {
     }
   };
 
-  const logActivitywarning = async (action, reportedUserName) => {
-    try {
-      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: "Admin", // Replace with dynamic admin username if available
-          action: action,
-          description: `Admin ${action.toLowerCase()} to handyman: ${reportedUserName}`,
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (error) {
-      console.error("Error logging activity:", error);
-    }
-  };
   
     
 const handleSuspendHandyman = async (handymanId, reportId, handyman) => {
@@ -189,40 +239,35 @@ const handleSendWarning = async (report) => {
 
   if (!result.isConfirmed) return;
 
-  Swal.fire({
-    title: "Sending a warning...",
-    text: "Please wait while we send the warning.",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    didOpen: () => {
-      Swal.showLoading();
-    },
+    Swal.fire({
+      title: "Sending a warning...",
+      text: "Please wait while we send the warning.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+          Swal.showLoading();
+      },
   });
+  {
+    try {
+      await axios.post(
+        "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
+        {
+          handymanId: report.handymanId?._id,
+          userId: report.userId?._id,
+          reported_by: report.reported_by
+        }
+      );
 
-  try {
-    const response = await axios.post(
-      "https://e-handyhelp-web-backend.onrender.com/api/notifications/send-warning",
-      {
-        handymanId: report.handymanId?._id,
-        userId: report.userId?._id,
-        reported_by: report.reported_by
-      }
-    );
+      await logActivity("Sent Warning", report);
 
-    // Extract reported user's name for activity log
-    const reportedUserName = report.handymanId
-      ? `${report.handymanId.fname} ${report.handymanId.lname}`
-      : `${report.userId.fname} ${report.userId.lname}`;
-
-    await logActivitywarning("Sent Warning", reportedUserName);
-
-    Swal.fire("Warning Sent", "Warning has been successfully sent.", "success");
-  } catch (error) {
-    console.error("Error sending warning:", error);
-    Swal.fire("Error", "Failed to send warning. Please try again.", "error");
+      Swal.fire("Warning Sent", "Warning has been successfully sent.", "success");
+    } catch (error) {
+      console.error("Error sending warning:", error);
+      Swal.fire("Error", "Failed to send warning. Please try again.", "error");
+    }
   }
 };
-
 
 
   const columns = [
@@ -284,15 +329,43 @@ const handleSendWarning = async (report) => {
     <div className="view-reports-container">
 
       <h2 className="view-reports-title mt-15">Reported Handyman</h2>
+     
+      <div className="action-buttons">
+              <Button
+                onClick={fetchReports}
+                style={{
+                  backgroundColor: "#1960b2",
+                  borderColor: "#1960b2",
+                  marginRight: "10px",
+                }}
+              >
+                <FaSync /> Refresh
+              </Button>
+      
+              <Button
+                onClick={handleClearSelected}
+                style={{
+                  backgroundColor: "#dc3545",
+                  borderColor: "#dc3545",
+                }}
+                disabled={selectedRows.length === 0} // Disable if no rows are selected
+              >
+                <FaTrash /> Clear Selected
+              </Button>
+            </div>
       <div className="table-responsive">
-        <DataTable
-          columns={columns}
-          data={userReports}
-          pagination
-          highlightOnHover
-          customStyles={customStyles}
-          progressPending={loading}
-        />
+
+      <DataTable
+        columns={columns}
+        data={userReports}
+        pagination
+        highlightOnHover
+        customStyles={customStyles}
+        progressPending={loading}
+        selectableRows
+        onSelectedRowsChange={handleRowSelect} // Track selected rows
+    />
+
       </div>
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>

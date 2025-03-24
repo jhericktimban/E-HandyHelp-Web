@@ -9,6 +9,7 @@ import {
   FaSync,
   FaExclamationTriangle,
   FaInfoCircle,
+  FaTrash,
 } from "react-icons/fa";
 import "../css/viewhandymanreports.css";
 
@@ -18,7 +19,7 @@ const ViewUserReports = () => {
   const [handymanReports, setHandymanReports] = useState([]);
   const [selectedReport, setSelectedReport] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
+  const [selectedRows, setSelectedRows] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -88,6 +89,74 @@ const ViewUserReports = () => {
     setShowModal(false);
     setSelectedReport(null);
   };
+
+  const handleRowSelect = ({ selectedRows }) => {
+    setSelectedRows(selectedRows);
+};
+
+const handleClearSelected = async () => {
+  if (selectedRows.length === 0) {
+      Swal.fire({
+          title: "No Reports Selected",
+          text: "Please select reports to delete.",
+          icon: "info",
+          confirmButtonText: "OK",
+      });
+      return;
+  }
+
+  const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This will permanently delete the selected reports.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete!",
+      cancelButtonText: "Cancel",
+      customClass: { confirmButton: "custom-confirm-btn" },
+  });
+
+  if (!result.isConfirmed) return;
+
+  Swal.fire({
+      title: "Deleting...",
+      text: "Please wait while we delete the selected reports.",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      didOpen: () => {
+          Swal.showLoading();
+      },
+  });
+
+  try {
+      const response = await axios.delete(
+          "https://e-handyhelp-web-backend.onrender.com/api/reports",
+          {
+              data: { reportIds: selectedRows.map((report) => report._id) },
+          }
+      );
+
+      if (response.status === 200) {
+          Swal.fire("Deleted!", "Selected reports deleted successfully.", "success");
+           // Log the activity for each deleted report
+           await Promise.all(
+            selectedRows.map((report) =>
+                logActivity("Deleted Report", {
+                    fname: report.reportedBy, 
+                    lname: "",
+                })
+            )
+        );
+          fetchReports(); // Refresh the table after deletion
+          setSelectedRows([]); // Clear selected rows
+      } else {
+          Swal.fire("Failed", "Failed to delete reports. Please try again.", "error");
+      }
+  } catch (error) {
+      console.error("Error deleting reports:", error);
+      Swal.fire("Error", "An error occurred while deleting reports.", "error");
+  }
+};
+
 
   const logActivity = async (action, user) => {
     try {
@@ -286,16 +355,44 @@ const handleSendWarning = async (report) => {
   return (
     <div className="view-reports-container">
       <h2 className="view-reports-title">Reported User</h2>
-      <div className="table-responsive">
+
+      <div className="action-buttons">
+                    <Button
+                      onClick={fetchReports}
+                      style={{
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
+                        marginRight: "10px",
+                      }}
+                    >
+                      <FaSync /> Refresh
+                    </Button>
+            
+                    <Button
+                      onClick={handleClearSelected}
+                      style={{
+                        backgroundColor: "#dc3545",
+                        borderColor: "#dc3545",
+                      }}
+                      disabled={selectedRows.length === 0} // Disable if no rows are selected
+                    >
+                      <FaTrash /> Clear Selected
+                    </Button>
+                  </div>
+                  <div className="table-responsive">
+
         <DataTable
           columns={columns}
-          data={handymanReports}
+          data={userReports}
           pagination
           highlightOnHover
           customStyles={customStyles}
           progressPending={loading}
+          selectableRows
+          onSelectedRowsChange={handleRowSelect} // Track selected rows
         />
-      </div>
+
+        </div>
 
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
