@@ -31,24 +31,24 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// ✅ Delete selected activity logs (DELETE)
-router.delete("/", async (req, res) => {
-    try {
-        const { logIds } = req.body;
-  
-        if (!logIds || logIds.length === 0) {
-            return res.status(400).json({ message: "No logs selected for deletion." });
-        }
-  
-        await ActivityLog.deleteMany({ _id: { $in: logIds } });
-  
-        res.status(200).json({ message: "Selected logs deleted successfully." });
-    } catch (error) {
-        console.error("Error deleting logs:", error);
-        res.status(500).json({ message: "Failed to delete logs." });
-    }
-  });
 
+// ✅ Delete selected reports (DELETE)
+router.delete('/', async (req, res) => {
+    try {
+        const { reportIds } = req.body;
+
+        if (!reportIds || reportIds.length === 0) {
+            return res.status(400).json({ message: "No reports selected for deletion." });
+        }
+
+        await Report.deleteMany({ _id: { $in: reportIds } });
+
+        res.status(200).json({ message: "Selected reports deleted successfully." });
+    } catch (error) {
+        console.error("Error deleting reports:", error);
+        res.status(500).json({ message: "Failed to delete reports." });
+    }
+});
 
 
 module.exports = router;

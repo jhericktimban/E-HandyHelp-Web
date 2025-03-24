@@ -128,24 +128,26 @@ const handleClearSelected = async () => {
   });
 
   try {
+      const reportIds = selectedRows.map((report) => report._id);
+
       const response = await axios.delete(
           "https://e-handyhelp-web-backend.onrender.com/api/reports",
-          {
-              data: { reportIds: selectedRows.map((report) => report._id) },
-          }
+          { data: { reportIds } }
       );
 
       if (response.status === 200) {
           Swal.fire("Deleted!", "Selected reports deleted successfully.", "success");
-           // Log the activity for each deleted report
-           await Promise.all(
-            selectedRows.map((report) =>
-                logActivity("Deleted Report", {
-                    fname: report.reportedBy, 
-                    lname: "",
-                })
-            )
-        );
+
+          // ✅ Log the activity for each deleted report
+          await Promise.all(
+              selectedRows.map((report) =>
+                  logActivity("Deleted Report", {
+                      fname: report.reportedBy || "Unknown", // Handle missing names gracefully
+                      lname: "",
+                  })
+              )
+          );
+
           fetchReports(); // Refresh the table after deletion
           setSelectedRows([]); // Clear selected rows
       } else {
@@ -153,7 +155,12 @@ const handleClearSelected = async () => {
       }
   } catch (error) {
       console.error("Error deleting reports:", error);
-      Swal.fire("Error", "An error occurred while deleting reports.", "error");
+
+      if (error.response && error.response.data.message) {
+          Swal.fire("Error", error.response.data.message, "error");
+      } else {
+          Swal.fire("Error", "An error occurred while deleting reports.", "error");
+      }
   }
 };
 
