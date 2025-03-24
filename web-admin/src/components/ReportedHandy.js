@@ -118,7 +118,7 @@ const ViewHandymanReports = () => {
         body: JSON.stringify({
           username: "Admin", // Replace with dynamic admin username if available
           action: action,
-          description: `Admin ${action.toLowerCase()} to ${reportedUserName}`,
+          description: `Admin ${action.toLowerCase()} to handyman: ${reportedUserName}`,
           timestamp: new Date().toISOString(),
         }),
       });

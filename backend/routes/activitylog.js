@@ -23,6 +23,25 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ✅ Delete selected activity logs (DELETE)
+router.delete("/", async (req, res) => {
+  try {
+      const { logIds } = req.body;
+
+      if (!logIds || logIds.length === 0) {
+          return res.status(400).json({ message: "No logs selected for deletion." });
+      }
+
+      await ActivityLog.deleteMany({ _id: { $in: logIds } });
+
+      res.status(200).json({ message: "Selected logs deleted successfully." });
+  } catch (error) {
+      console.error("Error deleting logs:", error);
+      res.status(500).json({ message: "Failed to delete logs." });
+  }
+});
+
+
 // ✅ Fetch all activity logs (GET)
 router.get("/", async (req, res) => {
   try {
