@@ -130,6 +130,18 @@ const handleClearSelected = async () => {
   try {
       const reportIds = selectedRows.map((report) => report._id);
 
+      // Extract reporter names for logging
+      const deletedReportsDetails = selectedRows.map((report) => {
+          const reporterName = report.reported_by === "handyman"
+              ? `${report.handymanId?.fname || "Unknown"} ${report.handymanId?.lname || ""}`
+              : `${report.userId?.fname || "Unknown"} ${report.userId?.lname || ""}`;
+
+          return {
+              reportId: report._id,
+              reporterName,
+          };
+      });
+
       const response = await axios.delete(
           "https://e-handyhelp-web-backend.onrender.com/api/reports",
           { data: { reportIds } }
@@ -138,15 +150,10 @@ const handleClearSelected = async () => {
       if (response.status === 200) {
           Swal.fire("Deleted!", "Selected reports deleted successfully.", "success");
 
-          // ✅ Log the activity for each deleted report
-          await Promise.all(
-              selectedRows.map((report) =>
-                  logActivity("Deleted Report", {
-                      fname: report.reportedBy || "Unknown", // Handle missing names gracefully
-                      lname: "",
-                  })
-              )
-          );
+          // Log each deleted report in the activity logs
+          for (const report of deletedReportsDetails) {
+              await logActivityClearSelected("Deleted Report", report.reporterName);
+          }
 
           fetchReports(); // Refresh the table after deletion
           setSelectedRows([]); // Clear selected rows
@@ -161,6 +168,25 @@ const handleClearSelected = async () => {
       } else {
           Swal.fire("Error", "An error occurred while deleting reports.", "error");
       }
+  }
+};
+
+const logActivityClearSelected = async (action, reporterName) => {
+  try {
+      await fetch("https://e-handyhelp-web-backend.onrender.com/api/activityLogs", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              username: "Admin", // Replace with dynamic admin username if available
+              action: action,
+              description: `Admin deleted a report filed by: ${reporterName}`,
+              timestamp: new Date().toISOString(),
+          }),
+      });
+  } catch (error) {
+      console.error("Error logging activity:", error);
   }
 };
 
@@ -183,6 +209,7 @@ const handleClearSelected = async () => {
       console.error("Error logging activity:", error);
     }
   };
+
 
   const logActivitywarning = async (action, reportedUserName) => {
     try {
@@ -361,8 +388,7 @@ const handleSendWarning = async (report) => {
 
   return (
     <div className="view-reports-container">
-      <h2 className="view-reports-title">Reported User</h2>
-
+      <h2 className="view-reports-title">Reported by Handyman</h2>
       <div className="action-buttons">
                     <Button
                       onClick={fetchReports}
@@ -388,18 +414,17 @@ const handleSendWarning = async (report) => {
                   </div>
                   <div className="table-responsive">
 
-        <DataTable
-          columns={columns}
-          data={userReports}
-          pagination
-          highlightOnHover
-          customStyles={customStyles}
-          progressPending={loading}
-          selectableRows
-          onSelectedRowsChange={handleRowSelect} // Track selected rows
-        />
-
-        </div>
+                  <DataTable
+                  columns={columns}
+                  data={handymanReports}
+                  pagination
+                  highlightOnHover
+                  customStyles={customStyles}
+                  progressPending={loading}
+                  selectableRows
+                  onSelectedRowsChange={handleRowSelect} // Track selected rows
+              />
+              </div>
 
       {selectedReport && (
         <Modal show={showModal} onHide={handleCloseModal} size="lg" centered>
