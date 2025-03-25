@@ -404,8 +404,8 @@ const handleSendWarning = async (report) => {
                     <Button
                       onClick={handleClearSelected}
                       style={{
-                        backgroundColor: "#dc3545",
-                        borderColor: "#dc3545",
+                        backgroundColor: "#1960b2",
+                        borderColor: "#1960b2",
                       }}
                       disabled={selectedRows.length === 0} // Disable if no rows are selected
                     >
